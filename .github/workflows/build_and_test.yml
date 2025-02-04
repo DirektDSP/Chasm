@@ -1,4 +1,4 @@
-name: Pamplejuce
+name: PluginTemplate_Build
 
 on:
   workflow_dispatch: # lets you run a build from the UI
@@ -152,7 +152,7 @@ jobs:
           ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
 
       - name: Codesign (macOS)
-        if: ${{ matrix.name == 'macOS' }}
+        if: ${{ matrix.name == 'macOS' && secrets.DEVELOPER_ID_APPLICATION}}
         run: |
           # Each plugin must be code signed
           codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime --timestamp
@@ -211,7 +211,7 @@ jobs:
           mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
 
       - name: Codesign with Azure Trusted Signing
-        if: ${{ matrix.name == 'Windows' }}
+        if: ${{ matrix.name == 'Windows' && secrets.AZURE_TENANT_ID}}
         uses: azure/trusted-signing-action@v0.5.0
         with:
           # The Azure Active Directory tenant (directory) ID.
