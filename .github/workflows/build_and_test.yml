@@ -152,7 +152,7 @@ jobs:
           ${{ matrix.pluginval-binary }} --strictness-level 10 --verbose --validate "${{ env.VST3_PATH }}"
 
       - name: Codesign (macOS)
-        if: ${{ matrix.name == 'macOS' && secrets.DEVELOPER_ID_APPLICATION}}
+        if: ${{ matrix.name == 'macOS'}}
         run: |
           # Each plugin must be code signed
           codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime --timestamp
@@ -211,7 +211,7 @@ jobs:
           mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
 
       - name: Codesign with Azure Trusted Signing
-        if: ${{ matrix.name == 'Windows' && secrets.AZURE_TENANT_ID}}
+        if: ${{ matrix.name == 'Windows'}}
         uses: azure/trusted-signing-action@v0.5.1
         with:
           # The Azure Active Directory tenant (directory) ID.
