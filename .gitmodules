@@ -14,3 +14,7 @@
 	path = modules/clap-juce-extensions
 	url = https://github.com/free-audio/clap-juce-extensions.git
 	branch = main
+[submodule "modules/moonbase_JUCEClient"]
+	path = modules/moonbase_JUCEClient
+	url = https://github.com/Moonbase-sh/moonbase_JUCEClient
+	branch = main
