@@ -46,6 +46,11 @@ project(${PROJECT_NAME} VERSION ${CURRENT_VERSION})
 # On Github Actions, this is done as a part of actions/checkout
 add_subdirectory(JUCE)
 
+add_subdirectory (modules/moonbase_JUCEClient) 
+
+# TODO: CHANGE ME! This must match the product id in assets/moonbase_api_config.json
+MOONBASE_DECLARE_LICENSING ("DirektDSP", "plugintemplate", VERSION)
+
 # Add CLAP format
 add_subdirectory(modules/clap-juce-extensions EXCLUDE_FROM_ALL)
 
@@ -91,6 +96,9 @@ add_library(SharedCode INTERFACE)
 clap_juce_extensions_plugin(TARGET "${PROJECT_NAME}"
     CLAP_ID "${BUNDLE_ID}"
     CLAP_FEATURES audio-effect)
+	
+# Link the moonbase_JUCEClient target to the Pamplejuce target
+target_link_libraries("${PROJECT_NAME}" PRIVATE moonbase_JUCEClient)
 
 # Enable fast math, C++20 and a few other target defaults
 include(SharedCodeDefaults)
@@ -106,6 +114,9 @@ target_sources(SharedCode INTERFACE ${SourceFiles})
 
 # Adds a BinaryData target for embedding assets into the binary
 include(Assets)
+
+# Add the config for licensing to binaryData
+juce_add_binary_data(Assets SOURCES assets/moonbase_api_config.json)
 
 # MacOS only: Cleans up folder and target organization on Xcode.
 include(XcodePrettify)
