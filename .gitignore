@@ -1,3 +1,5 @@
+# JUCE / C related files and folders
+
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
