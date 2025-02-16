@@ -48,9 +48,6 @@ add_subdirectory(JUCE)
 
 add_subdirectory (modules/moonbase_JUCEClient) 
 
-# TODO: CHANGE ME! This must match the product id in assets/moonbase_api_config.json
-MOONBASE_DECLARE_LICENSING ("DirektDSP", "plugintemplate", VERSION)
-
 # Add CLAP format
 add_subdirectory(modules/clap-juce-extensions EXCLUDE_FROM_ALL)
 
@@ -113,10 +110,8 @@ file(GLOB_RECURSE SourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/sou
 target_sources(SharedCode INTERFACE ${SourceFiles})
 
 # Adds a BinaryData target for embedding assets into the binary
+# This also includes the moonbase config json file
 include(Assets)
-
-# Add the config for licensing to binaryData
-juce_add_binary_data(Assets SOURCES assets/moonbase_api_config.json)
 
 # MacOS only: Cleans up folder and target organization on Xcode.
 include(XcodePrettify)

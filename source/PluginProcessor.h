@@ -1,6 +1,8 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
+#include "moonbase_JUCEClient/moonbase_JUCEClient.h"
+#include "BinaryData.h"
 
 #if (MSVC)
 #include "ipps.h"
@@ -11,6 +13,8 @@ class PluginProcessor : public juce::AudioProcessor
 public:
     PluginProcessor();
     ~PluginProcessor() override;
+
+    MOONBASE_DECLARE_LICENSING_NAMED(BinaryData, "DirektDSP", "plugintemplate", VERSION)
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
