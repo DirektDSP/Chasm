@@ -10,13 +10,16 @@ PluginProcessor::PluginProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts(*this, nullptr, "Parameters", createParameterLayout())
 {
     // Optionally, you can add activation state callbacks here:
     // moonbaseClient->addActivationStateChangedCallback([](Moonbase::JUCEClient::ActivationState state)
     // {
     //     // React to activation state changes if needed.
     // });
+
+    apvts.state.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
+    presetManager = std::make_unique<Service::PresetManager>(apvts);
 }
 
 PluginProcessor::~PluginProcessor()
@@ -152,12 +155,18 @@ juce::AudioProcessorEditor* PluginProcessor::createEditor()
 //==============================================================================
 void PluginProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    juce::ignoreUnused (destData);
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    juce::ignoreUnused (data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(apvts.state.getType()))
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================

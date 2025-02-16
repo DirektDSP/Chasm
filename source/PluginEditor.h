@@ -3,6 +3,7 @@
 #include "PluginProcessor.h"
 #include "BinaryData.h"
 #include "melatonin_inspector/melatonin_inspector.h"
+#include "PresetPanel.h"
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
@@ -22,12 +23,20 @@ private:
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };
+    
+    // keep aspect ratio when resizing :)
+    juce::ComponentBoundsConstrainer constrainer;
 
     // Licensing activation UI
     std::unique_ptr<Moonbase::JUCEClient::ActivationUI> activationUI;
 
     // Optional: a sample inspector from the melatonin module
     std::unique_ptr<melatonin::Inspector> inspector;
+
+
+    // Actual Plugin UI
+
+    Gui::PresetPanel presetPanel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };
