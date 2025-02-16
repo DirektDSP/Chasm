@@ -157,14 +157,17 @@ target_link_libraries(SharedCode
 # Link the JUCE plugin targets our SharedCode target
 target_link_libraries("${PROJECT_NAME}" PRIVATE SharedCode)
 
+
 # IPP support, comment out to disable
 include(PamplejuceIPP)
 
 # Everything related to the tests target
 include(Tests)
+target_link_libraries(Tests PRIVATE moonbase_JUCEClient)
 
 # A separate target for Benchmarks (keeps the Tests target fast)
 include(Benchmarks)
+target_link_libraries(Benchmarks PRIVATE moonbase_JUCEClient)
 
 # Output some config for CI (like our PRODUCT_NAME)
 include(GitHubENV)
