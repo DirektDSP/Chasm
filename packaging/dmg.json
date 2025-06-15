@@ -1,6 +1,6 @@
 {
   "title": "PluginTemplate",
-  "icon": "pamplejuce.icns",
+  "icon": "chasm.icns",
   "background": "background.jpg",
   "window": {
     "position": {

@@ -165,10 +165,10 @@ jobs:
         if: ${{ matrix.name == 'macOS' }}
         run: |
           # add the icns as its own icon resource (meta!)
-          sips -i packaging/pamplejuce.icns
+          sips -i packaging/chasm.icns
 
           # Grab the resource, put in tempfile
-          DeRez -only icns packaging/pamplejuce.icns > /tmp/icons
+          DeRez -only icns packaging/chasm.icns > /tmp/icons
 
           # Stuff the resource into the strange Icon? file's resource fork
           Rez -a /tmp/icons -o "${{ env.VST3_PATH }}/Icon"$'\r'

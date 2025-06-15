@@ -1,3 +1,5 @@
-# PluginTemplate
+# Chasm
 
-Internal DirektDSP JUCE Plugin Template (based originally on PampleJuce)
+> Korzana x DirektDSP
+
+Chasm is a.... fill this in later
