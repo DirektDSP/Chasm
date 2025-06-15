@@ -93,13 +93,14 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
-    // Any pre-playback initialisation can be done here.
+    // Prepare the DSP processor
+    dspProcessor.prepare(sampleRate, samplesPerBlock);
 }
 
 void PluginProcessor::releaseResources()
 {
-    // Free any spare memory or resources.
+    // Reset the DSP processor
+    dspProcessor.reset();
 }
 
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
@@ -132,13 +133,35 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // Process your audio here...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        auto* channelData = buffer.getWritePointer (channel);
-        juce::ignoreUnused (channelData);
-        // Process samples...
-    }
+    // Check if bypassed
+    bool isBypassed = *apvts.getRawParameterValue("BYPASS");
+    if (isBypassed)
+        return;    // Get parameter values and update DSP processor
+    float inputGain = *apvts.getRawParameterValue("INPUT_GAIN");
+    float outputGain = *apvts.getRawParameterValue("OUTPUT_GAIN");
+    float mix = *apvts.getRawParameterValue("MIX");
+    float delay = *apvts.getRawParameterValue("DELAY");
+    float brightness = *apvts.getRawParameterValue("BRIGHTNESS");
+    float character = *apvts.getRawParameterValue("CHARACTER");
+    float lowCut = *apvts.getRawParameterValue("LOW_CUT");
+    float highCut = *apvts.getRawParameterValue("HIGH_CUT");
+    float width = *apvts.getRawParameterValue("WIDTH");
+    bool limiterEnabled = *apvts.getRawParameterValue("LIMITER") > 0.5f;
+
+    // Update DSP processor parameters
+    dspProcessor.setInputGain(inputGain);
+    dspProcessor.setOutputGain(outputGain);
+    dspProcessor.setMix(mix);
+    dspProcessor.setDelay(delay);
+    dspProcessor.setBrightness(brightness);
+    dspProcessor.setCharacter(character);
+    dspProcessor.setLowCut(lowCut);
+    dspProcessor.setHighCut(highCut);
+    dspProcessor.setWidth(width);
+    dspProcessor.setLimiterEnabled(limiterEnabled);
+
+    // Process the audio
+    dspProcessor.processBlock(buffer);
 }
 
 //==============================================================================
