@@ -212,7 +212,7 @@ jobs:
           mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
 
       - name: Codesign with Azure Trusted Signing
-        if: ${{ matrix.name == 'Windows'}}
+        if: ${{ matrix.name == 'Windows' && 'true' == 'false'}}
         uses: azure/trusted-signing-action@v0.5.1
         with:
           # The Azure Active Directory tenant (directory) ID.
