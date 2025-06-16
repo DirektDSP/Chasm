@@ -16,40 +16,40 @@ class SmoothLimiter
 {
 public:
     SmoothLimiter() = default;
-    
+        
     /** Prepares the limiter with sample rate. */
-    void prepare(double sampleRate)
-    {
-        this->sampleRate = sampleRate;
-        
-        // Prepare the compressor for the limiting stage
-        compressor.prepare({sampleRate, 256, 2});
-        
-        // Configure compressor for limiting
-        compressor.setAttack(SampleType{0.1});   // 0.1ms attack
-        compressor.setRelease(SampleType{10.0}); // 10ms release
-        compressor.setThreshold(SampleType{-0.5}); // -0.5dB threshold
-        compressor.setRatio(SampleType{20.0});   // High ratio for limiting
-        
-        reset();
-    }
+        void prepare(double newSampleRate)
+        {
+            _sampleRate = newSampleRate;
+            
+            // Prepare the compressor for the limiting stage
+            _compressor.prepare({_sampleRate, 256, 2});
+            
+            // Configure compressor for limiting
+            _compressor.setAttack(SampleType{0.1});   // 0.1ms attack
+            _compressor.setRelease(SampleType{10.0}); // 10ms release
+            _compressor.setThreshold(SampleType{-0.5}); // -0.5dB threshold
+            _compressor.setRatio(SampleType{20.0});   // High ratio for limiting
+    
+            reset();
+        }
     
     /** Enables or disables the limiter. */
     void setEnabled(bool shouldBeEnabled)
     {
-        enabled = shouldBeEnabled;
+        _enabled = shouldBeEnabled;
     }
     
     /** Sets the output ceiling level in dB. */
     void setCeiling(SampleType ceilingDb)
     {
-        ceiling = juce::Decibels::decibelsToGain(ceilingDb);
+        _ceiling = juce::Decibels::decibelsToGain(ceilingDb);
     }
     
     /** Processes a single sample. */
     SampleType processSample(SampleType input)
     {
-        if (!enabled)
+        if (!_enabled)
             return input;
             
         // First stage: soft clipping for harmonic coloration
@@ -59,13 +59,13 @@ public:
         SampleType limited = dynamicLimit(softClipped);
         
         // Final stage: hard ceiling
-        return juce::jlimit(-ceiling, ceiling, limited);
+        return juce::jlimit(-_ceiling, _ceiling, limited);
     }
     
     /** Processes a stereo pair of samples. */
     void processStereoSample(SampleType& left, SampleType& right)
     {
-        if (!enabled)
+        if (!_enabled)
             return;
             
         left = processSample(left);
@@ -75,7 +75,7 @@ public:
     /** Processes a buffer. */
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
     {
-        if (!enabled)
+        if (!_enabled)
             return;
             
         int numChannels = buffer.getNumChannels();
@@ -97,15 +97,15 @@ public:
         {
             juce::dsp::AudioBlock<SampleType> block(buffer);
             juce::dsp::ProcessContextReplacing<SampleType> context(block);
-            compressor.process(context);
+            _compressor.process(context);
         }
     }
     
     /** Resets the limiter state. */
     void reset()
     {
-        compressor.reset();
-        envelopeFollower = SampleType{0};
+        _compressor.reset();
+        _envelopeFollower = SampleType{0};
     }
     
     /** Gets the current gain reduction in dB. */
@@ -113,7 +113,7 @@ public:
     {
         // This would typically come from the compressor
         // For now, estimate based on envelope follower
-        return juce::Decibels::gainToDecibels(std::max(envelopeFollower, SampleType{0.001}));
+        return juce::Decibels::gainToDecibels(std::max(_envelopeFollower, SampleType{0.001}));
     }
 
 private:
@@ -129,22 +129,22 @@ private:
         SampleType inputLevel = std::abs(input);
         
         // Update envelope
-        if (inputLevel > envelopeFollower)
+        if (inputLevel > _envelopeFollower)
         {
             // Fast attack
-            envelopeFollower += (inputLevel - envelopeFollower) * attackCoeff;
+            _envelopeFollower += (inputLevel - _envelopeFollower) * _attackCoeff;
         }
         else
         {
             // Slower release
-            envelopeFollower += (inputLevel - envelopeFollower) * releaseCoeff;
+            _envelopeFollower += (inputLevel - _envelopeFollower) * _releaseCoeff;
         }
         
         // Calculate gain reduction
         SampleType gainReduction = SampleType{1.0};
-        if (envelopeFollower > threshold)
+        if (_envelopeFollower > _threshold)
         {
-            gainReduction = threshold / (envelopeFollower + SampleType{1e-6});
+            gainReduction = _threshold / (_envelopeFollower + SampleType{1e-6});
         }
         
         return input * gainReduction;
@@ -152,26 +152,25 @@ private:
     
     void updateCoefficients()
     {
-        if (sampleRate > 0.0)
+        if (_sampleRate > 0.0)
         {
             // Calculate smoothing coefficients
             SampleType attackTimeMs = SampleType{0.1};  // 0.1ms attack
             SampleType releaseTimeMs = SampleType{10.0}; // 10ms release
-            
-            attackCoeff = SampleType{1.0} - std::exp(-SampleType{1.0} / (attackTimeMs * SampleType{0.001} * SampleType{sampleRate}));
-            releaseCoeff = SampleType{1.0} - std::exp(-SampleType{1.0} / (releaseTimeMs * SampleType{0.001} * SampleType{sampleRate}));
+            _attackCoeff = SampleType{1.0} - std::exp(-SampleType{1.0} / (attackTimeMs * SampleType{0.001} * _sampleRate));
+            _releaseCoeff = SampleType{1.0} - std::exp(-SampleType{1.0} / (releaseTimeMs * SampleType{0.001} * _sampleRate));
         }
     }
-    
-    double sampleRate = 44100.0;
-    bool enabled = true;
-    SampleType ceiling = SampleType{1.0};
-    SampleType threshold = SampleType{0.8};
-    SampleType envelopeFollower = SampleType{0};
-    SampleType attackCoeff = SampleType{0.9};
-    SampleType releaseCoeff = SampleType{0.01};
-    
-    juce::dsp::Compressor<SampleType> compressor;
+
+    double _sampleRate = 44100.0;
+    bool _enabled = true;
+    SampleType _ceiling = SampleType{1.0};
+    SampleType _threshold = SampleType{0.8};
+    SampleType _envelopeFollower = SampleType{0};
+    SampleType _attackCoeff = SampleType{0.9};
+    SampleType _releaseCoeff = SampleType{0.01};
+
+    juce::dsp::Compressor<SampleType> _compressor;
 };
 
 /**

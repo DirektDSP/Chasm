@@ -17,11 +17,11 @@ public:
     AllpassFilter() = default;
     
     /** Prepares the filter with sample rate and maximum delay time. */
-    void prepare(double sampleRate, double maxDelayMs)
+    void prepare(double newSampleRate, double maxDelayMs)
     {
-        this->sampleRate = sampleRate;
+        _sampleRate = newSampleRate;
         
-        auto maxDelaySamples = static_cast<size_t>(maxDelayMs * 0.001 * sampleRate) + 1;
+        auto maxDelaySamples = static_cast<size_t>(maxDelayMs * 0.001 * _sampleRate) + 1;
         delayLine.resize(maxDelaySamples, SampleType{0});
         
         reset();
@@ -30,8 +30,8 @@ public:
     /** Sets the delay time in milliseconds. */
     void setDelayTime(double delayMs)
     {
-        auto delaySamples = static_cast<double>(delayMs * 0.001 * sampleRate);
-        this->delaySamples = juce::jlimit(1.0, static_cast<double>(delayLine.size() - 1), delaySamples);
+        auto newDelaySamples = static_cast<double>(delayMs * 0.001 * _sampleRate);
+        this->delaySamples = juce::jlimit(1.0, static_cast<double>(delayLine.size() - 1), newDelaySamples);
     }
     
     /** Sets the feedback coefficient (-1.0 to 1.0). */
@@ -71,7 +71,7 @@ public:
 private:
     std::vector<SampleType> delayLine;
     size_t writeIndex = 0;
-    double sampleRate = 44100.0;
+    double _sampleRate = 44100.0;
     double delaySamples = 1.0;
     SampleType feedback = SampleType{0};
     

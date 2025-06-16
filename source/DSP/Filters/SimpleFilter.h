@@ -22,9 +22,9 @@ public:
     SimpleFilter() = default;
     
     /** Prepares the filter with sample rate. */
-    void prepare(double sampleRate)
+    void prepare(double newSampleRate)
     {
-        this->sampleRate = sampleRate;
+        _sampleRate = newSampleRate;
         reset();
     }
     
@@ -90,7 +90,7 @@ public:
 
 private:
     Type type = HighPass;
-    double sampleRate = 44100.0;
+    double _sampleRate = 44100.0;
     SampleType cutoffFreq = SampleType{1000};
     SampleType a = SampleType{1};
     SampleType lastInput = SampleType{0};
@@ -98,12 +98,12 @@ private:
     
     void updateCoefficients()
     {
-        auto omega = juce::MathConstants<double>::twoPi * cutoffFreq / sampleRate;
+        auto omega = juce::MathConstants<double>::twoPi * cutoffFreq / _sampleRate;
         
         if (type == HighPass)
         {
             auto rc = 1.0 / (cutoffFreq * juce::MathConstants<double>::twoPi);
-            auto dt = 1.0 / sampleRate;
+            auto dt = 1.0 / _sampleRate;
             a = static_cast<SampleType>(rc / (rc + dt));
         }
         else

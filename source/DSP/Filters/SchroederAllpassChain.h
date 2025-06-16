@@ -21,9 +21,9 @@ public:
     SchroederAllpassChain() = default;
     
     /** Prepares the chain with sample rate. */
-    void prepare(double sampleRate, int maxBlockSize)
+    void prepare(double newSampleRate)
     {
-        this->sampleRate = sampleRate;
+        _sampleRate = newSampleRate;
         
         // Prime delay times for diffusion (in milliseconds)
         // These values are carefully chosen to avoid harmonic relationships
@@ -31,15 +31,15 @@ public:
         
         for (size_t i = 0; i < NumAllpassFilters; ++i)
         {
-            allpassFilters[i].prepare(sampleRate, 100.0); // Max 100ms delay
+            allpassFilters[i].prepare(_sampleRate, 100.0); // Max 100ms delay
             allpassFilters[i].setDelayTime(delayTimes[i]);
             allpassFilters[i].setFeedback(SampleType{0.7}); // Default feedback
         }
         
         // Prepare parameter smoothers
-        delayTimeSmoother.prepare(sampleRate, 50.0); // 50ms smoothing
-        characterSmoother.prepare(sampleRate, 10.0); // 10ms smoothing
-        
+        delayTimeSmoother.prepare(_sampleRate, 50.0); // 50ms smoothing
+        characterSmoother.prepare(_sampleRate, 10.0); // 10ms smoothing
+
         delayTimeSmoother.setTargetValue(SampleType{30.0}); // Default 30ms
         characterSmoother.setTargetValue(SampleType{1.0});  // Default Q=1.0
         
@@ -101,7 +101,7 @@ private:
     Utils::ParameterSmoother<SampleType> delayTimeSmoother;
     Utils::ParameterSmoother<SampleType> characterSmoother;
     
-    double sampleRate = 44100.0;
+    double _sampleRate = 44100.0;
     
     void updateParameters()
     {

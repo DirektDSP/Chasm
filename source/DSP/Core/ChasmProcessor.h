@@ -20,13 +20,13 @@ public:
     ChasmProcessor() = default;
     
     /** Prepares the processor with sample rate and block size. */
-    void prepare(double sampleRate, int maxBlockSize)
+    void prepare(double newSampleRate, int newMaxBlockSize)
     {
-        this->sampleRate = sampleRate;
-        this->maxBlockSize = maxBlockSize;
+        this->sampleRate = newSampleRate;
+        this->maxBlockSize = newMaxBlockSize;
           // Prepare all DSP components
-        schroederChain.prepare(sampleRate, maxBlockSize);
-        stereoEnhancer.prepare(sampleRate, maxBlockSize);
+        schroederChain.prepare(sampleRate);
+        stereoEnhancer.prepare(sampleRate);
         limiter.prepare(sampleRate);
         
         // Prepare parameter smoothers with specified smoothing times from your table
@@ -205,8 +205,8 @@ private:
         }
     }
     
-    void applyMix(juce::AudioBuffer<SampleType>& wetBuffer,
-                  const juce::AudioBuffer<SampleType>& dryBuffer,
+    void applyMix(juce::AudioBuffer<SampleType>& wetBuff,
+                  const juce::AudioBuffer<SampleType>& dryBuff,
                   int numSamples)
     {
         for (int i = 0; i < numSamples; ++i)
@@ -215,10 +215,10 @@ private:
             auto wetGain = mixPercent / SampleType{100.0};
             auto dryGain = SampleType{1.0} - wetGain;
             
-            for (int channel = 0; channel < wetBuffer.getNumChannels(); ++channel)
+            for (int channel = 0; channel < wetBuff.getNumChannels(); ++channel)
             {
-                auto* wetData = wetBuffer.getWritePointer(channel);
-                auto* dryData = dryBuffer.getReadPointer(channel);
+                auto* wetData = wetBuff.getWritePointer(channel);
+                auto* dryData = dryBuff.getReadPointer(channel);
                 
                 wetData[i] = wetData[i] * wetGain + dryData[i] * dryGain;
             }

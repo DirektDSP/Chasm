@@ -18,10 +18,10 @@ public:
     StereoEnhancer() = default;
     
     /** Prepares the enhancer with sample rate and block size. */
-    void prepare(double sampleRate, int maxBlockSize)
+    void prepare(double newSampleRate)
     {
-        this->sampleRate = sampleRate;
-        
+        this->sampleRate = newSampleRate;
+
         // Prepare filters for frequency-dependent processing
         lowCutFilter.prepare(sampleRate);
         lowCutFilter.setType(Filters::SimpleFilter<SampleType>::HighPass);

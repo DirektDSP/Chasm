@@ -17,17 +17,17 @@ public:
     ParameterSmoother() = default;
     
     /** Prepares the smoother with sample rate and smoothing time. */
-    void prepare(double sampleRate, double smoothingTimeMs)
+    void prepare(double newSampleRate, double newSmoothingTimeMs)
     {
-        jassert(sampleRate > 0.0 && smoothingTimeMs >= 0.0);
-        
-        this->sampleRate = sampleRate;
-        this->smoothingTimeMs = smoothingTimeMs;
+        jassert(newSampleRate > 0.0 && newSmoothingTimeMs >= 0.0);
+
+        _sampleRate = newSampleRate;
+        _smoothingTimeMs = newSmoothingTimeMs;
         
         // Calculate smoothing coefficient
-        if (smoothingTimeMs > 0.0)
+        if (_smoothingTimeMs > 0.0)
         {
-            auto samplesForSmoothingTime = smoothingTimeMs * 0.001 * sampleRate;
+            auto samplesForSmoothingTime = _smoothingTimeMs * 0.001 * _sampleRate;
             smoothingCoeff = static_cast<SampleType>(1.0 - std::exp(-1.0 / samplesForSmoothingTime));
         }
         else
@@ -79,8 +79,8 @@ public:
     }
 
 private:
-    double sampleRate = 44100.0;
-    double smoothingTimeMs = 0.0;
+    double _sampleRate = 44100.0;
+    double _smoothingTimeMs = 0.0;
     SampleType smoothingCoeff = SampleType{1};
     SampleType currentValue = SampleType{0};
     SampleType targetValue = SampleType{0};
