@@ -55,11 +55,11 @@ public:
         // Input/Output Gains (-24 to +24 dB, Linear, 5ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"INPUT_GAIN", 1}, "Input Gain", 
-            juce::NormalisableRange<float>(-24.0f, 24.0f, 0.1f), 0.0f));
+            juce::NormalisableRange<float>(-48.0f, 24.0f, 0.1f), 0.0f));
             
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"OUTPUT_GAIN", 1}, "Output Gain", 
-            juce::NormalisableRange<float>(-24.0f, 24.0f, 0.1f), 0.0f));
+            juce::NormalisableRange<float>(-48.0f, 24.0f, 0.1f), 0.0f));
         
         // Mix (0 to 100%, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
@@ -79,7 +79,7 @@ public:
         // Character (0.1 to 10 Q, Logarithmic, 10ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"CHARACTER", 1}, "Character", 
-            juce::NormalisableRange<float>(0.1f, 10.0f, 0.01f, 0.3f), 1.0f));
+            juce::NormalisableRange<float>(1.0f, 3.0f, 0.01f, 0.3f), 1.0f));
         
         // Low Cut (0 to 100%, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
