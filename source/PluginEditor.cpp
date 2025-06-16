@@ -24,6 +24,9 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         // activationUI->setCompanyLogo (std::make_unique<CompanyLogo>());
     }
 
+    addAndMakeVisible (timestampLabel);
+    timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
+
     // Add a button to show an inspector (example usage of another module).
     addAndMakeVisible (inspectButton);
     inspectButton.onClick = [&] {
@@ -136,6 +139,8 @@ void PluginEditor::resized()
     layoutSliderWithLabel(widthSlider, widthLabel, row3.removeFromLeft(row3.getWidth() / 4));
     layoutToggleWithLabel(limiterToggle, limiterLabel, row3.removeFromLeft(row3.getWidth() / 3));
     layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
+
+    timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
     // IMPORTANT: Ensure the activation UI is resized as well.
     MOONBASE_RESIZE_ACTIVATION_UI

@@ -4,6 +4,7 @@
 #include "BinaryData.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 #include "PresetPanel.h"
+#include "UI/Utils/Timestamp.h"
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
@@ -26,6 +27,8 @@ private:
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };
+
+    TimestampLabel timestampLabel;
     
     // keep aspect ratio when resizing :)
     juce::ComponentBoundsConstrainer constrainer;

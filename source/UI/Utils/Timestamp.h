@@ -12,19 +12,14 @@ Used for checking build times when developing.
 
 using namespace juce;
 
-class ExtLabel : public Label
+class TimestampLabel : public Label
 {
 public:
-	ExtLabel() : Label("", "")
+	TimestampLabel() : Label("", "")
 	{
 		setMouseCursor(MouseCursor::PointingHandCursor);
   		setTooltip("Visit DirektDSP.com for more information");
 		setLookAndFeel(&mainLabelLookAndFeel);
-
-		// create a string with the current build time
-		auto buildTime = String(__DATE__) + " " + String(__TIME__);
-
-		setText("DirektDSP - " + buildTime, NotificationType::dontSendNotification);
 	}
 
 	// click = open link
@@ -36,7 +31,7 @@ public:
 		}
 	}
 
-	~ExtLabel()
+	~TimestampLabel()
 	{
 		setLookAndFeel(nullptr);
 	}
@@ -54,5 +49,5 @@ private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MainLabelLookAndFeel)
 	} mainLabelLookAndFeel;
 
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ExtLabel)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TimestampLabel)
 };
