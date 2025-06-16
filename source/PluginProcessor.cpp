@@ -94,7 +94,11 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
     // Prepare the DSP processor
-    dspProcessor.prepare(sampleRate, samplesPerBlock);
+    juce::dsp::ProcessSpec spec;
+    spec.sampleRate = sampleRate;
+    spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
+    spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
+    dspProcessor.prepare(spec);
 }
 
 void PluginProcessor::releaseResources()
@@ -149,18 +153,20 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     bool limiterEnabled = *apvts.getRawParameterValue("LIMITER") > 0.5f;
 
     // Update DSP processor parameters
-    dspProcessor.setInputGain(inputGain);
-    dspProcessor.setOutputGain(outputGain);
-    dspProcessor.setMix(mix);
-    dspProcessor.setDelay(delay);
-    dspProcessor.setBrightness(brightness);
-    dspProcessor.setCharacter(character);
-    dspProcessor.setLowCut(lowCut);
-    dspProcessor.setHighCut(highCut);
-    dspProcessor.setWidth(width);
-    dspProcessor.setLimiterEnabled(limiterEnabled);
+    // dspProcessor.setInputGain(inputGain);
+    // dspProcessor.setOutputGain(outputGain);
+    // dspProcessor.setMix(mix);
+    // dspProcessor.setDelay(delay);
+    // dspProcessor.setBrightness(brightness);
+    // dspProcessor.setCharacter(character);
+    // dspProcessor.setLowCut(lowCut);
+    // dspProcessor.setHighCut(highCut);
+    // dspProcessor.setWidth(width);
+    // dspProcessor.setLimiterEnabled(limiterEnabled);
+    dspProcessor.updateParameters(inputGain, outputGain, mix, delay, brightness,
+                                  character, lowCut, highCut, width, limiterEnabled);
 
-    // Process the audio
+    // Process the audio using function from
     dspProcessor.processBlock(buffer);
 }
 

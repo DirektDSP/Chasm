@@ -25,15 +25,15 @@
 #include "Effects/Limiter.h"
 
 // Core DSP processor
-#include "Core/ChasmProcessor.h"
+#include "Core/ChasmDSPProcessor.h"
 
 namespace DSP {
 
 /**
  * Convenience aliases for common types.
  */
-using FloatProcessor = Core::ChasmProcessor<float>;
-using DoubleProcessor = Core::ChasmProcessor<double>;
+using FloatProcessor = Core::ChasmDSPProcessor<float>;
+using DoubleProcessor = Core::ChasmDSPProcessor<double>;
 
 using FloatParameterSmoother = Utils::ParameterSmoother<float>;
 using DoubleParameterSmoother = Utils::ParameterSmoother<double>;

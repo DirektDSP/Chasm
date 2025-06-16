@@ -6,7 +6,7 @@
 // DSP Components
 #include "../Utils/ParameterSmoother.h"
 #include "../Utils/DSPUtils.h"
-#include "../Filters/SchroederAllpass.h"
+#include "../Filters/SchroederAllpassChain.h"
 #include "../Filters/EQFilters.h"
 #include "../Effects/StereoEnhancer.h"
 #include "../Effects/Limiter.h"
@@ -32,8 +32,8 @@ public:
         numChannels = static_cast<int>(spec.numChannels);
         
         // Prepare all DSP components
-        leftAllpassChain.prepare(sampleRate, 100.0);  // Max 100ms delay
-        rightAllpassChain.prepare(sampleRate, 100.0);
+        leftAllpassChain.prepare(sampleRate);  // Max 100ms delay
+        rightAllpassChain.prepare(sampleRate);
         
         brightnessEQ.prepare(spec);
         dualCutFilter.prepare(spec);
@@ -111,7 +111,28 @@ public:
             // Process single sample
             processSingleSample(buffer, i, inputGain, outputGain, mix);
         }
-        
+
+        // Apply stereo enhancement ONCE per buffer (if stereo)
+        if (buffer.getNumChannels() >= 2)
+        {
+            stereoEnhancer.processBlock(wetBuffer);
+        }
+
+        // After enhancement, mix dry/wet and apply output gain
+        for (int i = 0; i < numSamples; ++i)
+        {
+            for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+            {
+                auto* channelData = buffer.getWritePointer(channel);
+                SampleType drySample = dryBuffer.getSample(channel, i);
+                SampleType wetSample = wetBuffer.getSample(channel, i);
+                SampleType mix = mixSmoother.getCurrentValue();
+                SampleType outputGain = outputGainSmoother.getCurrentValue();
+                SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
+                channelData[i] = mixedSample * outputGain;
+            }
+        }
+
         // Apply final limiter
         limiter.processBlock(buffer);
     }
@@ -211,11 +232,12 @@ private:
             leftSample = dualCutFilter.processSample(leftSample);
             rightSample = dualCutFilter.processSample(rightSample);
             
-            // Stereo enhancement
-            stereoEnhancer.processStereoSample(leftSample, rightSample);
-            
             wetBuffer.setSample(0, sampleIndex, leftSample);
             wetBuffer.setSample(1, sampleIndex, rightSample);
+            
+            // Stereo enhancement (removed from per-sample processing)
+            // stereoEnhancer.processStereoSample(leftSample, rightSample);
+            
         }
         else if (buffer.getNumChannels() == 1)
         {
