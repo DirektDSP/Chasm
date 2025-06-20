@@ -51,6 +51,7 @@ jobs:
       # Setup MSVC toolchain and developer command prompt (Windows)
       - uses: ilammy/msvc-dev-cmd@v1
 
+
       # Use clang on Linux so we don't introduce a 3rd compiler (Windows and macOS use MSVC and Clang)
       - name: Set up Clang
         if: runner.os == 'Linux'
@@ -106,6 +107,9 @@ jobs:
         with:
           submodules: recursive
           token: ${{ secrets.PAT }}
+
+      - name: Recreate moonbase_api_config.json
+        run: echo "${{ secrets.CONFIG_JSON_B64 }}" | base64 --decode > moonbase_api_config.json
 
       - name: Cache the build
         uses: mozilla-actions/sccache-action@v0.0.8
