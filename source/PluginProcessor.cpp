@@ -99,6 +99,8 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
     spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
     dspProcessor.prepare(spec);
+
+    MOONBASE_PREPARE_TO_PLAY (sampleRate, samplesPerBlock);
 }
 
 void PluginProcessor::releaseResources()
@@ -168,6 +170,8 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     // Process the audio using function from
     dspProcessor.processBlock(buffer);
+
+    MOONBASE_PROCESS (buffer);
 }
 
 //==============================================================================
