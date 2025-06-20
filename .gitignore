@@ -31,3 +31,4 @@ cmake-build-release
 cmake-build-relwithdebinfo
 packaging/Output/*
 /build
+/assets/moonbase_api_config.json
