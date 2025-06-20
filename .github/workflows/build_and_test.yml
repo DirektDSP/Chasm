@@ -112,7 +112,7 @@ jobs:
         run: echo "${{ secrets.CONFIG_JSON_B64 }}" | base64 --decode > moonbase_api_config.json
 
       - name: Cache the build
-        uses: mozilla-actions/sccache-action@v0.0.8
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - name: Import Certificates (macOS)
         uses: sudara/basic-macos-keychain-action@v1
