@@ -28,7 +28,7 @@ public:
             // Configure compressor for limiting
             _compressor.setAttack(SampleType{0.1});   // 0.1ms attack
             _compressor.setRelease(SampleType{10.0}); // 10ms release
-            _compressor.setThreshold(SampleType{-0.5}); // -0.5dB threshold
+            _compressor.setThreshold(SampleType{-0.0}); // -0.0dB threshold
             _compressor.setRatio(SampleType{20.0});   // High ratio for limiting
     
             reset();
