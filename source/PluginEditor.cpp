@@ -54,8 +54,8 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(delaySlider, delayLabel, "Delay", "ms");
     setupSlider(brightnessSlider, brightnessLabel, "Brightness", "dB");
     setupSlider(characterSlider, characterLabel, "Character", "");
-    setupSlider(lowCutSlider, lowCutLabel, "Low Cut", "%");
-    setupSlider(highCutSlider, highCutLabel, "High Cut", "%");
+    setupSlider(lowCutSlider, lowCutLabel, "Low Cut", "Hz");
+    setupSlider(highCutSlider, highCutLabel, "High Cut", "Hz");
     setupSlider(widthSlider, widthLabel, "Width", "%");
 
     // Setup toggle buttons

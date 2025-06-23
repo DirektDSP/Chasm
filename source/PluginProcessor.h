@@ -81,15 +81,15 @@ public:
             juce::ParameterID{"CHARACTER", 1}, "Character", 
             juce::NormalisableRange<float>(1.0f, 3.0f, 0.01f, 0.3f), 1.0f));
         
-        // Low Cut (0 to 100%, Linear, 20ms smoothing)
+        // Low Cut (0 to 20khz, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"LOW_CUT", 1}, "Low Cut", 
-            juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
+            juce::NormalisableRange<float>(0.0f, 20000.0f, 0.1f), 0.0f));
         
-        // High Cut (0 to 100%, Linear, 20ms smoothing)
+        // High Cut (0 to 20khz, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"HIGH_CUT", 1}, "High Cut", 
-            juce::NormalisableRange<float>(0.0f, 100.0f, 0.1f), 0.0f));
+            juce::NormalisableRange<float>(0.0f, 20000.0f, 0.1f), 0.0f));
         
         // Width (0 to 200%, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
