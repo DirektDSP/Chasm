@@ -1,6 +1,6 @@
 # Getting Started with
 
-This guide will walk you through the process of installing CherryBomb, setting up your first project, and beginning your social media data analysis journey.
+This guide will walk you through the process of installing Chasm
 
 ## System Requirements
 
@@ -15,6 +15,4 @@ or you can build it from source if you know how.
 
 ## Next Steps
 
-- Learn about [Dataset Management](core-concepts/dataset-management.md) to organize your data
-- Explore [Trend Analysis](core-concepts/trend-analysis.md) to identify patterns
-- Understand [Prediction Models](core-concepts/prediction-models.md) to optimize future content
+Go make something cool with Chasm!!!
