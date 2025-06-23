@@ -7,9 +7,10 @@ namespace Service
 	const File PresetManager::defaultDirectory{ File::getSpecialLocation(
 		File::SpecialLocationType::commonDocumentsDirectory)
 			.getChildFile("DirektDSP")
-			.getChildFile("MiniDist")
+			.getChildFile(JucePlugin_Name)
+			.getChildFile("Presets")
 	};
-	const String PresetManager::extension{ "fxp" };
+	const String PresetManager::extension{ "ddsp" };
 	const String PresetManager::presetNameProperty{ "presetName" };
 
 	PresetManager::PresetManager(AudioProcessorValueTreeState& apvts) :
