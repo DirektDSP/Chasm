@@ -16,7 +16,7 @@ June 2025
   - [x] change location of saved presets
   - [ ] check for changes after every save, delete or plugin load
 
-- [ ] Implement multiple stereo widening modes (% offset, max offset of 'n' ms)
+- [ ] Implement multiple stere[[Chasm x Korzana]] widening modes (% offset, max offset of 'n' ms)
   - [ ] Simple Haas based widening (Phasing Issues)
   - [ ] Different diffusion settings / offset on L/R (Super wide)
   - [ ] Boost existing sides after diffusion with M/S split (saturation or compression on sides)
