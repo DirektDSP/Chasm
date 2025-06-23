@@ -20,6 +20,7 @@ PluginProcessor::PluginProcessor()
 
     apvts.state.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
     presetManager = std::make_unique<Service::PresetManager>(apvts);
+
 }
 
 PluginProcessor::~PluginProcessor()
@@ -155,18 +156,9 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     bool limiterEnabled = *apvts.getRawParameterValue("LIMITER") > 0.5f;
 
     // Update DSP processor parameters
-    // dspProcessor.setInputGain(inputGain);
-    // dspProcessor.setOutputGain(outputGain);
-    // dspProcessor.setMix(mix);
-    // dspProcessor.setDelay(delay);
-    // dspProcessor.setBrightness(brightness);
-    // dspProcessor.setCharacter(character);
-    // dspProcessor.setLowCut(lowCut);
-    // dspProcessor.setHighCut(highCut);
-    // dspProcessor.setWidth(width);
-    // dspProcessor.setLimiterEnabled(limiterEnabled);
     dspProcessor.updateParameters(inputGain, outputGain, mix, delay, brightness,
                                   character, lowCut, highCut, width, limiterEnabled);
+
 
     // Process the audio using function from
     dspProcessor.processBlock(buffer);

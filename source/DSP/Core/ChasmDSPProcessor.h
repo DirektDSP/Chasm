@@ -22,7 +22,15 @@ template<typename SampleType>
 class ChasmDSPProcessor
 {
 public:
-    ChasmDSPProcessor() = default;
+    ChasmDSPProcessor()
+    {
+        lowCutFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
+        highCutFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+
+        // Butterworth response ( 1 / sqrt(2) ) -> 12 dB/octave
+        lowCutFilter.setResonance(SampleType{0.707}); 
+        highCutFilter.setResonance(SampleType{0.707}); 
+    }
     
     /** Prepares all DSP components. */
     void prepare(const juce::dsp::ProcessSpec& spec)
@@ -47,6 +55,13 @@ public:
         wetBuffer.setSize(numChannels, samplesPerBlock);
         dryBuffer.setSize(numChannels, samplesPerBlock);
         
+        lowCutFilter.prepare(spec);
+        lowCutFilter.reset();
+
+        highCutFilter.prepare(spec);
+        highCutFilter.reset();
+        
+        
         reset();
     }
     
@@ -66,8 +81,20 @@ public:
         lowCutSmoother.setTargetValue(lowCutPercent);
         highCutSmoother.setTargetValue(highCutPercent);
         widthSmoother.setTargetValue(widthPercent);
+
+
+        // update the filters if they have changed
+
+        if (lowCutSmoother.getCurrentValue() != lastLowCut) {
+            lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
+            lastLowCut = lowCutSmoother.getCurrentValue();
+        }
+        if (highCutSmoother.getCurrentValue() != lastHighCut) {
+            highCutFilter.setCutoffFrequency(highCutSmoother.getNextValue());
+            lastHighCut = highCutSmoother.getCurrentValue();
+        }
         
-        // Limiter is not smoothed (binary parameter)
+        // boolean parameters can't be smoothed, duhh
         limiter.setEnabled(limiterEnabled);
     }
     
@@ -226,12 +253,20 @@ private:
             rightSample = rightAllpassChain.processSample(rightSample);
             
             // EQ and filtering
-            leftSample = brightnessEQ.processSample(leftSample);
-            rightSample = brightnessEQ.processSample(rightSample);
+            // leftSample = brightnessEQ.processSample(leftSample);
+            // rightSample = brightnessEQ.processSample(rightSample);
             
-            leftSample = dualCutFilter.processSample(leftSample);
-            rightSample = dualCutFilter.processSample(rightSample);
+            // leftSample = dualCutFilter.processSample(leftSample);
+            // rightSample = dualCutFilter.processSample(rightSample);
+
+            // filters
+            leftSample = lowCutFilter.processSample(0, leftSample);
+            leftSample = highCutFilter.processSample(0, leftSample);
+
+            rightSample = lowCutFilter.processSample(1, rightSample);
+            rightSample = highCutFilter.processSample(1, rightSample);
             
+            // Store processed samples back to wet buffer            
             wetBuffer.setSample(0, sampleIndex, leftSample);
             wetBuffer.setSample(1, sampleIndex, rightSample);
             
@@ -272,6 +307,10 @@ private:
     Effects::StereoEnhancer<SampleType> stereoEnhancer;
     Effects::SmoothLimiter<SampleType> limiter;
     
+    // Filters
+    juce::dsp::StateVariableTPTFilter<float> lowCutFilter;
+    juce::dsp::StateVariableTPTFilter<float> highCutFilter;
+
     // Parameter Smoothers
     Utils::ParameterSmoother<SampleType> inputGainSmoother;
     Utils::ParameterSmoother<SampleType> outputGainSmoother;
@@ -291,6 +330,9 @@ private:
     double sampleRate = 44100.0;
     int samplesPerBlock = 512;
     int numChannels = 2;
+
+    float lastLowCut = 0.0f;  // Last low cut frequency
+    float lastHighCut = 0.0f; // Last high cut frequency
 };
 
 } // namespace Core

@@ -110,8 +110,10 @@ public:
 private:
 
     std::unique_ptr<Service::PresetManager> presetManager;
-      // DSP Processor
+
+    // DSP Processor
     DSP::FloatProcessor dspProcessor;
+
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
 };
