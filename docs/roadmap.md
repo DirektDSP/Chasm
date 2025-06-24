@@ -24,7 +24,7 @@ June 2025
 ### In Progress
 
 - [ ] Fix filters for Brightness, Low cut and High cut
-  - [ ] Make High and low cut sliders logarithmic
+  - [x] Make High and low cut sliders logarithmic
   - [ ] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
   - [ ] Slope dropdown?
   - [ ] (uber crazy) visual of eq
