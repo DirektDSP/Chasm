@@ -87,10 +87,35 @@ public:
 
         if (lowCutSmoother.getCurrentValue() != lastLowCut) {
             lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
+
+            // if we are close to 20hz, slowly make the filter flat
+            // linearly interpolate to no resonance from 80hz to 20hz
+            double next = lowCutSmoother.getNextValue();
+            if (next < 80.0) {
+                
+                double res = 0.707  * (next / 80.0); // linearly interpolate from 0.707 to 0.0
+                lowCutFilter.setResonance(static_cast<SampleType>(res));
+            } else {
+                lowCutFilter.setResonance(0.707); // restore default resonance
+            }
+
             lastLowCut = lowCutSmoother.getCurrentValue();
         }
         if (highCutSmoother.getCurrentValue() != lastHighCut) {
             highCutFilter.setCutoffFrequency(highCutSmoother.getNextValue());
+
+
+            // if we are close to 20Khz, slowly make the filter flat
+            // linearly interpolate to no resonance from 19.5Khz to 20hz
+            double next = highCutSmoother.getNextValue();
+            if (next > 19500.0) {
+
+                double res = 0.707  * ((20000 - next) / 19500.0); // linearly interpolate from 0.707 to 0.0
+                highCutFilter.setResonance(static_cast<SampleType>(res));
+            } else {
+                highCutFilter.setResonance(0.707); // restore default resonance
+            }
+
             lastHighCut = highCutSmoother.getCurrentValue();
         }
         

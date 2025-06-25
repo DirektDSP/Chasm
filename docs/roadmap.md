@@ -29,7 +29,6 @@ June 2025
   - [ ] Slope dropdown?
   - [ ] (uber crazy) visual of eq
   - [ ] Implement high shelf for brightness
-  - [ ]  
 
 ### Completed
 
