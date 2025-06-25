@@ -37,7 +37,7 @@ public:
     {
         sampleRate = spec.sampleRate;
         samplesPerBlock = static_cast<int>(spec.maximumBlockSize);
-        numChannels = static_cast<int>(spec.numChannels);
+        numChannels = 2; // Stereo processing 
         
         // Prepare all DSP components
         leftAllpassChain.prepare(sampleRate);  // Max 100ms delay
@@ -156,6 +156,8 @@ public:
         // Apply stereo enhancement 
         // stereoEnhancer.processBlock(wetBuffer);
 
+        brightnessEQ.processBlock(wetBuffer);
+
         // After enhancement, mix dry/wet and apply output gain
         for (int i = 0; i < numSamples; ++i)
         {
@@ -268,26 +270,20 @@ private:
             rightSample = highCutFilter.processSample(1, rightSample);
         }
          
-        // brightness EQ
-        leftSample = brightnessEQ.processSample(leftSample);
-        rightSample = brightnessEQ.processSample(rightSample);
-
-        //
-
         // Store processed samples back to wet buffer            
         wetBuffer.setSample(0, sampleIndex, leftSample);
         wetBuffer.setSample(1, sampleIndex, rightSample);
         
-        // Mix dry and wet signals with output gain
-        for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-        {
-            auto* channelData = buffer.getWritePointer(channel);
-            SampleType drySample = dryBuffer.getSample(channel, sampleIndex);
-            SampleType wetSample = wetBuffer.getSample(channel, sampleIndex);
+        // // Mix dry and wet signals with output gain
+        // for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+        // {
+        //     auto* channelData = buffer.getWritePointer(channel);
+        //     SampleType drySample = dryBuffer.getSample(channel, sampleIndex);
+        //     SampleType wetSample = wetBuffer.getSample(channel, sampleIndex);
             
-            SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
-            channelData[sampleIndex] = mixedSample * outputGain;
-        }
+        //     SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
+        //     channelData[sampleIndex] = mixedSample * outputGain;
+        // }
     }
     
     // DSP Components
