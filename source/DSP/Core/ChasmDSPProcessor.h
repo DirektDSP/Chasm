@@ -118,67 +118,70 @@ public:
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
     {
         jassert(buffer.getNumChannels() >= 1);
-        
-        int numSamples = buffer.getNumSamples();
-        
-        // Ensure working buffers are the right size
-        if (wetBuffer.getNumSamples() != numSamples)
+       
+        for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
         {
-            wetBuffer.setSize(numChannels, numSamples, false, false, true);
-            dryBuffer.setSize(numChannels, numSamples, false, false, true);
-        }
-        
-        // Store dry signal
-        dryBuffer.makeCopyOf(buffer);
-        
-        // Process each sample with parameter smoothing
-        for (int i = 0; i < numSamples; ++i)
-        {
-            // Get smoothed parameter values for this sample
-            SampleType inputGain = inputGainSmoother.getNextValue();
-            SampleType outputGain = outputGainSmoother.getNextValue();
-            SampleType mix = mixSmoother.getNextValue();
-            SampleType delay = delaySmoother.getNextValue();
-            SampleType brightness = brightnessSmoother.getNextValue();
-            SampleType character = characterSmoother.getNextValue();
-            SampleType lowCut = lowCutSmoother.getNextValue();
-            SampleType highCut = highCutSmoother.getNextValue();
-            SampleType width = widthSmoother.getNextValue();
+            int numSamples = buffer.getNumSamples();
             
-            // Update DSP components with smoothed values
-            if (i == 0 || shouldUpdateDSPComponents(i))
+            // Ensure working buffers are the right size
+            if (wetBuffer.getNumSamples() != numSamples)
             {
-                updateDSPComponents(delay, brightness, character, width);
+                wetBuffer.setSize(numChannels, numSamples, false, false, true);
+                dryBuffer.setSize(numChannels, numSamples, false, false, true);
             }
             
-            // Process single sample
-            // this method overwrites data in wetBuffer
-            processSingleSample(buffer, i, inputGain, outputGain, mix);
-        }
-
-        // apply brightness eq
-        brightnessEQ.processBlock(wetBuffer);
-
-        // Apply stereo enhancement 
-        stereoEnhancer.processBlock(wetBuffer);
-
-        // After enhancement, mix dry/wet and apply output gain
-        for (int i = 0; i < numSamples; ++i)
-        {
-            for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+            // Store dry signal
+            dryBuffer.makeCopyOf(buffer);
+            
+            // Process each sample with parameter smoothing
+            for (int i = 0; i < numSamples; ++i)
             {
-                auto* channelData = buffer.getWritePointer(channel);
-                SampleType drySample = dryBuffer.getSample(channel, i);
-                SampleType wetSample = wetBuffer.getSample(channel, i);
-                SampleType mix = mixSmoother.getCurrentValue();
-                SampleType outputGain = outputGainSmoother.getCurrentValue();
-                SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
-                channelData[i] = mixedSample * outputGain;
+                // Get smoothed parameter values for this sample
+                SampleType inputGain = inputGainSmoother.getNextValue();
+                SampleType outputGain = outputGainSmoother.getNextValue();
+                SampleType mix = mixSmoother.getNextValue();
+                SampleType delay = delaySmoother.getNextValue();
+                SampleType brightness = brightnessSmoother.getNextValue();
+                SampleType character = characterSmoother.getNextValue();
+                SampleType lowCut = lowCutSmoother.getNextValue();
+                SampleType highCut = highCutSmoother.getNextValue();
+                SampleType width = widthSmoother.getNextValue();
+                
+                // Update DSP components with smoothed values
+                if (i == 0 || shouldUpdateDSPComponents(i))
+                {
+                    updateDSPComponents(delay, brightness, character, width);
+                }
+                
+                // Process single sample
+                // this method overwrites data in wetBuffer
+                processSingleSample(buffer, i, inputGain, outputGain, mix);
             }
-        }
 
-        // Apply final limiter
-        limiter.processBlock(buffer);
+            // apply brightness eq
+            brightnessEQ.processBlock(wetBuffer);
+
+            // Apply stereo enhancement 
+            stereoEnhancer.processBlock(wetBuffer);
+
+            // After enhancement, mix dry/wet and apply output gain
+            for (int i = 0; i < numSamples; ++i)
+            {
+                for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
+                {
+                    auto* channelData = buffer.getWritePointer(channel);
+                    SampleType drySample = dryBuffer.getSample(channel, i);
+                    SampleType wetSample = wetBuffer.getSample(channel, i);
+                    SampleType mix = mixSmoother.getCurrentValue();
+                    SampleType outputGain = outputGainSmoother.getCurrentValue();
+                    SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
+                    channelData[i] = mixedSample * outputGain;
+                }
+            }
+
+            // Apply final limiter
+            limiter.processBlock(buffer);
+        }
     }
     
     /** Resets all DSP components. */
