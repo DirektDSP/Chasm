@@ -148,18 +148,19 @@ public:
             // Update DSP components with smoothed values
             if (i == 0 || shouldUpdateDSPComponents(i))
             {
-                updateDSPComponents(delay, brightness, character, lowCut, highCut, width);
+                updateDSPComponents(delay, brightness, character, width);
             }
             
             // Process single sample
+            // this method overwrites data in wetBuffer
             processSingleSample(buffer, i, inputGain, outputGain, mix);
         }
 
-        // Apply stereo enhancement ONCE per buffer (if stereo)
-        if (buffer.getNumChannels() >= 2)
-        {
-            stereoEnhancer.processBlock(wetBuffer);
-        }
+        // apply brightness eq
+        brightnessEQ.processBlock(wetBuffer);
+
+        // Apply stereo enhancement 
+        stereoEnhancer.processBlock(wetBuffer);
 
         // After enhancement, mix dry/wet and apply output gain
         for (int i = 0; i < numSamples; ++i)
@@ -222,8 +223,7 @@ private:
         return (sampleIndex % 32) == 0;
     }
     
-    void updateDSPComponents(SampleType delay, SampleType brightness, SampleType character,
-                           SampleType lowCut, SampleType highCut, SampleType width)
+    void updateDSPComponents(SampleType delay, SampleType brightness, SampleType character, SampleType width)
     {
         // Update allpass chains
         leftAllpassChain.setDelayTime(delay);
@@ -263,13 +263,6 @@ private:
         leftSample = leftAllpassChain.processSample(leftSample);
         rightSample = rightAllpassChain.processSample(rightSample);
             
-        // Brightness EQ
-        leftSample = brightnessEQ.processSample(leftSample);
-        rightSample = brightnessEQ.processSample(rightSample);
-                        
-        // Stereo enhancement (removed from per-sample processing)
-        // stereoEnhancer.processBlock(leftSample, rightSample);
-
         // cut filters
         if (lowCutActive){
             leftSample = lowCutFilter.processSample(0, leftSample);

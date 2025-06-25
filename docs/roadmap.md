@@ -27,6 +27,7 @@ June 2025
   - [x] Make High and low cut sliders logarithmic
   - [ ] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
   - [ ] Implement high shelf for brightness
+  - [ ] fix brightness side data
 
 ### Completed
 
