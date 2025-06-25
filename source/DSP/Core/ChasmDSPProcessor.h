@@ -140,8 +140,6 @@ public:
             SampleType delay = delaySmoother.getNextValue();
             SampleType brightness = brightnessSmoother.getNextValue();
             SampleType character = characterSmoother.getNextValue();
-            SampleType lowCut = lowCutSmoother.getNextValue();
-            SampleType highCut = highCutSmoother.getNextValue();
             SampleType width = widthSmoother.getNextValue();
                 
             // Update DSP components with smoothed values
@@ -156,7 +154,7 @@ public:
         }
 
         // Apply stereo enhancement 
-        stereoEnhancer.processBlock(wetBuffer);
+        // stereoEnhancer.processBlock(wetBuffer);
 
         // After enhancement, mix dry/wet and apply output gain
         for (int i = 0; i < numSamples; ++i)
