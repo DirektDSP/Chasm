@@ -54,9 +54,11 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(delaySlider, delayLabel, "Delay", "ms");
     setupSlider(brightnessSlider, brightnessLabel, "Brightness", "dB");
     setupSlider(characterSlider, characterLabel, "Character", "");
-    setupSlider(lowCutSlider, lowCutLabel, "Low Cut", "Hz");
-    setupSlider(highCutSlider, highCutLabel, "High Cut", "Hz");
     setupSlider(widthSlider, widthLabel, "Width", "%");
+    
+    // use suffix-less functions since these can be "off"
+    setupSlider(lowCutSlider, lowCutLabel, "Low Cut");
+    setupSlider(highCutSlider, highCutLabel, "High Cut");
 
     // Setup toggle buttons
     setupToggleButton(limiterToggle, limiterLabel, "Limiter");
@@ -158,6 +160,21 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, 20);
     slider.setTextValueSuffix(" " + suffix);
+    
+    label.setText(labelText, juce::dontSendNotification);
+    label.setJustificationType(juce::Justification::centred);
+    label.attachToComponent(&slider, false);
+}
+
+
+void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label, 
+                              const juce::String& labelText)
+{
+    addAndMakeVisible(slider);
+    addAndMakeVisible(label);
+    
+    slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, 20);
     
     label.setText(labelText, juce::dontSendNotification);
     label.setJustificationType(juce::Justification::centred);

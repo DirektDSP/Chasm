@@ -87,33 +87,25 @@ public:
 
         if (lowCutSmoother.getCurrentValue() != lastLowCut) {
             lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
-
-            // if we are close to 20hz, slowly make the filter flat
-            // linearly interpolate to no resonance from 80hz to 20hz
-            double next = lowCutSmoother.getNextValue();
-            if (next < 80.0) {
-                
-                double res = 0.707  * (next / 80.0); // linearly interpolate from 0.707 to 0.0
-                lowCutFilter.setResonance(static_cast<SampleType>(res));
+            
+            // if filter cutoff = minimum of, just turn it off
+            if (lowCutSmoother.getNextValue() <= SampleType{20.0}) {
+                lowCutActive = false;
             } else {
-                lowCutFilter.setResonance(0.707); // restore default resonance
+                lowCutActive = true;
             }
+
 
             lastLowCut = lowCutSmoother.getCurrentValue();
         }
         if (highCutSmoother.getCurrentValue() != lastHighCut) {
             highCutFilter.setCutoffFrequency(highCutSmoother.getNextValue());
 
-
-            // if we are close to 20Khz, slowly make the filter flat
-            // linearly interpolate to no resonance from 19.5Khz to 20hz
-            double next = highCutSmoother.getNextValue();
-            if (next > 19500.0) {
-
-                double res = 0.707  * ((20000 - next) / 19500.0); // linearly interpolate from 0.707 to 0.0
-                highCutFilter.setResonance(static_cast<SampleType>(res));
+            // if cutoff = maximum of, just turn it off
+            if (highCutSmoother.getNextValue() >= SampleType{20000.0}) {
+                highCutActive = false;
             } else {
-                highCutFilter.setResonance(0.707); // restore default resonance
+                highCutActive = true;
             }
 
             lastHighCut = highCutSmoother.getCurrentValue();
@@ -285,11 +277,15 @@ private:
             // rightSample = dualCutFilter.processSample(rightSample);
 
             // filters
-            leftSample = lowCutFilter.processSample(0, leftSample);
-            leftSample = highCutFilter.processSample(0, leftSample);
-
-            rightSample = lowCutFilter.processSample(1, rightSample);
-            rightSample = highCutFilter.processSample(1, rightSample);
+            if (lowCutActive){
+                leftSample = lowCutFilter.processSample(0, leftSample);
+                rightSample = lowCutFilter.processSample(1, rightSample);
+            }
+            
+            if (highCutActive){
+                leftSample = highCutFilter.processSample(0, leftSample);
+                rightSample = highCutFilter.processSample(1, rightSample);
+            }
             
             // Store processed samples back to wet buffer            
             wetBuffer.setSample(0, sampleIndex, leftSample);
@@ -358,6 +354,9 @@ private:
 
     float lastLowCut = 0.0f;  // Last low cut frequency
     float lastHighCut = 0.0f; // Last high cut frequency
+
+    bool lowCutActive = false;  // Is low cut filter active?
+    bool highCutActive = false; // Is high cut filter active?
 };
 
 } // namespace Core

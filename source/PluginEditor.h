@@ -20,7 +20,8 @@ public:
 private:
     // Helper functions for UI setup
     void setupSlider(juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
-    void setupToggleButton(juce::ToggleButton& button, juce::Label& label, const juce::String& labelText);
+    void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText);
+    void setupToggleButton (juce::ToggleButton& button, juce::Label& label, const juce::String& labelText);
     void layoutSliderWithLabel(juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
     void layoutToggleWithLabel(juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
     PluginProcessor& processorRef;
