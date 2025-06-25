@@ -28,6 +28,8 @@ June 2025
   - [ ] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
   - [ ] Slope dropdown?
   - [ ] (uber crazy) visual of eq
+  - [ ] Implement high shelf for brightness
+  - [ ]  
 
 ### Completed
 
