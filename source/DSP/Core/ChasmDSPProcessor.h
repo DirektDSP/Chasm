@@ -27,7 +27,7 @@ public:
         lowCutFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
         highCutFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
 
-        // Butterworth response ( 1 / sqrt(2) ) -> 12 dB/octave
+        // Butterworth response ( 1 / sqrt(2) ) & 12 dB/octave
         lowCutFilter.setResonance(SampleType{0.707}); 
         highCutFilter.setResonance(SampleType{0.707}); 
     }
@@ -37,15 +37,16 @@ public:
     {
         sampleRate = spec.sampleRate;
         samplesPerBlock = static_cast<int>(spec.maximumBlockSize);
-        numChannels = 2; // Stereo processing 
+        numChannels = static_cast<int>(spec.numChannels);
         
         // Prepare all DSP components
-        leftAllpassChain.prepare(sampleRate);  // Max 100ms delay
+        leftAllpassChain.prepare(sampleRate);
         rightAllpassChain.prepare(sampleRate);
+        limiter.prepare(sampleRate);
         
         brightnessEQ.prepare(spec);
+
         stereoEnhancer.setWidth(SampleType{100.0}); // Default 100% width
-        limiter.prepare(sampleRate);
         
         // Prepare parameter smoothers with their respective smoothing times
         prepareParameterSmoothers();
@@ -80,9 +81,7 @@ public:
         highCutSmoother.setTargetValue(highCutPercent);
         widthSmoother.setTargetValue(widthPercent);
 
-
         // update the filters if they have changed
-
         if (lowCutSmoother.getCurrentValue() != lastLowCut) {
             lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
             
@@ -272,18 +271,7 @@ private:
          
         // Store processed samples back to wet buffer            
         wetBuffer.setSample(0, sampleIndex, leftSample);
-        wetBuffer.setSample(1, sampleIndex, rightSample);
-        
-        // // Mix dry and wet signals with output gain
-        // for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-        // {
-        //     auto* channelData = buffer.getWritePointer(channel);
-        //     SampleType drySample = dryBuffer.getSample(channel, sampleIndex);
-        //     SampleType wetSample = wetBuffer.getSample(channel, sampleIndex);
-            
-        //     SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
-        //     channelData[sampleIndex] = mixedSample * outputGain;
-        // }
+        wetBuffer.setSample(1, sampleIndex, rightSample);        
     }
     
     // DSP Components
