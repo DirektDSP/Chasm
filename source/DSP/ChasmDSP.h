@@ -6,10 +6,8 @@
  * This header provides easy access to all DSP functionality:
  * - Schroeder Allpass Filter Chain for reverb/delay effects
  * - Stereo Enhancer for width control and frequency-dependent processing
- * - Simple filters for EQ and frequency shaping
  * - Limiter for output protection
  * - Parameter smoothing utilities
- * - Complete DSP processor
  */
 
 // Utility classes
@@ -18,7 +16,6 @@
 // Filter components
 #include "Filters/AllpassFilter.h"
 #include "Filters/SchroederAllpassChain.h"
-#include "Filters/SimpleFilter.h"
 
 // Effect components
 #include "Effects/StereoEnhancer.h"
@@ -43,9 +40,6 @@ using DoubleAllpassFilter = Filters::AllpassFilter<double>;
 
 using FloatAllpassChain = Filters::SchroederAllpassChain<float>;
 using DoubleAllpassChain = Filters::SchroederAllpassChain<double>;
-
-using FloatSimpleFilter = Filters::SimpleFilter<float>;
-using DoubleSimpleFilter = Filters::SimpleFilter<double>;
 
 using FloatStereoEnhancer = Effects::StereoEnhancer<float>;
 using DoubleStereoEnhancer = Effects::StereoEnhancer<double>;

@@ -44,7 +44,6 @@ public:
         rightAllpassChain.prepare(sampleRate);
         
         brightnessEQ.prepare(spec);
-        dualCutFilter.prepare(spec);
         stereoEnhancer.setWidth(SampleType{100.0}); // Default 100% width
         limiter.prepare(sampleRate);
         
@@ -101,8 +100,8 @@ public:
         if (highCutSmoother.getCurrentValue() != lastHighCut) {
             highCutFilter.setCutoffFrequency(highCutSmoother.getNextValue());
 
-            // if cutoff = maximum of, just turn it off
-            if (highCutSmoother.getNextValue() >= SampleType{20000.0}) {
+            // if cutoff >= maximum of, just turn it off
+            if (highCutSmoother.getNextValue() >= SampleType{19999.0}) {
                 highCutActive = false;
             } else {
                 highCutActive = true;
@@ -187,7 +186,6 @@ public:
         leftAllpassChain.reset();
         rightAllpassChain.reset();
         brightnessEQ.reset();
-        dualCutFilter.reset();
         stereoEnhancer.reset();
         limiter.reset();
         
@@ -235,8 +233,6 @@ private:
         
         // Update EQ and filters
         brightnessEQ.setBrightness(brightness);
-        dualCutFilter.setLowCut(lowCut);
-        dualCutFilter.setHighCut(highCut);
         
         // Update stereo enhancer
         stereoEnhancer.setWidth(width);
@@ -259,54 +255,35 @@ private:
         }
         
         // Process through DSP chain
-        if (buffer.getNumChannels() >= 2)
-        {
-            // Stereo processing
-            SampleType leftSample = wetBuffer.getSample(0, sampleIndex);
-            SampleType rightSample = wetBuffer.getSample(1, sampleIndex);
+        // Stereo processing
+        SampleType leftSample = wetBuffer.getSample(0, sampleIndex);
+        SampleType rightSample = wetBuffer.getSample(1, sampleIndex);
             
-            // Allpass filtering
-            leftSample = leftAllpassChain.processSample(leftSample);
-            rightSample = rightAllpassChain.processSample(rightSample);
+        // Allpass filtering
+        leftSample = leftAllpassChain.processSample(leftSample);
+        rightSample = rightAllpassChain.processSample(rightSample);
             
-            // EQ and filtering
-            // leftSample = brightnessEQ.processSample(leftSample);
-            // rightSample = brightnessEQ.processSample(rightSample);
-            
-            // leftSample = dualCutFilter.processSample(leftSample);
-            // rightSample = dualCutFilter.processSample(rightSample);
+        // Brightness EQ
+        leftSample = brightnessEQ.processSample(leftSample);
+        rightSample = brightnessEQ.processSample(rightSample);
+                        
+        // Stereo enhancement (removed from per-sample processing)
+        // stereoEnhancer.processBlock(leftSample, rightSample);
 
-            // filters
-            if (lowCutActive){
-                leftSample = lowCutFilter.processSample(0, leftSample);
-                rightSample = lowCutFilter.processSample(1, rightSample);
-            }
-            
-            if (highCutActive){
-                leftSample = highCutFilter.processSample(0, leftSample);
-                rightSample = highCutFilter.processSample(1, rightSample);
-            }
-            
-            // Store processed samples back to wet buffer            
-            wetBuffer.setSample(0, sampleIndex, leftSample);
-            wetBuffer.setSample(1, sampleIndex, rightSample);
-            
-            // Stereo enhancement (removed from per-sample processing)
-            // stereoEnhancer.processStereoSample(leftSample, rightSample);
-            
+        // cut filters
+        if (lowCutActive){
+            leftSample = lowCutFilter.processSample(0, leftSample);
+            rightSample = lowCutFilter.processSample(1, rightSample);
         }
-        else if (buffer.getNumChannels() == 1)
-        {
-            // Mono processing
-            SampleType sample = wetBuffer.getSample(0, sampleIndex);
             
-            // Process through left chain only for mono
-            sample = leftAllpassChain.processSample(sample);
-            sample = brightnessEQ.processSample(sample);
-            sample = dualCutFilter.processSample(sample);
-            
-            wetBuffer.setSample(0, sampleIndex, sample);
+        if (highCutActive){
+            leftSample = highCutFilter.processSample(0, leftSample);
+            rightSample = highCutFilter.processSample(1, rightSample);
         }
+            
+        // Store processed samples back to wet buffer            
+        wetBuffer.setSample(0, sampleIndex, leftSample);
+        wetBuffer.setSample(1, sampleIndex, rightSample);
         
         // Mix dry and wet signals with output gain
         for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
@@ -324,7 +301,6 @@ private:
     Filters::SchroederAllpassChain<SampleType> leftAllpassChain;
     Filters::SchroederAllpassChain<SampleType> rightAllpassChain;
     Filters::BrightnessEQ<SampleType> brightnessEQ;
-    Filters::DualCutFilter<SampleType> dualCutFilter;
     Effects::StereoEnhancer<SampleType> stereoEnhancer;
     Effects::SmoothLimiter<SampleType> limiter;
     
