@@ -83,14 +83,16 @@ public:
         
         // Low Cut Logarithmic (20hz to 20khz, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"LOW_CUT", 1}, "Low Cut", 
-            juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.2f), 20.0f,
+            juce::ParameterID{"LOW_CUT", 1},
+            "Low Cut", 
+            juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.2f),
+            20.0f,
             juce::String(),
             juce::AudioProcessorParameter::genericParameter,
             [](float value, int) {
                 if (value <= 20.0f)
                     return juce::String("Off");
-                return juce::String(juce::roundToInt(value) + " Hz");
+                return juce::String(juce::roundToInt(value)) + " Hz";
             },
             [](const juce::String& text) {
                 if (text.compareIgnoreCase("off") == 0)
@@ -108,7 +110,7 @@ public:
             [](float value, int) {
                 if (value >= 20000.0f)
                     return juce::String("Off");
-                return juce::String(juce::roundToInt(value) + " Hz");
+                return juce::String(juce::roundToInt(value)) + " Hz";
             },
             [](const juce::String& text) {
                 if (text.compareIgnoreCase("off") == 0)
