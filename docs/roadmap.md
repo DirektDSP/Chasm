@@ -2,7 +2,7 @@
 
 June 2025
 
-## DSP
+## Chasm DSP
 
 ### To Do
 
@@ -17,20 +17,28 @@ June 2025
   - [x] change location of saved presets
   - [ ] check for changes after every save, delete or plugin load
 
-- [ ] Implement multiple stereo widening modes (% offset, max offset of 'n' ms) (v0.1.6)
-  - [ ] Simple Haas based widening (Phasing Issues)
-  - [ ] Different diffusion settings / offset on L/R (Super wide)
-  - [ ] Boost existing sides after diffusion with M/S split (saturation or compression on sides)
+- [ ] Implement stereo widening (v0.1.6)
+  - [ ] Simple Haas based widening (Expand / Add wideness)
+  - [ ] Boost existing sides after diffusion with M/S split (exaggerate existing wideness)
 
 ### In Progress
 
 - [ ] Fix filters for Brightness, Low cut and High cut (v 0.1.2)
   - [x] Make High and low cut sliders logarithmic
   - [ ] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
-  - [ ] Dropdowns to control cut slopes
   - [ ] Implement high shelf for brightness
 
 ### Completed
 
 - [x] Basic licensing implementation (fix DSP when not licensed) (v0.1.1)
 - [x] Base DSP implementation for smear effect and wet/dry mixing (v0.1.0)
+
+
+### Possible future additions
+
+- [ ] Dropdowns to control cut slopes
+- [ ] LFOs to modulate parameters in the plugin
+- [ ] Visuals of filters / FX in the plugin
+- [ ] A/B testing
+- [ ] Multiple stereo widening modes
+- [ ] 

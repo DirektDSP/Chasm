@@ -85,26 +85,26 @@ public:
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"LOW_CUT", 1},
             "Low Cut", 
-            juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.2f),
-            20.0f,
+            juce::NormalisableRange<float>(0.0f, 20000.0f, 0.1f, 0.2f),
+            0.0f,
             juce::String(),
             juce::AudioProcessorParameter::genericParameter,
             [](float value, int) {
-                if (value <= 20.0f)
+                if (value <= 0.0f)
                     return juce::String("Off");
                 return juce::String(juce::roundToInt(value)) + " Hz";
             },
             [](const juce::String& text) {
                 if (text.compareIgnoreCase("off") == 0)
-                    return 20.0f;
+                    return 0.0f;
                 return text.getFloatValue();
             }
         ));
         
         // High Cut Logarithmic (20hz to 20khz, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"HIGH_CUT", 1}, "High Cut", 
-            juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.2f), 20000.0f,
+            juce::ParameterID{"HIGH_CUT", 1}, "High Cut",
+            juce::NormalisableRange<float>(0.0f, 20000.0f, 0.1f, 0.2f), 20000.0f,
             juce::String(),
             juce::AudioProcessorParameter::genericParameter,
             [](float value, int) {
