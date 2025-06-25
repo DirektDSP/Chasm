@@ -89,7 +89,7 @@ public:
             lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
             
             // if filter cutoff = minimum of, just turn it off
-            if (lowCutSmoother.getNextValue() <= SampleType{20.0}) {
+            if (lowCutSmoother.getNextValue() <= SampleType{1.0}) {
                 lowCutActive = false;
             } else {
                 lowCutActive = true;
