@@ -79,7 +79,7 @@ public:
         // Character (0.1 to 10 Q, Logarithmic, 10ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"CHARACTER", 1}, "Character", 
-            juce::NormalisableRange<float>(1.0f, 3.0f, 0.01f, 0.3f), 1.0f));
+            juce::NormalisableRange<float>(0.1f, 2.0f, 0.01f), 1.0f));
         
         // Low Cut Logarithmic (20hz to 20khz, Linear, 20ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(

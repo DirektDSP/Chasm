@@ -6,10 +6,6 @@ June 2025
 
 ### To Do
 
-- [ ] Modify character implementation to significantly reduce gain (v0.1.4)
-
-- [ ] Ensure mono compatible filters (use plugin doctor to test)
-
 - [ ] fix preset manager (list doesnt update on delete even after reload) (v0.1.5)
   - [x] change location of saved presets
   - [ ] check for changes after every save, delete or plugin load
@@ -20,6 +16,7 @@ June 2025
 
 ### In Progress
 
+- [ ] Modify character implementation to significantly reduce gain (v0.1.4)
 
 ### Completed
 
@@ -39,7 +36,6 @@ June 2025
   - [x] Implementation into DSP Processor
   - [x] Implementation into Plugin Processor
 
-
 ### Possible future additions
 
 - [ ] Dropdowns to control cut slopes
@@ -47,4 +43,4 @@ June 2025
 - [ ] Visuals of filters / FX in the plugin
 - [ ] A/B testing
 - [ ] Multiple stereo widening modes
-- [ ] 
+- [ ]
