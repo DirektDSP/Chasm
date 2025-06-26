@@ -9,7 +9,7 @@
 #include "../Filters/SchroederAllpassChain.h"
 #include "../Filters/EQFilters.h"
 #include "../Effects/StereoEnhancer.h"
-#include "../Effects/Limiter.h"
+#include "../Effects/MakeItLoud.h
 
 namespace DSP {
 namespace Core {
@@ -37,7 +37,6 @@ public:
 
         leftAllpassChain.prepare(sampleRate);
         rightAllpassChain.prepare(sampleRate);
-        limiter.prepare(sampleRate);
         brightnessEQ.prepare(spec);
 
         stereoEnhancer.setWidth(SampleType{100.0});
@@ -59,7 +58,7 @@ public:
     void updateParameters(SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent,
                           SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
                           SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
-                          bool limiterEnabled)
+                          bool makeItLoudEnabled)
     {
         inputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(inputGainDb));
         outputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(outputGainDb));
@@ -71,7 +70,6 @@ public:
         highCutSmoother.setTargetValue(highCutPercent);
         widthSmoother.setTargetValue(widthPercent);
 
-        limiter.setEnabled(limiterEnabled);
     }
 
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
@@ -132,7 +130,6 @@ public:
             }
         }
 
-        limiter.processBlock(buffer);
     }
 
     void reset()
@@ -141,7 +138,6 @@ public:
         rightAllpassChain.reset();
         brightnessEQ.reset();
         stereoEnhancer.reset();
-        limiter.reset();
 
         inputGainSmoother.reset(SampleType{1.0});
         outputGainSmoother.reset(SampleType{1.0});
@@ -212,7 +208,6 @@ private:
     Filters::SchroederAllpassChain<SampleType> rightAllpassChain;
     Filters::BrightnessEQ<SampleType> brightnessEQ;
     Effects::StereoEnhancer<SampleType> stereoEnhancer;
-    Effects::SmoothLimiter<SampleType> limiter;
 
     juce::dsp::StateVariableTPTFilter<SampleType> lowCutFilter;
     juce::dsp::StateVariableTPTFilter<SampleType> highCutFilter;

@@ -21,7 +21,9 @@ June 2025
 ### In Progress
 
 - [ ] Implement Limiter parameters for better control (v0.1.3)
-  - [ ] This will largely be a re-implementation of the existing code in MakeItLoud for end user simplicity
+  - [x] MakeItLoud implementation
+  - [ ] Implementation into DSP Processor
+  - [ ] Implementation into Plugin Processor
 
 ### Completed
 
