@@ -9,7 +9,7 @@
 #include "../Filters/SchroederAllpassChain.h"
 #include "../Filters/EQFilters.h"
 #include "../Effects/StereoEnhancer.h"
-#include "../Effects/MakeItLoud.h
+#include "../Effects/MakeItLoud.h"
 
 namespace DSP {
 namespace Core {
@@ -52,13 +52,15 @@ public:
         highCutFilter.prepare(spec);
         highCutFilter.reset();
 
+        makeItLoud.prepare(spec);
+
         reset();
     }
 
     void updateParameters(SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent,
                           SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
                           SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
-                          bool makeItLoudEnabled)
+                        SampleType mil_InputGain, SampleType mil_BoostValue)
     {
         inputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(inputGainDb));
         outputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(outputGainDb));
@@ -69,6 +71,9 @@ public:
         lowCutSmoother.setTargetValue(lowCutPercent);
         highCutSmoother.setTargetValue(highCutPercent);
         widthSmoother.setTargetValue(widthPercent);
+
+        mil_BoostSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_BoostValue));
+        mil_InputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_InputGain));
 
     }
 
@@ -116,6 +121,14 @@ public:
         
         // After allpasschains to tr regain some high end.
         brightnessEQ.processBlock(wetBuffer);
+
+        // Apply stereo enhancement
+        // TODO: Finalize Stereo Enhancer implementation
+
+        // Apply MakeItLoud effect
+        makeItLoud.setInputGain(mil_InputGainSmoother.getNextValue());
+        makeItLoud.setBoostValue(mil_BoostSmoother.getNextValue());
+        makeItLoud.processBlock(wetBuffer);
         
         for (int i = 0; i < numSamples; ++i)
         {
@@ -148,6 +161,9 @@ public:
         lowCutSmoother.reset(SampleType{0.0});
         highCutSmoother.reset(SampleType{0.0});
         widthSmoother.reset(SampleType{100.0});
+
+        mil_BoostSmoother.reset(SampleType{0.0});
+        mil_InputGainSmoother.reset(SampleType{1.0});
     }
 
 private:
@@ -162,6 +178,9 @@ private:
         lowCutSmoother.prepare(sampleRate, 5.0);
         highCutSmoother.prepare(sampleRate, 5.0);
         widthSmoother.prepare(sampleRate, 5.0);
+
+        mil_BoostSmoother.prepare(sampleRate, 5.0);
+        mil_InputGainSmoother.prepare(sampleRate, 5.0);
     }
 
     bool shouldUpdateDSPComponents(int sampleIndex) { return (sampleIndex % 32) == 0; }
@@ -221,6 +240,13 @@ private:
     Utils::ParameterSmoother<SampleType> lowCutSmoother;
     Utils::ParameterSmoother<SampleType> highCutSmoother;
     Utils::ParameterSmoother<SampleType> widthSmoother;
+
+    // MakeItLoud
+
+    Effects::MakeItLoud<SampleType> makeItLoud;
+
+    Utils::ParameterSmoother<SampleType> mil_InputGainSmoother;
+    Utils::ParameterSmoother<SampleType> mil_BoostSmoother;
 
     juce::AudioBuffer<SampleType> wetBuffer;
     juce::AudioBuffer<SampleType> dryBuffer;
