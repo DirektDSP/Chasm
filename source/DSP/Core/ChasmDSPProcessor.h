@@ -14,63 +14,53 @@
 namespace DSP {
 namespace Core {
 
-/**
- * Main DSP Processor for Chasm.
- * Coordinates all DSP components with parameter smoothing.
- */
 template<typename SampleType>
 class ChasmDSPProcessor
 {
 public:
     ChasmDSPProcessor()
     {
-        lowCutFilter.setType(juce::dsp::StateVariableTPTFilterType::highpass);
-        highCutFilter.setType(juce::dsp::StateVariableTPTFilterType::lowpass);
+        using FilterType = juce::dsp::StateVariableTPTFilterType;
 
-        // Butterworth response ( 1 / sqrt(2) ) & 12 dB/octave
+        lowCutFilter.setType(FilterType::highpass);
+        highCutFilter.setType(FilterType::lowpass);
+
         lowCutFilter.setResonance(SampleType{0.707}); 
         highCutFilter.setResonance(SampleType{0.707}); 
     }
-    
-    /** Prepares all DSP components. */
+
     void prepare(const juce::dsp::ProcessSpec& spec)
     {
         sampleRate = spec.sampleRate;
         samplesPerBlock = static_cast<int>(spec.maximumBlockSize);
         numChannels = static_cast<int>(spec.numChannels);
-        
-        // Prepare all DSP components
+
         leftAllpassChain.prepare(sampleRate);
         rightAllpassChain.prepare(sampleRate);
         limiter.prepare(sampleRate);
-        
         brightnessEQ.prepare(spec);
 
-        stereoEnhancer.setWidth(SampleType{100.0}); // Default 100% width
-        
-        // Prepare parameter smoothers with their respective smoothing times
+        stereoEnhancer.setWidth(SampleType{100.0});
+
         prepareParameterSmoothers();
-        
-        // Create working buffers
+
         wetBuffer.setSize(numChannels, samplesPerBlock);
         dryBuffer.setSize(numChannels, samplesPerBlock);
-        
+
         lowCutFilter.prepare(spec);
         lowCutFilter.reset();
 
         highCutFilter.prepare(spec);
         highCutFilter.reset();
-        
+
         reset();
     }
-    
-    /** Updates all parameters with smoothing. */
+
     void updateParameters(SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent,
-                         SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
-                         SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
-                         bool limiterEnabled)
+                          SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
+                          SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
+                          bool limiterEnabled)
     {
-        // Update all parameter smoothers
         inputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(inputGainDb));
         outputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(outputGainDb));
         mixSmoother.setTargetValue(Utils::DSPUtils::percentageToNormalized(mixPercent));
@@ -81,102 +71,71 @@ public:
         highCutSmoother.setTargetValue(highCutPercent);
         widthSmoother.setTargetValue(widthPercent);
 
-        // update the filters if they have changed
-        if (lowCutSmoother.getCurrentValue() != lastLowCut) {
-            lowCutFilter.setCutoffFrequency(lowCutSmoother.getNextValue());
-            
-            // if filter cutoff = minimum of, just turn it off
-            if (lowCutSmoother.getNextValue() <= SampleType{1.0}) {
-                lowCutActive = false;
-            } else {
-                lowCutActive = true;
-            }
-
-
-            lastLowCut = lowCutSmoother.getCurrentValue();
-        }
-        if (highCutSmoother.getCurrentValue() != lastHighCut) {
-            highCutFilter.setCutoffFrequency(highCutSmoother.getNextValue());
-
-            // if cutoff >= maximum of, just turn it off
-            if (highCutSmoother.getNextValue() >= SampleType{19999.0}) {
-                highCutActive = false;
-            } else {
-                highCutActive = true;
-            }
-
-            lastHighCut = highCutSmoother.getCurrentValue();
-        }
-        
-        // boolean parameters can't be smoothed, duhh
         limiter.setEnabled(limiterEnabled);
     }
-    
-    /** Processes a block of audio. */
+
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
     {
         jassert(buffer.getNumChannels() >= 1);
-       
-        int numSamples = buffer.getNumSamples();
-            
-        // Ensure working buffers are the right size
+
+        const int numSamples = buffer.getNumSamples();
+
         if (wetBuffer.getNumSamples() != numSamples)
         {
             wetBuffer.setSize(numChannels, numSamples, false, false, true);
             dryBuffer.setSize(numChannels, numSamples, false, false, true);
         }
-            
-        // Store dry signal
+
         dryBuffer.makeCopyOf(buffer);
-            
-        // Process each sample with parameter smoothing
+
         for (int i = 0; i < numSamples; ++i)
         {
-            // Get smoothed parameter values for this sample
-            SampleType inputGain = inputGainSmoother.getNextValue();
-            SampleType outputGain = outputGainSmoother.getNextValue();
-            SampleType mix = mixSmoother.getNextValue();
-            SampleType delay = delaySmoother.getNextValue();
-            SampleType brightness = brightnessSmoother.getNextValue();
-            SampleType character = characterSmoother.getNextValue();
-            SampleType width = widthSmoother.getNextValue();
-                
-            // Update DSP components with smoothed values
-            if (i == 0 || shouldUpdateDSPComponents(i))
-            {
-                updateDSPComponents(delay, brightness, character, width);
-            }
-                
-            // Process single sample
-            // this method overwrites data in wetBuffer
-            processSingleSample(buffer, i, inputGain, outputGain, mix);
-        }
+            const auto inputGain = inputGainSmoother.getNextValue();
+            const auto outputGain = outputGainSmoother.getNextValue();
+            const auto mix = mixSmoother.getNextValue();
+            const auto delay = delaySmoother.getNextValue();
+            const auto brightness = brightnessSmoother.getNextValue();
+            const auto character = characterSmoother.getNextValue();
+            const auto width = widthSmoother.getNextValue();
 
-        // Apply stereo enhancement 
-        // stereoEnhancer.processBlock(wetBuffer);
+            const auto lowCutFreq = lowCutSmoother.getNextValue();
+            if (!juce::approximatelyEqual(lowCutFreq, lastLowCut)) {
+                lowCutFilter.setCutoffFrequency(lowCutFreq);
+                lowCutActive = lowCutFreq > SampleType{1.0};
+                lastLowCut = lowCutFreq;
+            }
+
+            const auto highCutFreq = highCutSmoother.getNextValue();
+            if (!juce::approximatelyEqual(highCutFreq, lastHighCut)) {
+                highCutFilter.setCutoffFrequency(highCutFreq);
+                highCutActive = highCutFreq < SampleType{19999.0};
+                lastHighCut = highCutFreq;
+            }
+
+            if (i == 0 || shouldUpdateDSPComponents(i))
+                updateDSPComponents(delay, brightness, character, width);
+
+            processSingleSample(buffer, i, inputGain);
+        }
 
         brightnessEQ.processBlock(wetBuffer);
 
-        // After enhancement, mix dry/wet and apply output gain
         for (int i = 0; i < numSamples; ++i)
         {
+            const auto mix = mixSmoother.getCurrentValue();
+            const auto outputGain = outputGainSmoother.getCurrentValue();
             for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
             {
                 auto* channelData = buffer.getWritePointer(channel);
-                SampleType drySample = dryBuffer.getSample(channel, i);
-                SampleType wetSample = wetBuffer.getSample(channel, i);
-                SampleType mix = mixSmoother.getCurrentValue();
-                SampleType outputGain = outputGainSmoother.getCurrentValue();
-                SampleType mixedSample = drySample * (SampleType{1.0} - mix) + wetSample * mix;
-                channelData[i] = mixedSample * outputGain;
+                const auto drySample = dryBuffer.getSample(channel, i);
+                const auto wetSample = wetBuffer.getSample(channel, i);
+                channelData[i] = (drySample * (SampleType{1.0} - mix) + wetSample * mix) * outputGain;
             }
         }
 
-        // Apply final limiter
         limiter.processBlock(buffer);
     }
-    
-    /** Resets all DSP components. */
+
     void reset()
     {
         leftAllpassChain.reset();
@@ -184,8 +143,7 @@ public:
         brightnessEQ.reset();
         stereoEnhancer.reset();
         limiter.reset();
-        
-        // Reset parameter smoothers
+
         inputGainSmoother.reset(SampleType{1.0});
         outputGainSmoother.reset(SampleType{1.0});
         mixSmoother.reset(SampleType{0.5});
@@ -200,92 +158,66 @@ public:
 private:
     void prepareParameterSmoothers()
     {
-        // Prepare smoothers with their specified smoothing times
-        inputGainSmoother.prepare(sampleRate, 5.0);   // 5ms
-        outputGainSmoother.prepare(sampleRate, 5.0);  // 5ms
-        mixSmoother.prepare(sampleRate, 20.0);        // 20ms
-        delaySmoother.prepare(sampleRate, 50.0);      // 50ms
-        brightnessSmoother.prepare(sampleRate, 10.0); // 10ms
-        characterSmoother.prepare(sampleRate, 10.0);  // 10ms
-        lowCutSmoother.prepare(sampleRate, 20.0);     // 20ms
-        highCutSmoother.prepare(sampleRate, 20.0);    // 20ms
-        widthSmoother.prepare(sampleRate, 20.0);      // 20ms
+        inputGainSmoother.prepare(sampleRate, 1.0);
+        outputGainSmoother.prepare(sampleRate, 1.0);
+        mixSmoother.prepare(sampleRate, 5.0);
+        delaySmoother.prepare(sampleRate, 5.0);
+        brightnessSmoother.prepare(sampleRate, 5.0);
+        characterSmoother.prepare(sampleRate, 5.0);
+        lowCutSmoother.prepare(sampleRate, 5.0);
+        highCutSmoother.prepare(sampleRate, 5.0);
+        widthSmoother.prepare(sampleRate, 5.0);
     }
-    
-    bool shouldUpdateDSPComponents(int sampleIndex)
-    {
-        // Update DSP components every 32 samples to balance quality vs performance
-        return (sampleIndex % 32) == 0;
-    }
-    
+
+    bool shouldUpdateDSPComponents(int sampleIndex) { return (sampleIndex % 32) == 0; }
+
     void updateDSPComponents(SampleType delay, SampleType brightness, SampleType character, SampleType width)
     {
-        // Update allpass chains
         leftAllpassChain.setDelayTime(delay);
         rightAllpassChain.setDelayTime(delay);
         leftAllpassChain.setCharacter(character);
         rightAllpassChain.setCharacter(character);
-        
-        // Update EQ and filters
         brightnessEQ.setBrightness(brightness);
-        
-        // Update stereo enhancer
         stereoEnhancer.setWidth(width);
     }
-    
-    void processSingleSample(juce::AudioBuffer<SampleType>& buffer, int sampleIndex,
-                           SampleType inputGain, SampleType outputGain, SampleType mix)
+
+    void processSingleSample(juce::AudioBuffer<SampleType>& buffer, int sampleIndex, SampleType inputGain)
     {
-        // Apply input gain
         for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
-        {
-            auto* channelData = buffer.getWritePointer(channel);
-            channelData[sampleIndex] *= inputGain;
-        }
-        
-        // Store wet signal for processing
+            buffer.getWritePointer(channel)[sampleIndex] *= inputGain;
+
         for (int channel = 0; channel < juce::jmin(wetBuffer.getNumChannels(), buffer.getNumChannels()); ++channel)
-        {
             wetBuffer.setSample(channel, sampleIndex, buffer.getSample(channel, sampleIndex));
-        }
-        
-        // Process through DSP chain
-        // Stereo processing
-        SampleType leftSample = wetBuffer.getSample(0, sampleIndex);
-        SampleType rightSample = wetBuffer.getSample(1, sampleIndex);
-            
-        // Allpass filtering
+
+        auto leftSample = wetBuffer.getSample(0, sampleIndex);
+        auto rightSample = wetBuffer.getSample(1, sampleIndex);
+
         leftSample = leftAllpassChain.processSample(leftSample);
         rightSample = rightAllpassChain.processSample(rightSample);
-            
-        // cut filters
-        if (lowCutActive){
+
+        if (lowCutActive) {
             leftSample = lowCutFilter.processSample(0, leftSample);
             rightSample = lowCutFilter.processSample(1, rightSample);
         }
-            
-        if (highCutActive){
+
+        if (highCutActive) {
             leftSample = highCutFilter.processSample(0, leftSample);
             rightSample = highCutFilter.processSample(1, rightSample);
         }
-         
-        // Store processed samples back to wet buffer            
+
         wetBuffer.setSample(0, sampleIndex, leftSample);
-        wetBuffer.setSample(1, sampleIndex, rightSample);        
+        wetBuffer.setSample(1, sampleIndex, rightSample);
     }
-    
-    // DSP Components
+
     Filters::SchroederAllpassChain<SampleType> leftAllpassChain;
     Filters::SchroederAllpassChain<SampleType> rightAllpassChain;
     Filters::BrightnessEQ<SampleType> brightnessEQ;
     Effects::StereoEnhancer<SampleType> stereoEnhancer;
     Effects::SmoothLimiter<SampleType> limiter;
-    
-    // Filters
-    juce::dsp::StateVariableTPTFilter<float> lowCutFilter;
-    juce::dsp::StateVariableTPTFilter<float> highCutFilter;
 
-    // Parameter Smoothers
+    juce::dsp::StateVariableTPTFilter<SampleType> lowCutFilter;
+    juce::dsp::StateVariableTPTFilter<SampleType> highCutFilter;
+
     Utils::ParameterSmoother<SampleType> inputGainSmoother;
     Utils::ParameterSmoother<SampleType> outputGainSmoother;
     Utils::ParameterSmoother<SampleType> mixSmoother;
@@ -295,21 +227,19 @@ private:
     Utils::ParameterSmoother<SampleType> lowCutSmoother;
     Utils::ParameterSmoother<SampleType> highCutSmoother;
     Utils::ParameterSmoother<SampleType> widthSmoother;
-    
-    // Working buffers
+
     juce::AudioBuffer<SampleType> wetBuffer;
     juce::AudioBuffer<SampleType> dryBuffer;
-    
-    // Audio settings
+
     double sampleRate = 44100.0;
     int samplesPerBlock = 512;
     int numChannels = 2;
 
-    float lastLowCut = 0.0f;  // Last low cut frequency
-    float lastHighCut = 0.0f; // Last high cut frequency
+    SampleType lastLowCut = SampleType{0.0};
+    SampleType lastHighCut = SampleType{0.0};
 
-    bool lowCutActive = false;  // Is low cut filter active?
-    bool highCutActive = false; // Is high cut filter active?
+    bool lowCutActive = false;
+    bool highCutActive = false;
 };
 
 } // namespace Core

@@ -23,11 +23,12 @@ June 2025
 
 ### In Progress
 
-- [ ] Fix filters for Brightness, Low cut and High cut (v 0.1.2)
+- [x] Fix filters for Brightness, Low cut and High cut (v 0.1.2)
   - [x] Make High and low cut sliders logarithmic
   - [x] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
   - [x] Implement high shelf for brightness
-  - [ ] fix brightness only on one side
+  - [x] fix brightness only on one side
+    - [x] Use process duplicator for IIR filter since can only be used on mono
 
 ### Completed
 

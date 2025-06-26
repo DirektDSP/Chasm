@@ -19,7 +19,7 @@ public:
     void prepare(const juce::dsp::ProcessSpec& spec)
     {
         sampleRate = spec.sampleRate;
-        highShelfFilter.prepare(spec);
+        highShelfFilterDuplicator.prepare(spec);
         reset();
     }
     
@@ -36,31 +36,26 @@ public:
             juce::Decibels::decibelsToGain(brightnessDb)
         );
         
-        *highShelfFilter.coefficients = *coeffs;
+        *highShelfFilterDuplicator.state = *coeffs;
     }
-    
-    /** Processes a single sample. */
-    SampleType processSample(SampleType input)
-    {
-        return highShelfFilter.processSample(input);
-    }
-    
+        
     /** Processes a block of samples. */
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
     {
         juce::dsp::AudioBlock<SampleType> block(buffer);
         juce::dsp::ProcessContextReplacing<SampleType> context(block);
-        highShelfFilter.process(context);
+        highShelfFilterDuplicator.process(context);
     }
     
     /** Resets the filter state. */
     void reset()
     {
-        highShelfFilter.reset();
+        highShelfFilterDuplicator.reset();
     }
 
 private:
-    juce::dsp::IIR::Filter<SampleType> highShelfFilter;
+    juce::dsp::ProcessorDuplicator<juce::dsp::IIR::Filter<SampleType>,
+        juce::dsp::IIR::Coefficients<SampleType>> highShelfFilterDuplicator;
     double sampleRate = 44100.0;
 };
 
