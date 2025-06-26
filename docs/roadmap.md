@@ -6,9 +6,6 @@ June 2025
 
 ### To Do
 
-- [ ] Implement Limiter parameters for better control (v0.1.3)
-  - [ ] This will largely be a re-implementation of the existing code in MakeItLoud for end user simplicity
-
 - [ ] Modify character implementation to significantly reduce gain (v0.1.4)
 
 - [ ] Ensure mono compatible filters (use plugin doctor to test)
@@ -23,17 +20,21 @@ June 2025
 
 ### In Progress
 
+- [ ] Implement Limiter parameters for better control (v0.1.3)
+  - [ ] This will largely be a re-implementation of the existing code in MakeItLoud for end user simplicity
+
+### Completed
+
+- [x] Base DSP implementation for smear effect and wet/dry mixing (v0.1.0)
+
+- [x] Basic licensing implementation (fix DSP when not licensed) (v0.1.1)
+
 - [x] Fix filters for Brightness, Low cut and High cut (v 0.1.2)
   - [x] Make High and low cut sliders logarithmic
   - [x] Make cuts convert into flat filters near 0 and 20khz (aka turn em off)
   - [x] Implement high shelf for brightness
   - [x] fix brightness only on one side
     - [x] Use process duplicator for IIR filter since can only be used on mono
-
-### Completed
-
-- [x] Basic licensing implementation (fix DSP when not licensed) (v0.1.1)
-- [x] Base DSP implementation for smear effect and wet/dry mixing (v0.1.0)
 
 
 ### Possible future additions
