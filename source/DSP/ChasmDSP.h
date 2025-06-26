@@ -6,7 +6,6 @@
  * This header provides easy access to all DSP functionality:
  * - Schroeder Allpass Filter Chain for reverb/delay effects
  * - Stereo Enhancer for width control and frequency-dependent processing
- * - Limiter for output protection
  * - Parameter smoothing utilities
  */
 
@@ -19,7 +18,6 @@
 
 // Effect components
 #include "Effects/StereoEnhancer.h"
-#include "Effects/Limiter.h"
 
 // Core DSP processor
 #include "Core/ChasmDSPProcessor.h"
@@ -43,8 +41,5 @@ using DoubleAllpassChain = Filters::SchroederAllpassChain<double>;
 
 using FloatStereoEnhancer = Effects::StereoEnhancer<float>;
 using DoubleStereoEnhancer = Effects::StereoEnhancer<double>;
-
-using FloatLimiter = Effects::SmoothLimiter<float>;
-using DoubleLimiter = Effects::SmoothLimiter<double>;
 
 } // namespace DSP

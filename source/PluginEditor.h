@@ -45,12 +45,12 @@ private:
     // DSP Parameter Controls
     juce::Slider inputGainSlider, outputGainSlider, mixSlider, delaySlider;
     juce::Slider brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider;
-    juce::ToggleButton limiterToggle, bypassToggle;
+    juce::ToggleButton bypassToggle;
     
     // Labels for sliders
     juce::Label inputGainLabel, outputGainLabel, mixLabel, delayLabel;
     juce::Label brightnessLabel, characterLabel, lowCutLabel, highCutLabel, widthLabel;
-    juce::Label limiterLabel, bypassLabel;
+    juce::Label bypassLabel;
 
     // APVTS Attachments
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAttachment;
@@ -62,7 +62,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> limiterAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)

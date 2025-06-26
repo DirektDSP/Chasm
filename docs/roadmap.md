@@ -20,10 +20,6 @@ June 2025
 
 ### In Progress
 
-- [ ] Implement Limiter parameters for better control (v0.1.3)
-  - [x] MakeItLoud implementation
-  - [ ] Implementation into DSP Processor
-  - [ ] Implementation into Plugin Processor
 
 ### Completed
 
@@ -37,6 +33,11 @@ June 2025
   - [x] Implement high shelf for brightness
   - [x] fix brightness only on one side
     - [x] Use process duplicator for IIR filter since can only be used on mono
+
+- [x] Implement Limiter parameters for better control (v0.1.3)
+  - [x] MakeItLoud implementation
+  - [x] Implementation into DSP Processor
+  - [x] Implementation into Plugin Processor
 
 
 ### Possible future additions

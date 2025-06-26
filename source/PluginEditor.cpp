@@ -61,7 +61,6 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(highCutSlider, highCutLabel, "High Cut");
 
     // Setup toggle buttons
-    setupToggleButton(limiterToggle, limiterLabel, "Limiter");
     setupToggleButton(bypassToggle, bypassLabel, "Bypass");
 
     // Create APVTS attachments
@@ -83,8 +82,6 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         processorRef.apvts, "HIGH_CUT", highCutSlider);
     widthAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processorRef.apvts, "WIDTH", widthSlider);
-    limiterAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processorRef.apvts, "LIMITER", limiterToggle);
     bypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
         processorRef.apvts, "BYPASS", bypassToggle);
 
@@ -139,7 +136,6 @@ void PluginEditor::resized()
 
     // Row 3: Width and toggles
     layoutSliderWithLabel(widthSlider, widthLabel, row3.removeFromLeft(row3.getWidth() / 4));
-    layoutToggleWithLabel(limiterToggle, limiterLabel, row3.removeFromLeft(row3.getWidth() / 3));
     layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
 
     timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));

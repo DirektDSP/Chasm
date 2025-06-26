@@ -60,7 +60,7 @@ public:
     void updateParameters(SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent,
                           SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
                           SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
-                        SampleType mil_InputGain, SampleType mil_BoostValue)
+                        SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode, bool mil_Enabled)
     {
         inputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(inputGainDb));
         outputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(outputGainDb));
@@ -74,6 +74,8 @@ public:
 
         mil_BoostSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_BoostValue));
         mil_InputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_InputGain));
+        makeItLoud.setCompressorMode(mil_Mode);
+        makeItLoud.setEnabled(mil_Enabled);
 
     }
 
@@ -127,13 +129,13 @@ public:
 
         // Apply MakeItLoud effect
         makeItLoud.setInputGain(mil_InputGainSmoother.getNextValue());
-        makeItLoud.setBoostValue(mil_BoostSmoother.getNextValue());
+        makeItLoud.setBoost(mil_BoostSmoother.getNextValue());
         makeItLoud.processBlock(wetBuffer);
         
         for (int i = 0; i < numSamples; ++i)
         {
-            const auto mix = mixSmoother.getCurrentValue();
-            const auto outputGain = outputGainSmoother.getCurrentValue();
+            const auto mix = mixSmoother.getNextValue();
+            const auto outputGain = outputGainSmoother.getNextValue();
             for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
             {
                 auto* channelData = buffer.getWritePointer(channel);
@@ -179,8 +181,8 @@ private:
         highCutSmoother.prepare(sampleRate, 5.0);
         widthSmoother.prepare(sampleRate, 5.0);
 
-        mil_BoostSmoother.prepare(sampleRate, 5.0);
-        mil_InputGainSmoother.prepare(sampleRate, 5.0);
+        mil_BoostSmoother.prepare(sampleRate, 1.0);
+        mil_InputGainSmoother.prepare(sampleRate, 1.0);
     }
 
     bool shouldUpdateDSPComponents(int sampleIndex) { return (sampleIndex % 32) == 0; }

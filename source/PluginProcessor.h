@@ -124,13 +124,26 @@ public:
             juce::ParameterID{"WIDTH", 1}, "Width", 
             juce::NormalisableRange<float>(0.0f, 200.0f, 0.1f), 100.0f));
         
-        // Limiter (On/Off, Binary, N/A smoothing)
-        params.push_back(std::make_unique<juce::AudioParameterBool>(
-            juce::ParameterID{"LIMITER", 1}, "Limiter", true));
-        
         // Keep bypass for compatibility
         params.push_back(std::make_unique<juce::AudioParameterBool>(
             juce::ParameterID{"BYPASS", 1}, "Bypass", false));
+
+        // MakeItLoud Parameters
+
+        params.push_back(std::make_unique<juce::AudioParameterBool>(
+            juce::ParameterID{"MIL_ENABLED", 1}, "MakeItLoud Enabled", false));
+
+        params.push_back(std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID{"MIL_INPUT_GAIN", 1}, "MakeItLoud Input Gain",
+            juce::NormalisableRange<float>(-6.0f, 6.0f, 0.1f), 0.0f));
+
+        params.push_back(std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID{"MIL_BOOST_VALUE", 1}, "MakeItLoud Boost Value",
+            juce::NormalisableRange<float>(0.0f, 2.0f, 0.1f), 0.0f));
+        
+        params.push_back(std::make_unique<juce::AudioParameterChoice>(
+            juce::ParameterID{"MIL_MODE", 1}, "MakeItLoud Mode",
+            juce::StringArray{"Clean", "Further", "Crunchy"}, 0));
         
         return { params.begin(), params.end() };
     }

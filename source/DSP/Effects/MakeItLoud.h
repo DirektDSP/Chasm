@@ -18,7 +18,7 @@ namespace Effects {
  * - Input gain (linear, 0.0 to 2.0)
  * - Boost gain (linear, 0.0 to 2.0)
  * - Compressor mode (Clean, Further, Crunchy)
- * - (optional) Bypass mode (this usually gets implemented in the DSPProcessor manually)
+ * - Bypass mode / Enabled state
  *
  * Designed to be loud and punchy, with tone control via compressor modes.
  *
@@ -75,6 +75,9 @@ public:
      */
     void processBlock(juce::AudioBuffer<SampleType>& buffer)
     {
+        if (!_enabled)
+            return;
+
         if (buffer.getNumChannels() == 0 || buffer.getNumSamples() == 0)
             return;
 
@@ -99,7 +102,7 @@ public:
             for (int i = 0; i < buffer.getNumSamples(); ++i)
             {
                 SampleType sample = channelData[i];
-                sample = std::tanh(sample);
+                sample = std::tanh(sample * _boostValue);
 
                 if (std::isnan(sample) || std::isinf(sample))
                     sample = SampleType{ 0.0 };
@@ -118,6 +121,9 @@ public:
      */
     void processSingleSample(SampleType& sample)
     {
+        if (!_enabled)
+            return;
+
         sample = _preCompressor.processSample(sample);
         sample = _inputGain.processSample(sample * _inputGainValue);
         sample = _boostGain.processSample(sample * _boostValue);
@@ -145,6 +151,11 @@ public:
     void setInputGain(SampleType gain)
     {
         _inputGainValue = gain;
+    }
+
+    void setEnabled(bool enabled)
+    {
+        _enabled = enabled;
     }
 
     /**
@@ -203,6 +214,7 @@ private:
     SampleType _inputGainValue { 1.0 };
     double _sampleRate { 44100.0 };
     int _blockSize { 512 };
+    bool _enabled { true };
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MakeItLoud<SampleType>)
 };

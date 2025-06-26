@@ -153,11 +153,16 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     float lowCut = *apvts.getRawParameterValue("LOW_CUT");
     float highCut = *apvts.getRawParameterValue("HIGH_CUT");
     float width = *apvts.getRawParameterValue("WIDTH");
-    bool limiterEnabled = *apvts.getRawParameterValue("LIMITER") > 0.5f;
+
+    float mil_InputGain = *apvts.getRawParameterValue("MIL_INPUT_GAIN");
+    float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST_VALUE");
+    int mil_Mode = *apvts.getRawParameterValue("MIL_MODE");
+    bool mil_Enabled = *apvts.getRawParameterValue("MIL_ENABLED") > 0.5f;
 
     // Update DSP processor parameters
     dspProcessor.updateParameters(inputGain, outputGain, mix, delay, brightness,
-                                  character, lowCut, highCut, width, limiterEnabled);
+                                  character, lowCut, highCut, width,
+                                  mil_InputGain, mil_BoostValue, mil_Mode, mil_Enabled);
 
 
     // Process the audio using function from
