@@ -86,6 +86,10 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         processorRef.apvts, "BYPASS", bypassToggle);
 
     setSize (800, 600);
+
+    addAndMakeVisible(testKnob);
+    testKnob.setBounds(getWidth() - 150, getHeight() - 150, 100, 100);
+
 }
 
 PluginEditor::~PluginEditor()
@@ -139,6 +143,8 @@ void PluginEditor::resized()
     layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
 
     timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
+
+    testKnob.setBounds(area.getWidth()/2 - 125, area.getHeight()/2 - 125, 500, 500);
 
     // IMPORTANT: Ensure the activation UI is resized as well.
     MOONBASE_RESIZE_ACTIVATION_UI

@@ -4,137 +4,139 @@
 #include "PluginEditor.h"
 #include "PluginProcessor.h"
 
-// class RasterKnob : public juce::Slider
-// {
-// public:
+class RasterKnob : public juce::Slider
+{
+public:
 
-// 	RasterKnob() : juce::Slider(SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
-// 	{	
-// 		setMouseCursor(MouseCursor::PointingHandCursor);
-// 		setLookAndFeel(&mainSliderLookAndFeel);
-// 	}
+	RasterKnob() : juce::Slider(SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
+	{	
+		setMouseCursor(MouseCursor::PointingHandCursor);
+		setLookAndFeel(&mainSliderLookAndFeel);
+	}
 
-// 	~RasterKnob()
-// 	{
-// 		setLookAndFeel(nullptr);
-// 	}
+	~RasterKnob()
+	{
+		setLookAndFeel(nullptr);
+	}
 
-// 	class RasterKnobLookAndFeel : public juce::LookAndFeel_V4
-// 	{
-// 	public:
+	class RasterKnobLookAndFeel : public juce::LookAndFeel_V4
+	{
+	public:
 
-// 		RasterKnobLookAndFeel()
-// 		{
-// 			image = juce::ImageCache::getFromMemory(BinaryData::MiniBrute_png, BinaryData::MiniBrute_pngSize);
-// 			// byImage = juce::ImageCache::getFromMemory(BinaryData::LittlePhatty_OFF_png, BinaryData::LittlePhatty_OFF_pngSize);
-// 		}
+		RasterKnobLookAndFeel()
+		{
+			image = juce::ImageCache::getFromMemory(BinaryData::Knob1_png, BinaryData::Knob1_pngSize);
+			// byImage = juce::ImageCache::getFromMemory(BinaryData::LittlePhatty_OFF_png, BinaryData::LittlePhatty_OFF_pngSize);
+		}
 
-// 		~RasterKnobLookAndFeel() override
-// 		{
-// 		}
+		~RasterKnobLookAndFeel() override
+		{
+		}
 		
-// 		void drawRotarySlider(
-// 			juce::Graphics& g,
-// 			int x,
-// 			int y,
-// 			int width,
-// 			int height,
-// 			float sliderPosProportional,
-// 			float /*rotaryStartAngle*/,
-// 			float /*rotaryEndAngle*/,
-// 			juce::Slider& /*slider*/) override
-// 		{
-// 			const auto frames = 101;
-// 			const auto frameId = static_cast<int>(ceil(sliderPosProportional * (static_cast<float>(frames) - 1.0f)));
+		void drawRotarySlider(
+			juce::Graphics& g,
+			int x,
+			int y,
+			int width,
+			int height,
+			float sliderPosProportional,
+			float /*rotaryStartAngle*/,
+			float /*rotaryEndAngle*/,
+			juce::Slider& /*slider*/) override
+		{
+			const auto frames = 128;
+			const auto frameId = static_cast<int>(ceil(sliderPosProportional * (static_cast<float>(frames) - 1.0f)));
 
-// 			// image is vertical strip, each frame is 1/100th of the height
+			// image is vertical strip, each frame is 1/100th of the height
 
-// 			g.drawImage(image,
-// 				x,
-// 				y,
-// 				width,
-// 				height,
-// 				0,
-// 				frameId * image.getHeight() / frames,
-// 				image.getWidth(),
-// 				image.getHeight() / frames);
-// 		}
+			g.drawImage(image,
+				x,
+				y,
+				width,
+				height,
+				0,
+				frameId * image.getHeight() / frames,
+				image.getWidth(),
+				image.getHeight() / frames);
+		}
 
-// 	private:
-// 		juce::Image image;
-// 		juce::Image byImage;
+	private:
+		juce::Image image;
+		juce::Image byImage;
 
-// 		bool bp = false;
+		bool bp = false;
 
 
-// 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnobLookAndFeel)
-// 	} mainSliderLookAndFeel;
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnobLookAndFeel)
+	} mainSliderLookAndFeel;
 	
-// private:
-// 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnob)
-// };
+private:
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnob)
+};
 
 
-//
-//class BypassButton : public juce::ToggleButton
-//{
-//
-//public:
-//	BypassButton() : juce::ToggleButton("")
-//	{
-//		setLookAndFeel(&mainButtonLookAndFeel);
-//	}
-//
-//	~BypassButton()
-//	{
-//		setLookAndFeel(nullptr);
-//	}
-//
-//private:
-//	class BypassButtonLookAndFeel : public juce::LookAndFeel_V4
-//	{
-//	public:
-//		BypassButtonLookAndFeel()
-//		{
-//			image = ImageCache::getFromMemory(BinaryData::Toggle_png, BinaryData::Toggle_pngSize);
-//		}
-//
-//
-//		void drawTickBox(Graphics& g, Component& component,
-//            float x,
-//            float y,
-//            float w,
-//            float h,
-//            bool ticked,
-//            bool isEnabled,
-//            bool isMouseOverButton,
-//            bool isButtonDown) override
-//		{
-//			const auto frames = 2;
-//			const auto frameId = static_cast<int>(ticked);
-//
-//            Rectangle<float> Bounds(x, y, w, h);
-//
-//			g.drawImage(image,
-//				x,
-//				y,
-//				w,
-//				h,
-//				0,
-//				frameId * image.getHeight() / frames,
-//				image.getWidth(),
-//				image.getHeight() / frames);
-//		}
-//        
-//
-//	private:
-//		juce::Image image;
-//            
-//		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BypassButtonLookAndFeel)
-//	} mainButtonLookAndFeel;
-//
-//	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BypassButton)
-//};
+
+class BypassButton : public juce::ToggleButton
+{
+
+public:
+	BypassButton() : juce::ToggleButton("")
+	{
+		setLookAndFeel(&mainButtonLookAndFeel);
+	}
+
+	~BypassButton()
+	{
+		setLookAndFeel(nullptr);
+	}
+
+private:
+	class BypassButtonLookAndFeel : public juce::LookAndFeel_V4
+	{
+	public:
+		BypassButtonLookAndFeel()
+		{
+			image = ImageCache::getFromMemory(BinaryData::Knob1_png, BinaryData::Knob1_pngSize);
+		}
+
+
+		void drawTickBox(Graphics& g, Component& component,
+           float x,
+           float y,
+           float w,
+           float h,
+           bool ticked,
+           bool isEnabled,
+           bool isMouseOverButton,
+           bool isButtonDown) override
+		{
+			const auto frames = 2;
+			const auto frameId = static_cast<int>(ticked);
+
+           Rectangle<float> Bounds(x, y, w, h);
+
+			g.drawImage(image,
+				x,
+				y,
+				w,
+				h,
+				0,
+				frameId * image.getHeight() / frames,
+				image.getWidth(),
+				image.getHeight() / frames);
+		}
+       
+
+	private:
+		juce::Image image;
+           
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BypassButtonLookAndFeel)
+	} mainButtonLookAndFeel;
+
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(BypassButton)
+};
+
+
 /*
 class BypassButton : public juce::ToggleButton
 {

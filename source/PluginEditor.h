@@ -5,6 +5,7 @@
 #include "melatonin_inspector/melatonin_inspector.h"
 #include "PresetPanel.h"
 #include "UI/Utils/Timestamp.h"
+#include "StyleSheet.h"
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
@@ -63,6 +64,9 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
+
+
+    RasterKnob testKnob;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };
