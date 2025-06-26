@@ -17,6 +17,8 @@ June 2025
 ### In Progress
 
 - [ ] Modify character implementation to significantly reduce gain (v0.1.4)
+  - this is problematic since character is the feedback parameter for the allpass chains.
+  - We cant have too low a value since it does nothing but too high and its clipping time.
 
 ### Completed
 
