@@ -28,7 +28,7 @@ namespace Gui
 			loadPresetList();
 		}
 
-		~PresetPanel()
+		~PresetPanel() override
 		{
 			saveButton.removeListener(this);
 			deleteButton.removeListener(this);

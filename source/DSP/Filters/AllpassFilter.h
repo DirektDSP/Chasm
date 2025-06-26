@@ -37,7 +37,7 @@ public:
     /** Sets the feedback coefficient (-1.0 to 1.0). */
     void setFeedback(SampleType newFeedback)
     {
-        feedback = juce::jlimit(SampleType{-0.99}, SampleType{0.99}, newFeedback);
+        feedback = juce::jlimit((SampleType)(-0.99f), (SampleType)(0.99f), newFeedback);
     }
     
     /** Processes a single sample. */

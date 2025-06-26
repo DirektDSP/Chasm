@@ -25,8 +25,8 @@ public:
         lowCutFilter.setType(FilterType::highpass);
         highCutFilter.setType(FilterType::lowpass);
 
-        lowCutFilter.setResonance(SampleType{0.707}); 
-        highCutFilter.setResonance(SampleType{0.707}); 
+        lowCutFilter.setResonance(static_cast<SampleType>(0.707));
+        highCutFilter.setResonance(static_cast<SampleType>(0.707));
     }
 
     void prepare(const juce::dsp::ProcessSpec& spec)

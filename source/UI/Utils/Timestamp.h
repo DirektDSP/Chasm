@@ -31,7 +31,7 @@ public:
 		}
 	}
 
-	~TimestampLabel()
+	~TimestampLabel() override
 	{
 		setLookAndFeel(nullptr);
 	}

@@ -23,7 +23,7 @@ PluginProcessor::PluginProcessor()
 
 }
 
-PluginProcessor::~PluginProcessor()
+PluginProcessor::~PluginProcessor() noexcept
 {
 }
 
@@ -141,7 +141,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         buffer.clear (i, 0, buffer.getNumSamples());
 
     // Check if bypassed
-    bool isBypassed = *apvts.getRawParameterValue("BYPASS");
+    bool isBypassed = *apvts.getRawParameterValue("BYPASS") > 0.5f;
     if (isBypassed)
         return;    // Get parameter values and update DSP processor
     float inputGain = *apvts.getRawParameterValue("INPUT_GAIN");

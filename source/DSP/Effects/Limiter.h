@@ -26,10 +26,10 @@ public:
             _compressor.prepare({_sampleRate, 256, 2});
             
             // Configure compressor for limiting
-            _compressor.setAttack(SampleType{0.1});   // 0.1ms attack
-            _compressor.setRelease(SampleType{10.0}); // 10ms release
-            _compressor.setThreshold(SampleType{-0.0}); // -0.0dB threshold
-            _compressor.setRatio(SampleType{20.0});   // High ratio for limiting
+            _compressor.setAttack(static_cast<SampleType>(0.1));   // 0.1ms attack
+            _compressor.setRelease(static_cast<SampleType>(10.0)); // 10ms release
+            _compressor.setThreshold(static_cast<SampleType>(-0.0)); // -0.0dB threshold
+            _compressor.setRatio(static_cast<SampleType>(20.0));   // High ratio for limiting
     
             reset();
         }
@@ -144,7 +144,7 @@ private:
         SampleType gainReduction = SampleType{1.0};
         if (_envelopeFollower > _threshold)
         {
-            gainReduction = _threshold / (_envelopeFollower + SampleType{1e-6});
+            gainReduction = static_cast<SampleType>(_threshold / (_envelopeFollower + static_cast<SampleType>(1e-6)));
         }
         
         return input * gainReduction;
@@ -165,10 +165,10 @@ private:
     double _sampleRate = 44100.0;
     bool _enabled = true;
     SampleType _ceiling = SampleType{1.0};
-    SampleType _threshold = SampleType{0.8};
+    SampleType _threshold = static_cast<SampleType>(0.8);
     SampleType _envelopeFollower = SampleType{0};
-    SampleType _attackCoeff = SampleType{0.9};
-    SampleType _releaseCoeff = SampleType{0.01};
+    SampleType _attackCoeff = SampleType{static_cast<SampleType>(0.9)};
+    SampleType _releaseCoeff = SampleType{static_cast<SampleType>(0.01)};
 
     juce::dsp::Compressor<SampleType> _compressor;
 };

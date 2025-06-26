@@ -30,10 +30,10 @@ public:
         
         // High shelf filter at 3kHz
         auto coeffs = juce::dsp::IIR::Coefficients<SampleType>::makeHighShelf(
-            sampleRate, 
+            sampleRate,
             SampleType{3000.0}, // 3kHz cutoff
-            SampleType{0.707},  // Q factor
-            juce::Decibels::decibelsToGain(brightnessDb)
+            static_cast<SampleType>(0.707),  // Q factor
+            static_cast<SampleType>(juce::Decibels::decibelsToGain(brightnessDb))
         );
         
         *highShelfFilterDuplicator.state = *coeffs;

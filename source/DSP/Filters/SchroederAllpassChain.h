@@ -33,7 +33,7 @@ public:
         {
             allpassFilters[i].prepare(_sampleRate, 100.0); // Max 100ms delay
             allpassFilters[i].setDelayTime(delayTimes[i]);
-            allpassFilters[i].setFeedback(SampleType{0.7}); // Default feedback
+            allpassFilters[i].setFeedback(static_cast<SampleType>(0.7)); // Default feedback
         }
         
         // Prepare parameter smoothers
@@ -56,7 +56,7 @@ public:
     /** Sets the character (feedback amount) - higher values = more resonant. */
     void setCharacter(SampleType character)
     {
-        characterSmoother.setTargetValue(juce::jlimit(SampleType{0.1}, SampleType{10.0}, character));
+        characterSmoother.setTargetValue(juce::jlimit(static_cast<SampleType>(0.1), static_cast<SampleType>(10.0), static_cast<SampleType>(character)));
     }
     
     /** Processes a single sample through the allpass chain. */
@@ -110,11 +110,11 @@ private:
         
         // Calculate feedback from character parameter (logarithmic scaling)
         auto feedback = static_cast<SampleType>(0.3 + 0.6 * (std::log(character) / std::log(10.0)));
-        feedback = juce::jlimit(SampleType{0.1}, SampleType{0.9}, feedback);
+        feedback = juce::jlimit(static_cast<SampleType>(0.1), static_cast<SampleType>(0.9), feedback);
         
         // Scale delay times with different ratios for each filter
         std::array<SampleType, NumAllpassFilters> delayScales = {
-            SampleType{0.41}, SampleType{0.66}, SampleType{0.97}, SampleType{1.25}
+            static_cast<SampleType>(0.41), static_cast<SampleType>(0.66), static_cast<SampleType>(0.97), static_cast<SampleType>(1.25)
         };
         
         for (size_t i = 0; i < NumAllpassFilters; ++i)
