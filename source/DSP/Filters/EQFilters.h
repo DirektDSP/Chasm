@@ -32,7 +32,7 @@ public:
         auto coeffs = juce::dsp::IIR::Coefficients<SampleType>::makeHighShelf(
             sampleRate,
             SampleType{3000.0}, // 3kHz cutoff
-            static_cast<SampleType>(0.707),  // Q factor
+            static_cast<SampleType>(1.2),  // Q factor
             static_cast<SampleType>(juce::Decibels::decibelsToGain(brightnessDb))
         );
         

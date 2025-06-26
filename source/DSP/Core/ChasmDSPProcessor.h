@@ -91,35 +91,34 @@ public:
         for (int i = 0; i < numSamples; ++i)
         {
             const auto inputGain = inputGainSmoother.getNextValue();
-            const auto outputGain = outputGainSmoother.getNextValue();
-            const auto mix = mixSmoother.getNextValue();
             const auto delay = delaySmoother.getNextValue();
             const auto brightness = brightnessSmoother.getNextValue();
             const auto character = characterSmoother.getNextValue();
             const auto width = widthSmoother.getNextValue();
-
+            
             const auto lowCutFreq = lowCutSmoother.getNextValue();
             if (!juce::approximatelyEqual(lowCutFreq, lastLowCut)) {
                 lowCutFilter.setCutoffFrequency(lowCutFreq);
                 lowCutActive = lowCutFreq > SampleType{1.0};
                 lastLowCut = lowCutFreq;
             }
-
+            
             const auto highCutFreq = highCutSmoother.getNextValue();
             if (!juce::approximatelyEqual(highCutFreq, lastHighCut)) {
                 highCutFilter.setCutoffFrequency(highCutFreq);
                 highCutActive = highCutFreq < SampleType{19999.0};
                 lastHighCut = highCutFreq;
             }
-
+            
             if (i == 0 || shouldUpdateDSPComponents(i))
-                updateDSPComponents(delay, brightness, character, width);
-
+            updateDSPComponents(delay, brightness, character, width);
+            
             processSingleSample(buffer, i, inputGain);
         }
-
+        
+        // After allpasschains to tr regain some high end.
         brightnessEQ.processBlock(wetBuffer);
-
+        
         for (int i = 0; i < numSamples; ++i)
         {
             const auto mix = mixSmoother.getCurrentValue();
