@@ -24,7 +24,6 @@ namespace Effects {
 
 
     When implementing, add the following to your apvts:
-    - Input Gain (float, 0.0 to 2.0, default 1.0)
     - Boost (float, 0.0 to 2.0, default 1.0)
     - Pre Compressor Mode (int, 0 to 2, default 0)
     - Post Compressor Mode (int, 0 to 2, default 0)
@@ -48,7 +47,7 @@ class MakeItLoud
         Clean,
         Further,
         Crunchy
-    }
+    };
 
     /** Prepares the effect with sample rate and block size. */
     void prepare(double newSampleRate, int blockSize)
@@ -76,16 +75,16 @@ class MakeItLoud
         if (buffer.getNumChannels() == 0 || buffer.getNumSamples() == 0)
             return;
 
-        // apply input gain
-        _inputGain.setGainLinear(_inGain);
-        _inputGain.process(juce::dsp::ProcessContextReplacing<SampleType>(juce::dsp::AudioBlock<SampleType>(buffer)));
+        // create processing context
+        juce::dsp::AudioBlock<SampleType> block(buffer);
+        juce::dsp::ProcessContextReplacing<SampleType> context(block);
 
         // Apply pre-compression
-        _preCompressor.process(juce::dsp::ProcessContextReplacing<SampleType>(juce::dsp::AudioBlock<SampleType>(buffer)));
+        _preCompressor.process(context);
 
         // Apply boost gain
         _boostGain.setGainLinear(_boost);
-        _boostGain.process(juce::dsp::ProcessContextReplacing<SampleType>(juce::dsp::AudioBlock<SampleType>(buffer)));
+        _boostGain.process(context);
 
         // Apply waveshaping
         for (int channel = 0; channel < buffer.getNumChannels(); ++channel)
@@ -93,18 +92,33 @@ class MakeItLoud
             auto* channelData = buffer.getWritePointer(channel);
             for (int i = 0; i < buffer.getNumSamples(); ++i)
             {
-                channelData[i] = tanh(channelData[i] * _boost);
+                channelData[i] = tanh(channelData[i]);
             }
         }
         // Apply post-compression
-        _postCompressor.process(juce::dsp::ProcessContextReplacing<SampleType>(juce::dsp::AudioBlock<SampleType>(buffer)));
+        _postCompressor.process(context);
     }
 
-    /** Sets the input gain. */
-    void setInputGain(SampleType gain)
+    void processSingleSample(SampleType& sample)
     {
-        _inGain = gain;
+        // Apply pre-compression
+        _preCompressor.processSample(sample);
+
+        // Apply boost gain
+        _boostGain.setGainLinear(_boost);
+        sample = _boostGain.processSample(sample);
+
+        // Ensure sample is not NaN or Inf
+        if (std::isnan(sample) || std::isinf(sample))
+            sample = SampleType{0.0};
+
+        // Apply waveshaping
+        sample = tanh(sample);
+
+        // Apply post-compression
+        _postCompressor.processSample(sample);
     }
+
 
     /** Sets the boost factor. */
     void setBoost(SampleType boost)
@@ -113,7 +127,7 @@ class MakeItLoud
     }
 
     /** Sets the pre-compressor mode. */
-    void setPreCompressorMode(CompressorMode mode){
+    void setCompressorMode(CompressorMode mode){
         switch (mode)
         {
         case CompressorMode::Clean:
@@ -155,11 +169,52 @@ class MakeItLoud
         }
     }
 
+    void setCompressorMode(int mode){
+        switch (mode)
+        {
+        case 0: //clean
+            _preCompressor.setThreshold(-20.0f);
+            _preCompressor.setRatio(4.0f);
+            _preCompressor.setAttack(10.0f);
+            _preCompressor.setRelease(80.0f);
+
+            _postCompressor.setThreshold(-20.0f);
+            _postCompressor.setRatio(4.0f);
+            _postCompressor.setAttack(10.0f);
+            _postCompressor.setRelease(80.0f);
+
+            break;
+        case 1: // further
+            _preCompressor.setThreshold(-15.0f);
+            _preCompressor.setRatio(6.0f);
+            _preCompressor.setAttack(75.0f);
+            _preCompressor.setRelease(50.0f);
+
+            _postCompressor.setThreshold(-15.0f);
+            _postCompressor.setRatio(6.0f);
+            _postCompressor.setAttack(75.0f);
+            _postCompressor.setRelease(50.0f);
+
+            break;
+        case 2: // crunchy
+            _preCompressor.setThreshold(-8.0f);
+            _preCompressor.setRatio(5.0f);
+            _preCompressor.setAttack(100.0f);
+            _preCompressor.setRelease(200.0f);
+
+            _postCompressor.setThreshold(-8.0f);
+            _postCompressor.setRatio(5.0f);
+            _postCompressor.setAttack(100.0f);
+            _postCompressor.setRelease(200.0f);
+
+            break;
+        }
+    }
+
     private:
     double _sampleRate = 44100.0;
     int _blockSize = 512;
 
-    SampleType _inGain = SampleType{1.0};
     SampleType _boost = SampleType{1.0};
 
     juce::dsp::Gain<SampleType> _inputGain;
