@@ -2,32 +2,32 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 
-class RasterKnob : public juce::Slider
+class AnimatedBackground : public juce::Slider
 {
 public:
 
-	RasterKnob() : juce::Slider(SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
+	AnimatedBackground() : juce::Slider(SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
 	{	
 		setMouseCursor(juce::MouseCursor::PointingHandCursor);
 		setLookAndFeel(&mainSliderLookAndFeel);
 	}
 
-	~RasterKnob()
+	~AnimatedBackground()
 	{
 		setLookAndFeel(nullptr);
 	}
 
-	class RasterKnobLookAndFeel : public juce::LookAndFeel_V4
+	class AnimatedBackgroundLookAndFeel : public juce::LookAndFeel_V4
 	{
 	public:
 
-		RasterKnobLookAndFeel()
+		AnimatedBackgroundLookAndFeel()
 		{
 			image = juce::ImageCache::getFromMemory(BinaryData::Knob1_png, BinaryData::Knob1_pngSize);
 			// byImage = juce::ImageCache::getFromMemory(juce::BinaryData::LittlePhatty_OFF_png, juce::BinaryData::LittlePhatty_OFF_pngSize);
 		}
 
-		~RasterKnobLookAndFeel() override
+		~AnimatedBackgroundLookAndFeel() override
 		{
 		}
 		
@@ -65,10 +65,10 @@ public:
 		bool bp = false;
 
 
-		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnobLookAndFeel)
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnimatedBackgroundLookAndFeel)
 	} mainSliderLookAndFeel;
 	
 private:
-	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RasterKnob)
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AnimatedBackground)
 };
 

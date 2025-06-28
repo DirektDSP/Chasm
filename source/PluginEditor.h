@@ -5,7 +5,7 @@
 #include "melatonin_inspector/melatonin_inspector.h"
 #include "PresetPanel.h"
 #include "UI/Utils/Timestamp.h"
-#include "StyleSheet.h"
+#include "UI/Components/RasterKnob.h"
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"

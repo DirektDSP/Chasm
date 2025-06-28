@@ -2,9 +2,9 @@
 
 #include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_gui_extra/juce_gui_extra.h>
-#include "StyleSheet.h"
 #include "PresetManager.h"
-
+#include "UI/Components/PresetButton.h"
+#include "UI/Components/PresetCB.h"
 
 using namespace juce;
 
