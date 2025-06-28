@@ -46,3 +46,52 @@ June 2025
 - [ ] A/B testing
 - [ ] Multiple stereo widening modes
 - [ ]
+
+## Chasm UI
+
+A main note for the ui, the general theme is some overlap between a chrome, cybersigilism inspired aesthetic and a natural aesthetic.
+
+It would make sense to split the ui in half and have one half react using chrome based effects and the other half with nature inspired ones.
+
+UI Component layout
+
+- Main delay know *must* be a main element -> nature, Centre of UI, large
+- high/low cut -> chrome, centre bottom
+- Brightness and Character controls -> chrome, left
+- In and Output gain controls -> nature, right
+- MakeItLoud components, unique to plugin -> mix of themes, flat modern, bottom.
+
+### To Do (UI)
+
+- [ ] Main UI
+  - [x] Main Delay Knob
+  - [ ] Sliders
+    - [ ] Main Sliders
+    - [ ] Dual High/Low Cut Slider
+  - [ ] Misc Knobs
+    - [ ] Bypass Button
+    - [ ] Preset Dropdown
+    - [ ] Save Button
+    - [ ] Delete Button
+  - MakeItLoud
+    - [ ] Dropdown menus
+    - [ ] Knobs
+    - [ ] Toggle
+
+### In Progress (UI)
+
+- [ ]
+
+### Done (UI)
+
+### Exports to Manage
+
+- Filmstrips for UI elements
+  - Knobs
+  - Sliders
+  - Buttons
+  - Info UI Elements (TBD)
+
+- Blender Files
+  - Main UI Implementation
+  - Info UI (TBD)
