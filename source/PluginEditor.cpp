@@ -120,8 +120,8 @@ void PluginEditor::resized()
     int largeKnobSizeY = getWidth() * 0.36f + TEXT_BOX_HEIGHT; // 320x320 at expected res (1000x600)
     
     bg.setBounds(area);
-    bg.setLeftFrame(2);
-    bg.setRightFrame(128);
+    bg.setLeftFrame(lastLeft);
+    bg.setRightFrame(lastRight);
     
     // // Reserve space for preset panel at the top
     // presetPanel.setBounds(area.removeFromTop(proportionOfHeight(0.08f)));
@@ -175,7 +175,15 @@ void PluginEditor::resized()
         knobSizeY
     );
 
-    // mixSlider.setBounds();
+     mixSlider.setBounds(
+        getWidth()*0.8,
+        (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT,
+        knobSizeX+TEXT_BOX_WIDTH,
+        knobSizeY-TEXT_BOX_HEIGHT
+     );
+
+
+    // left side
 
     characterSlider.setBounds(
         leftPad*0.75,
@@ -217,12 +225,14 @@ void PluginEditor::sliderValueChanged(juce::Slider* slider)
         int mappedDelay = static_cast<int>(skewed * 127.0f + 1);
         
         bg.setRightFrame(mappedDelay);
+        lastRight = mappedDelay;
     }
     
     if (slider == &characterSlider){
         // Linear mapping as before
         int mappedCharacter = static_cast<int>(((character - 0.1f) / 1.9f) * 127 + 1);
         bg.setLeftFrame(mappedCharacter);
+        lastLeft = mappedCharacter;
     }
 }
 
@@ -247,6 +257,11 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     label.setFont(UI::Utils::getCustomFont());
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
+
+    if (labelText == "Mix"){
+        label.attachToComponent(&slider, true);
+        slider.setTextBoxStyle(juce::Slider::TextBoxRight, false, TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT);
+    }
 }
 
 

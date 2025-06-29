@@ -22,6 +22,8 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    int lastRight, lastLeft;
+
 private:
     
     AudioProcessorValueTreeState& apvts;
