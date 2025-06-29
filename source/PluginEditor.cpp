@@ -38,14 +38,14 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         inspector->setVisible (true);
     };
 
-    constrainer.setFixedAspectRatio (4.0f/3.0f); // 4:3 aspect ratio
+    constrainer.setFixedAspectRatio (2000.0f/1200.0f);
 
     // Now tell the editor to use this constrainer
     setConstrainer (&constrainer);
 
     // Allow the editor to be resizable
     setResizable(true, true);
-    constrainer.setMinimumSize(400, 300);    addAndMakeVisible(presetPanel);
+    constrainer.setMinimumSize(250, 150);    addAndMakeVisible(presetPanel);
 
     // Setup sliders and labels
     setupSlider(inputGainSlider, inputGainLabel, "Input Gain", "dB");
@@ -85,10 +85,12 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     bypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
         processorRef.apvts, "BYPASS", bypassToggle);
 
-    setSize (800, 600);
+    setSize (1000, 600);
 
-    addAndMakeVisible(testKnob);
-    testKnob.setBounds(getWidth() - 150, getHeight() - 150, 100, 100);
+    addAndMakeVisible(bg);
+
+    // addAndMakeVisible(testKnob);
+    // testKnob.setBounds(getWidth() - 150, getHeight() - 150, 100, 100);
 
 }
 
@@ -111,40 +113,45 @@ void PluginEditor::paint (juce::Graphics& g)
 void PluginEditor::resized()
 {
     auto area = getLocalBounds();
-
-    // Reserve space for preset panel at the top
-    presetPanel.setBounds(area.removeFromTop(proportionOfHeight(0.08f)));
-
-    // Reserve space for inspect button at bottom
-    inspectButton.setBounds(area.removeFromBottom(50).withSizeKeepingCentre(100, 50));
-
-    // Main DSP controls area
-    auto controlsArea = area.reduced(10);
-
-    // Create a 3x4 grid for controls (3 rows, 4 columns)
-    auto row1 = controlsArea.removeFromTop(controlsArea.getHeight() / 3);
-    auto row2 = controlsArea.removeFromTop(controlsArea.getHeight() / 2);
-    auto row3 = controlsArea;
-
-    // Row 1: Gain and Mix controls
-    layoutSliderWithLabel(inputGainSlider, inputGainLabel, row1.removeFromLeft(row1.getWidth() / 4));
-    layoutSliderWithLabel(outputGainSlider, outputGainLabel, row1.removeFromLeft(row1.getWidth() / 3));
-    layoutSliderWithLabel(mixSlider, mixLabel, row1.removeFromLeft(row1.getWidth() / 2));
-    layoutSliderWithLabel(delaySlider, delayLabel, row1);
-
-    // Row 2: Character and EQ controls  
-    layoutSliderWithLabel(brightnessSlider, brightnessLabel, row2.removeFromLeft(row2.getWidth() / 4));
-    layoutSliderWithLabel(characterSlider, characterLabel, row2.removeFromLeft(row2.getWidth() / 3));
-    layoutSliderWithLabel(lowCutSlider, lowCutLabel, row2.removeFromLeft(row2.getWidth() / 2));
-    layoutSliderWithLabel(highCutSlider, highCutLabel, row2);
-
-    // Row 3: Width and toggles
-    layoutSliderWithLabel(widthSlider, widthLabel, row3.removeFromLeft(row3.getWidth() / 4));
-    layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
-
-    timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
-
     testKnob.setBounds(area.getWidth()/2 - 125, area.getHeight()/2 - 125, 500, 500);
+
+    bg.setBounds(area);
+    bg.setLeftFrame(2);
+    bg.setRightFrame(128);
+
+    // // Reserve space for preset panel at the top
+    // presetPanel.setBounds(area.removeFromTop(proportionOfHeight(0.08f)));
+
+    // // Reserve space for inspect button at bottom
+    // inspectButton.setBounds(area.removeFromBottom(50).withSizeKeepingCentre(100, 50));
+
+    // // Main DSP controls area
+    // auto controlsArea = area.reduced(10);
+
+    // // Create a 3x4 grid for controls (3 rows, 4 columns)
+    // auto row1 = controlsArea.removeFromTop(controlsArea.getHeight() / 3);
+    // auto row2 = controlsArea.removeFromTop(controlsArea.getHeight() / 2);
+    // auto row3 = controlsArea;
+
+    // // Row 1: Gain and Mix controls
+    // layoutSliderWithLabel(inputGainSlider, inputGainLabel, row1.removeFromLeft(row1.getWidth() / 4));
+    // layoutSliderWithLabel(outputGainSlider, outputGainLabel, row1.removeFromLeft(row1.getWidth() / 3));
+    // layoutSliderWithLabel(mixSlider, mixLabel, row1.removeFromLeft(row1.getWidth() / 2));
+    // layoutSliderWithLabel(delaySlider, delayLabel, row1);
+
+    // // Row 2: Character and EQ controls  
+    // layoutSliderWithLabel(brightnessSlider, brightnessLabel, row2.removeFromLeft(row2.getWidth() / 4));
+    // layoutSliderWithLabel(characterSlider, characterLabel, row2.removeFromLeft(row2.getWidth() / 3));
+    // layoutSliderWithLabel(lowCutSlider, lowCutLabel, row2.removeFromLeft(row2.getWidth() / 2));
+    // layoutSliderWithLabel(highCutSlider, highCutLabel, row2);
+
+    // // Row 3: Width and toggles
+    // layoutSliderWithLabel(widthSlider, widthLabel, row3.removeFromLeft(row3.getWidth() / 4));
+    // layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
+
+    // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
+
+    
 
     // IMPORTANT: Ensure the activation UI is resized as well.
     MOONBASE_RESIZE_ACTIVATION_UI

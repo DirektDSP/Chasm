@@ -3,9 +3,10 @@
 #include "PluginProcessor.h"
 #include "BinaryData.h"
 #include "melatonin_inspector/melatonin_inspector.h"
-#include "PresetPanel.h"
+#include "UI/Components/PresetPanel.h"
 #include "UI/Utils/Timestamp.h"
 #include "UI/Components/RasterKnob.h"
+#include "UI/Components/AnimatedBackground.h"
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
@@ -41,7 +42,9 @@ private:
     // Optional: a sample inspector from the melatonin module
     std::unique_ptr<melatonin::Inspector> inspector;
     // Actual Plugin UI
-    Gui::PresetPanel presetPanel;
+    UI::Components::AnimatedBackground bg;
+   
+    UI::Components::PresetPanel presetPanel;
 
     // DSP Parameter Controls
     juce::Slider inputGainSlider, outputGainSlider, mixSlider, delaySlider;
@@ -66,7 +69,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
 
 
-    RasterKnob testKnob;
+    UI::Components::RasterKnob testKnob;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };

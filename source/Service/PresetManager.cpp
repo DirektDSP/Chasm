@@ -1,7 +1,5 @@
 #include "PresetManager.h"
 
-
-
 namespace Service
 {
 	const File PresetManager::defaultDirectory{ File::getSpecialLocation(

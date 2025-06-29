@@ -91,5 +91,6 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "*.mm": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "enabled"
 }
