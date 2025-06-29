@@ -1,36 +1,37 @@
 #pragma once
 
 #include <juce_gui_basics/juce_gui_basics.h>
+
 #include "UI/Utils/CustomFont.h"
 
 namespace UI
 {
     namespace Components
     {
-        class RasterKnob : public juce::Slider
+        class SmallerRasterKnob : public juce::Slider
         {
         public:
-            RasterKnob() : juce::Slider (SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
+            SmallerRasterKnob() : juce::Slider (SliderStyle::RotaryHorizontalVerticalDrag, TextEntryBoxPosition::NoTextBox)
             {
                 setMouseCursor (juce::MouseCursor::PointingHandCursor);
                 setLookAndFeel (&mainSliderLookAndFeel);
             }
 
-            ~RasterKnob()
+            ~SmallerRasterKnob()
             {
                 setLookAndFeel (nullptr);
             }
 
-            class RasterKnobLookAndFeel : public juce::LookAndFeel_V4
+            class SmallerRasterKnobLookAndFeel : public juce::LookAndFeel_V4
             {
             public:
-                RasterKnobLookAndFeel()
+                SmallerRasterKnobLookAndFeel()
                 {
-                    image = juce::ImageCache::getFromMemory (BinaryData::Knob1_png, BinaryData::Knob1_pngSize);
+                    image = juce::ImageCache::getFromMemory (BinaryData::SmallerKnob1_png, BinaryData::SmallerKnob1_pngSize);
                     customFont = UI::Utils::getCustomFont();
                 }
 
-                ~RasterKnobLookAndFeel() override
+                ~SmallerRasterKnobLookAndFeel() override
                 {
                 }
 
@@ -58,7 +59,8 @@ namespace UI
                         0,
                         frameId * image.getHeight() / frames,
                         image.getWidth(),
-                        image.getHeight() / frames);
+                        image.getHeight() / frames
+                    );
                 }
 
             private:
@@ -69,11 +71,11 @@ namespace UI
 
                 bool bp = false;
 
-                JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RasterKnobLookAndFeel)
+                JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallerRasterKnobLookAndFeel)
             } mainSliderLookAndFeel;
 
         private:
-            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RasterKnob)
+            JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SmallerRasterKnob)
         };
 
     }

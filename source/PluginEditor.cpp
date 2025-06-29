@@ -1,4 +1,8 @@
 #include "PluginEditor.h"
+#include "UI/Utils/CustomFont.h"
+
+int TEXT_BOX_WIDTH = 80;
+int TEXT_BOX_HEIGHT = 20;
 
 //==============================================================================
 PluginEditor::PluginEditor (PluginProcessor& p)
@@ -23,6 +27,9 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         // Optionally set company logo (replace CompanyLogo with your drawable class).
         // activationUI->setCompanyLogo (std::make_unique<CompanyLogo>());
     }
+
+
+    addAndMakeVisible(bg);
 
     addAndMakeVisible (timestampLabel);
     timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
@@ -87,7 +94,7 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     setSize (1000, 600);
 
-    addAndMakeVisible(bg);
+    
 
     // addAndMakeVisible(testKnob);
     // testKnob.setBounds(getWidth() - 150, getHeight() - 150, 100, 100);
@@ -100,54 +107,75 @@ PluginEditor::~PluginEditor()
 
 void PluginEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    auto area = getLocalBounds();
-    g.setColour (juce::Colours::white);
-    g.setFont (16.0f);
-    auto helloWorld = juce::String ("Hello from ") + PRODUCT_NAME_WITHOUT_VERSION + " v" VERSION +
-                      " running in " + CMAKE_BUILD_TYPE;
-    g.drawText (helloWorld, area.removeFromTop (150), juce::Justification::centred, false);
+    // g.setOpacity(0.0);
 }
 
 void PluginEditor::resized()
 {
     auto area = getLocalBounds();
-    testKnob.setBounds(area.getWidth()/2 - 125, area.getHeight()/2 - 125, 500, 500);
-
+    
+    int padding = getWidth() * 0.04; // 40px at 1000x600
+    int knobSizeX = getWidth() * 0.10f; // 100x100 at expected res (1000x600)
+    int knobSizeY = (getWidth() * 0.10f) + TEXT_BOX_HEIGHT;
+    int largeKnobSizeX = getWidth() * 0.36f; // 320x320 at expected res (1000x600)
+    int largeKnobSizeY = getWidth() * 0.36f + TEXT_BOX_HEIGHT; // 320x320 at expected res (1000x600)
+    
     bg.setBounds(area);
     bg.setLeftFrame(2);
     bg.setRightFrame(128);
-
+    
     // // Reserve space for preset panel at the top
     // presetPanel.setBounds(area.removeFromTop(proportionOfHeight(0.08f)));
-
+    
     // // Reserve space for inspect button at bottom
-    // inspectButton.setBounds(area.removeFromBottom(50).withSizeKeepingCentre(100, 50));
-
+    inspectButton.setBounds(area.removeFromBottom(50).withSizeKeepingCentre(100, 50));
+    
     // // Main DSP controls area
-    // auto controlsArea = area.reduced(10);
 
-    // // Create a 3x4 grid for controls (3 rows, 4 columns)
-    // auto row1 = controlsArea.removeFromTop(controlsArea.getHeight() / 3);
-    // auto row2 = controlsArea.removeFromTop(controlsArea.getHeight() / 2);
-    // auto row3 = controlsArea;
+    // Main Delay Slider
+    delaySlider.setBounds(
+        (getWidth() / 2) - (largeKnobSizeX/2),
+        (getHeight() / 2) - (largeKnobSizeY/2),
+        largeKnobSizeX,
+        largeKnobSizeY
+    );
+    
+    // In / Out gain & Mix
+    // Right hand side, 2 on top one on bottom
+    // 175 px y
+    int topLayerHeight = (getHeight()*0.3f);
 
-    // // Row 1: Gain and Mix controls
-    // layoutSliderWithLabel(inputGainSlider, inputGainLabel, row1.removeFromLeft(row1.getWidth() / 4));
-    // layoutSliderWithLabel(outputGainSlider, outputGainLabel, row1.removeFromLeft(row1.getWidth() / 3));
-    // layoutSliderWithLabel(mixSlider, mixLabel, row1.removeFromLeft(row1.getWidth() / 2));
-    // layoutSliderWithLabel(delaySlider, delayLabel, row1);
+    int leftPad = getWidth() *0.05f;
 
-    // // Row 2: Character and EQ controls  
-    // layoutSliderWithLabel(brightnessSlider, brightnessLabel, row2.removeFromLeft(row2.getWidth() / 4));
-    // layoutSliderWithLabel(characterSlider, characterLabel, row2.removeFromLeft(row2.getWidth() / 3));
-    // layoutSliderWithLabel(lowCutSlider, lowCutLabel, row2.removeFromLeft(row2.getWidth() / 2));
-    // layoutSliderWithLabel(highCutSlider, highCutLabel, row2);
+    inputGainSlider.setBounds(
+        leftPad,
+        topLayerHeight,
+        knobSizeX,
+        knobSizeY
+    );
 
-    // // Row 3: Width and toggles
-    // layoutSliderWithLabel(widthSlider, widthLabel, row3.removeFromLeft(row3.getWidth() / 4));
-    // layoutToggleWithLabel(bypassToggle, bypassLabel, row3.removeFromLeft(row3.getWidth() / 2));
+    outputGainSlider.setBounds(
+        leftPad+knobSizeX+padding,
+        topLayerHeight,
+        knobSizeX,
+        knobSizeY
+    );
+
+    lowCutSlider.setBounds(
+        leftPad,
+        topLayerHeight+knobSizeY+padding,
+        knobSizeX,
+        knobSizeY
+    );
+
+    highCutSlider.setBounds(
+        leftPad+knobSizeX+padding,
+        topLayerHeight+knobSizeY+padding,
+        knobSizeX,
+        knobSizeY
+    );
+
+    // mixSlider.setBounds();
 
     // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
@@ -167,10 +195,13 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     addAndMakeVisible(label);
     
     slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
-    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, 20);
+    slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT);
     slider.setTextValueSuffix(" " + suffix);
+    slider.setColour(juce::Label::textColourId, juce::Colour::fromRGB(47, 47 ,47));
     
     label.setText(labelText, juce::dontSendNotification);
+    label.setColour(juce::Label::textColourId, juce::Colour::fromRGB(47, 47 ,47));
+    label.setFont(UI::Utils::getCustomFont());
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
 }
@@ -184,8 +215,11 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     
     slider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
     slider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 80, 20);
+    slider.setColour(juce::Label::textColourId, juce::Colour::fromRGB(47, 47 ,47));
     
     label.setText(labelText, juce::dontSendNotification);
+    label.setColour(juce::Label::textColourId, juce::Colour::fromRGB(47, 47 ,47));
+    label.setFont(UI::Utils::getCustomFont());
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
 }

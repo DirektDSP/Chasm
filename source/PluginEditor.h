@@ -1,12 +1,15 @@
 #pragma once
 
-#include "PluginProcessor.h"
 #include "BinaryData.h"
-#include "melatonin_inspector/melatonin_inspector.h"
-#include "UI/Components/PresetPanel.h"
-#include "UI/Utils/Timestamp.h"
-#include "UI/Components/RasterKnob.h"
+#include "PluginProcessor.h"
 #include "UI/Components/AnimatedBackground.h"
+#include "UI/Components/PresetPanel.h"
+#include "UI/Components/RasterKnob.h"
+#include "UI/Components/SmallerRasterKnob.h"
+#include "UI/Utils/Timestamp.h"
+#include "melatonin_inspector/melatonin_inspector.h"
+
+#include <juce_gui_basics/juce_gui_basics.h>
 
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
@@ -15,24 +18,25 @@ class PluginEditor : public juce::AudioProcessorEditor
 {
 public:
     explicit PluginEditor (PluginProcessor&);
-    ~PluginEditor() override;    //==============================================================================
+    ~PluginEditor() override; //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
+    
     // Helper functions for UI setup
-    void setupSlider(juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
+    void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText);
     void setupToggleButton (juce::ToggleButton& button, juce::Label& label, const juce::String& labelText);
-    void layoutSliderWithLabel(juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
-    void layoutToggleWithLabel(juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
+    void layoutSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
+    void layoutToggleWithLabel (juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
     PluginProcessor& processorRef;
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };
 
     TimestampLabel timestampLabel;
-    
+
     // keep aspect ratio when resizing :)
     juce::ComponentBoundsConstrainer constrainer;
 
@@ -43,14 +47,16 @@ private:
     std::unique_ptr<melatonin::Inspector> inspector;
     // Actual Plugin UI
     UI::Components::AnimatedBackground bg;
-   
+
     UI::Components::PresetPanel presetPanel;
 
     // DSP Parameter Controls
-    juce::Slider inputGainSlider, outputGainSlider, mixSlider, delaySlider;
-    juce::Slider brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider;
+    UI::Components::RasterKnob delaySlider;
+
+    UI::Components::SmallerRasterKnob inputGainSlider, outputGainSlider, mixSlider;
+    UI::Components::SmallerRasterKnob brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider;
     juce::ToggleButton bypassToggle;
-    
+
     // Labels for sliders
     juce::Label inputGainLabel, outputGainLabel, mixLabel, delayLabel;
     juce::Label brightnessLabel, characterLabel, lowCutLabel, highCutLabel, widthLabel;
@@ -67,9 +73,6 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
-
-
-    UI::Components::RasterKnob testKnob;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };
