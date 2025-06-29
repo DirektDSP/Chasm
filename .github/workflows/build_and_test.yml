@@ -109,7 +109,9 @@ jobs:
           token: ${{ secrets.PAT }}
 
       - name: Recreate moonbase_api_config.json
-        run: echo "${{ secrets.CONFIG_JSON_B64 }}" | base64 --decode > moonbase_api_config.json
+        run: |
+          mkdir -p assets/BinaryData
+          echo "${{ secrets.CONFIG_JSON_B64 }}" | base64 --decode > assets/BinaryData/moonbase_api_config.json
 
       - name: Cache the build
         uses: mozilla-actions/sccache-action@v0.0.9
