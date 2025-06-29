@@ -45,7 +45,9 @@ June 2025
 - [ ] Visuals of filters / FX in the plugin
 - [ ] A/B testing
 - [ ] Multiple stereo widening modes
-- [ ]
+- [ ] Skins
+- [ ] Online DB of plugins
+- [ ] 
 
 ## Chasm UI
 
@@ -64,25 +66,25 @@ UI Component layout
 ### To Do (UI)
 
 - [ ] Main UI
-  - [x] Main Delay Knob
-  - [ ] Sliders
-    - [ ] Main Sliders
-    - [ ] Dual High/Low Cut Slider
   - [ ] Misc Knobs
     - [ ] Bypass Button
     - [ ] Preset Dropdown
     - [ ] Save Button
     - [ ] Delete Button
-  - MakeItLoud
-    - [ ] Dropdown menus
-    - [ ] Knobs
-    - [ ] Toggle
 
 ### In Progress (UI)
 
-- [ ]
+- MakeItLoud UI Elements
+  - [ ] Dropdown menus
+  - [ ] Knobs
+  - [ ] Toggle
 
 ### Done (UI)
+
+- [x] Main Delay Knob
+- [x] Sliders
+  - [x] Main Sliders
+  - [x] Dual High/Low Cut Slider
 
 ### Exports to Manage
 

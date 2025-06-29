@@ -18,7 +18,7 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     if (activationUI)
     {
         // Set welcome text (max 2 lines) for the activation screen.
-        activationUI->setWelcomePageText ("MiniDist", "Made by DirektDSP");
+        activationUI->setWelcomePageText ("Chasm", "Made by Korzana & DirektDSP");
 
         // Set spinner logo from your BinaryData assets.
 
