@@ -14,7 +14,7 @@
 // Include the Moonbase Activation UI header (adjust path if needed)
 #include "moonbase_JUCEClient/moonbase_JUCEClient.h"
 
-class PluginEditor : public juce::AudioProcessorEditor
+class PluginEditor : public juce::AudioProcessorEditor, public juce::Slider::Listener
 {
 public:
     explicit PluginEditor (PluginProcessor&);
@@ -24,6 +24,8 @@ public:
 
 private:
     
+    AudioProcessorValueTreeState& apvts;
+
     // Helper functions for UI setup
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText);
@@ -31,6 +33,8 @@ private:
     void layoutSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
     void layoutToggleWithLabel (juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
     PluginProcessor& processorRef;
+
+    void sliderValueChanged(juce::Slider* slider) override;
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };

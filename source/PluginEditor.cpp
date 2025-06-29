@@ -6,7 +6,7 @@ int TEXT_BOX_HEIGHT = 20;
 
 //==============================================================================
 PluginEditor::PluginEditor (PluginProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p), presetPanel(p.getPresetManager())
+    : AudioProcessorEditor (&p), processorRef (p), presetPanel(p.getPresetManager()), apvts(p.getApvts())
 {
     // Create the activation UI via the Moonbase client.
     // The activation UI is created using the licensing member from the processor.
@@ -55,10 +55,10 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     constrainer.setMinimumSize(250, 150);    addAndMakeVisible(presetPanel);
 
     // Setup sliders and labels
-    setupSlider(inputGainSlider, inputGainLabel, "Input Gain", "dB");
-    setupSlider(outputGainSlider, outputGainLabel, "Output Gain", "dB");
+    setupSlider(inputGainSlider, inputGainLabel, "Input", "dB");
+    setupSlider(outputGainSlider, outputGainLabel, "Output", "dB");
     setupSlider(mixSlider, mixLabel, "Mix", "%");
-    setupSlider(delaySlider, delayLabel, "Delay", "ms");
+    setupSlider(delaySlider, delayLabel, "", "ms");
     setupSlider(brightnessSlider, brightnessLabel, "Brightness", "dB");
     setupSlider(characterSlider, characterLabel, "Character", "");
     setupSlider(widthSlider, widthLabel, "Width", "%");
@@ -94,15 +94,14 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     setSize (1000, 600);
 
-    
-
-    // addAndMakeVisible(testKnob);
-    // testKnob.setBounds(getWidth() - 150, getHeight() - 150, 100, 100);
-
+    delaySlider.addListener(this);
+    characterSlider.addListener(this);
 }
 
 PluginEditor::~PluginEditor()
 {
+    delaySlider.removeListener(this);
+    characterSlider.removeListener(this);
 }
 
 void PluginEditor::paint (juce::Graphics& g)
@@ -114,9 +113,9 @@ void PluginEditor::resized()
 {
     auto area = getLocalBounds();
     
-    int padding = getWidth() * 0.04; // 40px at 1000x600
-    int knobSizeX = getWidth() * 0.10f; // 100x100 at expected res (1000x600)
-    int knobSizeY = (getWidth() * 0.10f) + TEXT_BOX_HEIGHT;
+    int padding = getWidth() * 0.02; // 20px at 1000x600
+    int knobSizeX = getWidth() * 0.08f; // 80x80 at expected res (1000x600)
+    int knobSizeY = (getWidth() * 0.08f) + TEXT_BOX_HEIGHT;
     int largeKnobSizeX = getWidth() * 0.36f; // 320x320 at expected res (1000x600)
     int largeKnobSizeY = getWidth() * 0.36f + TEXT_BOX_HEIGHT; // 320x320 at expected res (1000x600)
     
@@ -140,42 +139,57 @@ void PluginEditor::resized()
         largeKnobSizeY
     );
     
-    // In / Out gain & Mix
+    // In / Out gain & filters
     // Right hand side, 2 on top one on bottom
     // 175 px y
-    int topLayerHeight = (getHeight()*0.3f);
+    int topLayerHeight = (getHeight()*0.35f);
 
-    int leftPad = getWidth() *0.05f;
+    int leftPad = getWidth() *0.1f;
+    int rightPad = getWidth() - leftPad - (1.35f*knobSizeX);
 
     inputGainSlider.setBounds(
-        leftPad,
+        rightPad,
         topLayerHeight,
         knobSizeX,
         knobSizeY
     );
 
     outputGainSlider.setBounds(
-        leftPad+knobSizeX+padding,
+        rightPad-knobSizeX-padding,
         topLayerHeight,
         knobSizeX,
         knobSizeY
     );
 
-    lowCutSlider.setBounds(
-        leftPad,
-        topLayerHeight+knobSizeY+padding,
+    highCutSlider.setBounds(
+        rightPad,
+        topLayerHeight+knobSizeY+(1.3*padding),
         knobSizeX,
         knobSizeY
     );
 
-    highCutSlider.setBounds(
-        leftPad+knobSizeX+padding,
-        topLayerHeight+knobSizeY+padding,
+    lowCutSlider.setBounds(
+        rightPad-knobSizeX-padding,
+        topLayerHeight+knobSizeY+(1.3*padding),
         knobSizeX,
         knobSizeY
     );
 
     // mixSlider.setBounds();
+
+    characterSlider.setBounds(
+        leftPad*0.75,
+        (getHeight()*0.5 - knobSizeX*0.75),
+        knobSizeX*1.5,
+        knobSizeY*1.5-(TEXT_BOX_HEIGHT/2)
+    );
+
+    brightnessSlider.setBounds(
+        (leftPad*0.75) + (knobSizeX*1.5),
+        (getHeight()*0.5 - knobSizeX*0.75),
+        knobSizeX*1.5,
+        knobSizeY*1.5-(TEXT_BOX_HEIGHT/2)
+    );
 
     // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
@@ -184,6 +198,35 @@ void PluginEditor::resized()
     // IMPORTANT: Ensure the activation UI is resized as well.
     MOONBASE_RESIZE_ACTIVATION_UI
 }
+
+//==============================================================================
+
+void PluginEditor::sliderValueChanged(juce::Slider* slider)
+{
+    float delay = apvts.getRawParameterValue("DELAY")->load();
+    float character = apvts.getRawParameterValue("CHARACTER")->load();
+
+    if (slider == &delaySlider) {
+        // Normalize delay from [1,100] to [0,1]
+        float normalized = (delay - 1.0f) / 99.0f;
+        
+        // Apply skew with exponent < 1 (e.g. 0.5 = sqrt) to bias towards low half
+        float skewed = std::pow(normalized, 1.f);
+        
+        // Map skewed value to [1, 128]
+        int mappedDelay = static_cast<int>(skewed * 127.0f + 1);
+        
+        bg.setRightFrame(mappedDelay);
+    }
+    
+    if (slider == &characterSlider){
+        // Linear mapping as before
+        int mappedCharacter = static_cast<int>(((character - 0.1f) / 1.9f) * 127 + 1);
+        bg.setLeftFrame(mappedCharacter);
+    }
+}
+
+
 
 //==============================================================================
 // Helper functions for UI setup

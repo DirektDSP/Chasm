@@ -44,6 +44,7 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    AudioProcessorValueTreeState& getApvts() { return apvts; }
 
     Service::PresetManager& getPresetManager() { return *presetManager; }
 
@@ -54,11 +55,11 @@ public:
         
         // Input/Output Gains (-24 to +24 dB, Linear, 5ms smoothing)
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"INPUT_GAIN", 1}, "Input Gain", 
+            juce::ParameterID{"INPUT_GAIN", 1}, "Input", 
             juce::NormalisableRange<float>(-48.0f, 24.0f, 0.1f), 0.0f));
             
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
-            juce::ParameterID{"OUTPUT_GAIN", 1}, "Output Gain", 
+            juce::ParameterID{"OUTPUT_GAIN", 1}, "Output", 
             juce::NormalisableRange<float>(-48.0f, 24.0f, 0.1f), 0.0f));
         
         // Mix (0 to 100%, Linear, 20ms smoothing)
