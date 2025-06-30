@@ -125,6 +125,7 @@ public:
 
         // Apply stereo enhancement
         // TODO: Finalize Stereo Enhancer implementation
+        stereoEnhancer.processBlock(wetBuffer);
 
         // Apply MakeItLoud effect
         makeItLoud.setInputGain(mil_InputGainSmoother.getNextValue());
