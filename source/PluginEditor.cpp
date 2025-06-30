@@ -175,12 +175,19 @@ void PluginEditor::resized()
         knobSizeY
     );
 
-     mixSlider.setBounds(
-        getWidth()*0.8,
+    mixSlider.setBounds(
+        getWidth()-TEXT_BOX_WIDTH-knobSizeX,
         (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT,
         knobSizeX+TEXT_BOX_WIDTH,
         knobSizeY-TEXT_BOX_HEIGHT
-     );
+    );
+
+    widthSlider.setBounds(
+        getWidth()*0.625f,
+        (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT,
+        knobSizeX+TEXT_BOX_WIDTH,
+        knobSizeY-TEXT_BOX_HEIGHT
+    );
 
 
     // left side
@@ -258,7 +265,7 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
 
-    if (labelText == "Mix"){
+    if (labelText == "Mix" || labelText == "Width"){
         label.attachToComponent(&slider, true);
         slider.setTextBoxStyle(juce::Slider::TextBoxRight, false, TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT);
     }
