@@ -184,7 +184,12 @@ public:
      */
     void setCompressorMode(int mode)
     {
-        setCompressorMode(static_cast<CompressorMode>(juce::jlimit(0, 2, mode)));
+        if (mode == 0){
+            _enabled = false;
+        } else {
+            _enabled = true;
+            setCompressorMode(static_cast<CompressorMode>(juce::jlimit(0, 2, mode+1))); // +1 offset from 0->disabled
+        }
     }
 
 private:

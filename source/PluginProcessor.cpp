@@ -140,10 +140,6 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    // Check if bypassed
-    bool isBypassed = *apvts.getRawParameterValue("BYPASS") > 0.5f;
-    if (isBypassed)
-        return;    // Get parameter values and update DSP processor
     float inputGain = *apvts.getRawParameterValue("INPUT_GAIN");
     float outputGain = *apvts.getRawParameterValue("OUTPUT_GAIN");
     float mix = *apvts.getRawParameterValue("MIX");
@@ -154,15 +150,14 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     float highCut = *apvts.getRawParameterValue("HIGH_CUT");
     float width = *apvts.getRawParameterValue("WIDTH");
 
-    float mil_InputGain = *apvts.getRawParameterValue("MIL_INPUT_GAIN");
-    float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST_VALUE");
+    float mil_InputGain = *apvts.getRawParameterValue("MIL_INGAIN");
+    float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST");
     int mil_Mode = *apvts.getRawParameterValue("MIL_MODE");
-    bool mil_Enabled = *apvts.getRawParameterValue("MIL_ENABLED") > 0.5f;
 
     // Update DSP processor parameters
     dspProcessor.updateParameters(inputGain, outputGain, mix, delay, brightness,
                                   character, lowCut, highCut, width,
-                                  mil_InputGain, mil_BoostValue, mil_Mode, mil_Enabled);
+                                  mil_InputGain, mil_BoostValue, mil_Mode);
 
 
     // Process the audio using function from

@@ -67,9 +67,23 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(lowCutSlider, lowCutLabel, "Low Cut");
     setupSlider(highCutSlider, highCutLabel, "High Cut");
 
-    // Setup toggle buttons
-    setupToggleButton(bypassToggle, bypassLabel, "Bypass");
+    setupSlider(mil_inGain, mil_inGainLabel, "In Gain", "dB");
+    setupSlider(mil_boost, mil_boostLabel, "Boost", "dB");
+    mil_inGain.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
+    mil_boost.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
 
+    
+    setupComboBox(mil_modeCB, mil_modeCBLabel, "Mode");
+
+    mil_modeCB.addItemList(juce::StringArray{
+        "Off",
+        "Clean",
+        "Further",
+        "Crunchy"
+    }, 1);
+    mil_modeCB.setSelectedItemIndex(0);
+
+    
     // Create APVTS attachments
     inputGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processorRef.apvts, "INPUT_GAIN", inputGainSlider);
@@ -89,8 +103,15 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         processorRef.apvts, "HIGH_CUT", highCutSlider);
     widthAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processorRef.apvts, "WIDTH", widthSlider);
-    bypassAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ButtonAttachment>(
-        processorRef.apvts, "BYPASS", bypassToggle);
+
+    mil_modeCBAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
+        processorRef.apvts, "MIL_MODE", mil_modeCB);
+
+    mil_inGainAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processorRef.apvts, "MIL_INGAIN", mil_inGain);
+
+    mil_boostAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processorRef.apvts, "MIL_BOOST", mil_boost);
 
     setSize (1000, 600);
 
@@ -208,6 +229,24 @@ void PluginEditor::resized()
     );
     // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
+
+    // MIL
+
+    auto btmHeight = (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT;
+
+    mil_boost.setBounds(
+        getWidth()/2 + 8*padding,
+        btmHeight,
+        knobSizeX,
+        knobSizeY-TEXT_BOX_HEIGHT
+    );
+
+    mil_modeCB.setBounds(
+        getWidth()/2.75,
+        btmHeight+(knobSizeY/4),
+        knobSizeX+TEXT_BOX_WIDTH,
+        knobSizeY/4
+    );
     
 
     // IMPORTANT: Ensure the activation UI is resized as well.
@@ -265,7 +304,12 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
 
-    if (labelText == "Mix" || labelText == "Width"){
+    if (
+        labelText == "Mix" ||
+        labelText == "Width" ||
+        labelText == "In Gain" ||
+        labelText == "Boost"
+    ){
         label.attachToComponent(&slider, true);
         slider.setTextBoxStyle(juce::Slider::TextBoxRight, false, TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT);
     }
@@ -288,6 +332,19 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
     label.setJustificationType(juce::Justification::centred);
     label.attachToComponent(&slider, false);
 }
+
+void PluginEditor::setupComboBox(juce::ComboBox& comboBox, juce::Label& label, const juce::String& labelText)
+{
+    addAndMakeVisible(comboBox);
+    addAndMakeVisible(label);
+
+    label.setText(labelText, juce::dontSendNotification);
+    label.setColour(juce::Label::textColourId, juce::Colour::fromRGB(47, 47, 47));
+    label.setFont(UI::Utils::getCustomFont());
+    label.setJustificationType(juce::Justification::centred);
+    label.attachToComponent(&comboBox, true);
+}
+
 
 void PluginEditor::setupToggleButton(juce::ToggleButton& button, juce::Label& label, 
                                    const juce::String& labelText)

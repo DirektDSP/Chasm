@@ -6,6 +6,8 @@
 #include "UI/Components/PresetPanel.h"
 #include "UI/Components/RasterKnob.h"
 #include "UI/Components/SmallerRasterKnob.h"
+#include "UI/Components/ModeCB.h"
+#include "UI/Components/LedButton.h"
 #include "UI/Utils/Timestamp.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
@@ -31,6 +33,7 @@ private:
     // Helper functions for UI setup
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText);
+    void setupComboBox(juce::ComboBox& comboBox, juce::Label& label, const juce::String& labelText);
     void setupToggleButton (juce::ToggleButton& button, juce::Label& label, const juce::String& labelText);
     void layoutSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
     void layoutToggleWithLabel (juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
@@ -61,12 +64,10 @@ private:
 
     UI::Components::SmallerRasterKnob inputGainSlider, outputGainSlider, mixSlider;
     UI::Components::SmallerRasterKnob brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider;
-    juce::ToggleButton bypassToggle;
 
     // Labels for sliders
     juce::Label inputGainLabel, outputGainLabel, mixLabel, delayLabel;
     juce::Label brightnessLabel, characterLabel, lowCutLabel, highCutLabel, widthLabel;
-    juce::Label bypassLabel;
 
     // APVTS Attachments
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAttachment;
@@ -78,7 +79,19 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> bypassAttachment;
+
+    // MIL
+
+    juce::Label mil_modeCBLabel, mil_inGainLabel, mil_enabledLabel, mil_boostLabel;
+
+    UI::Components::ModeCB mil_modeCB;
+    UI::Components::SmallerRasterKnob mil_inGain, mil_boost;
+    UI::Components::LedButton mil_enabled;
+
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> mil_modeCBAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mil_inGainAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mil_boostAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> mil_enabledAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };

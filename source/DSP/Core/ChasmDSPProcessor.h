@@ -60,7 +60,7 @@ public:
     void updateParameters(SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent,
                           SampleType delayMs, SampleType brightnessDb, SampleType characterQ,
                           SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent,
-                        SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode, bool mil_Enabled)
+                        SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode)
     {
         inputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(inputGainDb));
         outputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(outputGainDb));
@@ -75,7 +75,6 @@ public:
         mil_BoostSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_BoostValue));
         mil_InputGainSmoother.setTargetValue(Utils::DSPUtils::dbToGain(mil_InputGain));
         makeItLoud.setCompressorMode(mil_Mode);
-        makeItLoud.setEnabled(mil_Enabled);
 
     }
 

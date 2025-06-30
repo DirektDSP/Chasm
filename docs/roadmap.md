@@ -67,7 +67,6 @@ UI Component layout
 
 - [ ] Main UI
   - [ ] Misc Knobs
-    - [ ] Bypass Button
     - [ ] Preset Dropdown
     - [ ] Save Button
     - [ ] Delete Button
