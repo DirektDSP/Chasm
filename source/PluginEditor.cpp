@@ -52,7 +52,7 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     // Allow the editor to be resizable
     setResizable(true, true);
-    constrainer.setMinimumSize(250, 150);    addAndMakeVisible(presetPanel);
+    constrainer.setMinimumSize(800, 420);    addAndMakeVisible(presetPanel);
 
     // Setup sliders and labels
     setupSlider(inputGainSlider, inputGainLabel, "Input", "dB");
@@ -176,36 +176,36 @@ void PluginEditor::resized()
     );
 
     mixSlider.setBounds(
-        getWidth()-TEXT_BOX_WIDTH-knobSizeX,
+        getWidth()-TEXT_BOX_WIDTH-knobSizeX-padding,
         (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT,
         knobSizeX+TEXT_BOX_WIDTH,
         knobSizeY-TEXT_BOX_HEIGHT
     );
 
-    widthSlider.setBounds(
-        getWidth()*0.625f,
-        (getHeight()*0.985f)-(knobSizeY)+TEXT_BOX_HEIGHT,
-        knobSizeX+TEXT_BOX_WIDTH,
-        knobSizeY-TEXT_BOX_HEIGHT
-    );
-
-
+    
+    
     // left side
-
+    
     characterSlider.setBounds(
         leftPad*0.75,
-        (getHeight()*0.5 - knobSizeX*0.75),
+        (getHeight()*0.5 - knobSizeX*1.6),
         knobSizeX*1.5,
         knobSizeY*1.5-(TEXT_BOX_HEIGHT/2)
     );
-
+    
     brightnessSlider.setBounds(
         (leftPad*0.75) + (knobSizeX*1.5),
-        (getHeight()*0.5 - knobSizeX*0.75),
+        (getHeight()*0.5 - knobSizeX*1.6),
         knobSizeX*1.5,
         knobSizeY*1.5-(TEXT_BOX_HEIGHT/2)
     );
-
+    
+    widthSlider.setBounds(
+        leftPad*0.75+TEXT_BOX_WIDTH,
+        (getHeight()*0.5) + knobSizeX*0.4,
+        knobSizeX+TEXT_BOX_WIDTH,
+        knobSizeY-TEXT_BOX_HEIGHT
+    );
     // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
     
