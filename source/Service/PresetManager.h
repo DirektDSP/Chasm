@@ -7,26 +7,38 @@ using namespace juce;
 
 namespace Service
 {
-	class PresetManager : ValueTree::Listener
-	{
-	public:
-		static const File defaultDirectory;
-		static const String extension;
-		static const String presetNameProperty;
+    struct PresetMetadata
+    {
+        String name;
+        String artist;
+        String dateCreated;
+        String dateModified;
+    };
 
-		PresetManager(AudioProcessorValueTreeState&);
+    class PresetManager : private ValueTree::Listener
+    {
+    public:
+        static const File defaultDirectory;
+        static const String extension;
+        static const String presetNameProperty;
 
-		void savePreset(const String& presetName);
-		void deletePreset(const String& presetName);
-		void loadPreset(const String& presetName);
-		int loadNextPreset();
-		int loadPreviousPreset();
-		StringArray getAllPresets() const;
-		String getCurrentPreset() const;
-	private:
-		void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
+        PresetManager(AudioProcessorValueTreeState&);
 
-		AudioProcessorValueTreeState& valueTreeState;
-		Value currentPreset;
-	};
+        void savePreset(const String& presetName, const String& artistName = "Unknown");
+        void deletePreset(const String& presetName);
+        void loadPreset(const String& presetName);
+        int loadNextPreset();
+        int loadPreviousPreset();
+        StringArray getAllPresets() const;
+        Array<PresetMetadata> getAllPresetMetadata() const;
+        String getCurrentPreset() const;
+
+    private:
+        void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
+        void updatePresetList();
+
+        AudioProcessorValueTreeState& valueTreeState;
+        Value currentPreset;
+        StringArray availablePresets;
+    };
 }

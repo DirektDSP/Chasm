@@ -68,15 +68,11 @@ UI Component layout
 - [ ] Main UI
   - [ ] Misc Knobs
     - [ ] Preset Dropdown
-    - [ ] Save Button
-    - [ ] Delete Button
+    - [ ] Save Preset Button
+    - [ ] Delete Preset Button
 
 ### In Progress (UI)
 
-- MakeItLoud UI Elements
-  - [ ] Dropdown menus
-  - [ ] Knobs
-  - [ ] Toggle
 
 ### Done (UI)
 
@@ -84,6 +80,10 @@ UI Component layout
 - [x] Sliders
   - [x] Main Sliders
   - [x] Dual High/Low Cut Slider
+
+- MakeItLoud UI Elements
+  - [x] Dropdown menus
+  - [x] Knobs
 
 ### Exports to Manage
 

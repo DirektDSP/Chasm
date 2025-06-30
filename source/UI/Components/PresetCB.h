@@ -25,7 +25,7 @@ namespace UI
             public:
                 PresetCBLookAndFeel()
                 {
-                    bgColour = juce::Colour::fromRGB (42, 42, 42);
+                    bgColour = juce::Colour::fromRGB (173, 173, 173);
                 }
 
                 void drawComboBox (juce::Graphics& g, int width, int height, bool isButtonDown, int buttonX, int buttonY, int buttonW, int buttonH, ComboBox& box) override

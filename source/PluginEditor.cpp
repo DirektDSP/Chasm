@@ -203,6 +203,14 @@ void PluginEditor::resized()
         knobSizeY-TEXT_BOX_HEIGHT
     );
 
+
+    presetPanel.setBounds(
+        0,
+        0,
+        getWidth()*0.56,
+        getHeight()*0.15f
+    );
+
     
     
     // left side

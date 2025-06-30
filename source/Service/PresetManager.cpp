@@ -2,145 +2,184 @@
 
 namespace Service
 {
-	const File PresetManager::defaultDirectory{ File::getSpecialLocation(
-		File::SpecialLocationType::commonDocumentsDirectory)
-			.getChildFile("DirektDSP")
-			.getChildFile(JucePlugin_Name)
-			.getChildFile("Presets")
-	};
-	const String PresetManager::extension{ "ddsp" };
-	const String PresetManager::presetNameProperty{ "presetName" };
+    const File PresetManager::defaultDirectory{
+        File::getSpecialLocation(File::SpecialLocationType::commonDocumentsDirectory)
+            .getChildFile("DirektDSP")
+            .getChildFile(JucePlugin_Name)
+            .getChildFile("Presets")
+    };
 
-	PresetManager::PresetManager(AudioProcessorValueTreeState& apvts) :
-		valueTreeState(apvts)
-	{
-		// Create a default Preset Directory, if it doesn't exist
-		if (!defaultDirectory.exists())
-		{
-			const auto result = defaultDirectory.createDirectory();
-			if (result.failed())
-			{
-				DBG("Could not create preset directory: " + result.getErrorMessage());
-				jassertfalse;
-			}
-		}
+    const String PresetManager::extension{ "ddsp" };
+    const String PresetManager::presetNameProperty{ "presetName" };
 
-		valueTreeState.state.addListener(this);
-		currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
-	}
+    PresetManager::PresetManager(AudioProcessorValueTreeState& apvts)
+        : valueTreeState(apvts)
+    {
+        if (!defaultDirectory.exists())
+        {
+            const auto result = defaultDirectory.createDirectory();
+            if (result.failed())
+            {
+                DBG("Could not create preset directory: " + result.getErrorMessage());
+                jassertfalse;
+            }
+        }
 
-	void PresetManager::savePreset(const String& presetName)
-	{
-		if (presetName.isEmpty())
-			return;
+        valueTreeState.state.addListener(this);
+        currentPreset.referTo(valueTreeState.state.getPropertyAsValue(presetNameProperty, nullptr));
+        updatePresetList();
+    }
 
-		currentPreset.setValue(presetName);
-		const auto xml = valueTreeState.copyState().createXml();
-		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-		if (!xml->writeTo(presetFile))
-		{
-			DBG("Could not create preset file: " + presetFile.getFullPathName());
-			jassertfalse;
-		}
-	}
+    void PresetManager::savePreset(const String& presetName, const String& artistName)
+    {
+        if (presetName.isEmpty())
+            return;
 
-	void PresetManager::deletePreset(const String& presetName)
-	{
-		if (presetName.isEmpty())
-			return;
+        currentPreset.setValue(presetName);
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-		
-		if (!presetFile.existsAsFile())
-		{
-			DBG("Preset file " + presetFile.getFullPathName() + " does not exist");
-			jassertfalse;
-			return;
-		}
-		
-		// Show confirmation before deleting
-		if (AlertWindow::showOkCancelBox(
-			AlertWindow::WarningIcon, 
-			"Delete Preset", 
-			"Are you sure you want to delete the preset \"" + presetName + "\"?", 
-			"Delete", 
-			"Cancel",
-			nullptr,
-			nullptr))
-		{
-			if (!presetFile.moveToTrash())
-			{
-				DBG("Preset file " + presetFile.getFullPathName() + " could not be deleted");
-				jassertfalse;
-				return;
-			}
-			
-			currentPreset.setValue("");
-		}
-	}
+        auto state = valueTreeState.copyState();
+        state.setProperty("artist", artistName, nullptr);
+        state.setProperty("dateCreated", Time::getCurrentTime().toISO8601(true), nullptr);
+        state.setProperty("dateModified", Time::getCurrentTime().toISO8601(true), nullptr);
 
-	void PresetManager::loadPreset(const String& presetName)
-	{
-		if (presetName.isEmpty())
-			return;
+        const auto xml = state.createXml();
+        const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
-		const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
-		if (!presetFile.existsAsFile())
-		{
-			DBG("Preset file " + presetFile.getFullPathName() + " does not exist");
-			jassertfalse;
-			return;
-		}
-		// presetFile (XML) -> (ValueTree)
-		XmlDocument xmlDocument{ presetFile }; 
-		const auto valueTreeToLoad = ValueTree::fromXml(*xmlDocument.getDocumentElement());
+        if (!xml->writeTo(presetFile))
+        {
+            DBG("Could not create preset file: " + presetFile.getFullPathName());
+            jassertfalse;
+        }
 
-		valueTreeState.replaceState(valueTreeToLoad);
-		currentPreset.setValue(presetName);
+        updatePresetList();
+    }
 
-	}
+    void PresetManager::deletePreset(const String& presetName)
+    {
+        if (presetName.isEmpty())
+            return;
 
-	int PresetManager::loadNextPreset()
-	{
-		const auto allPresets = getAllPresets();
-		if (allPresets.isEmpty())
-			return -1;
-		const auto currentIndex = allPresets.indexOf(currentPreset.toString());
-		const auto nextIndex = currentIndex + 1 > (allPresets.size() - 1) ? 0 : currentIndex + 1;
-		loadPreset(allPresets.getReference(nextIndex));
-		return nextIndex;
-	}
+        const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
 
-	int PresetManager::loadPreviousPreset()
-	{
-		const auto allPresets = getAllPresets();
-		if (allPresets.isEmpty())
-			return -1;
-		const auto currentIndex = allPresets.indexOf(currentPreset.toString());
-		const auto previousIndex = currentIndex - 1 < 0 ? allPresets.size() - 1 : currentIndex - 1;
-		loadPreset(allPresets.getReference(previousIndex));
-		return previousIndex;
-	}
+        if (!presetFile.existsAsFile())
+        {
+            DBG("Preset file " + presetFile.getFullPathName() + " does not exist");
+            jassertfalse;
+            return;
+        }
 
-	StringArray PresetManager::getAllPresets() const
-	{
-		StringArray presets;
-		const auto fileArray = defaultDirectory.findChildFiles(
-			File::TypesOfFileToFind::findFiles, false, "*." + extension);
-		for (const auto& file : fileArray)
-		{
-			presets.add(file.getFileNameWithoutExtension());
-		}
-		return presets;
-	}
+        
+        if (!presetFile.moveToTrash())
+        {
+            DBG("Preset file " + presetFile.getFullPathName() + " could not be deleted");
+            jassertfalse;
+            return;
+        }
 
-	String PresetManager::getCurrentPreset() const
-	{
-		return currentPreset.toString();
-	}
+        currentPreset.setValue("");
+        updatePresetList();
+    
+    }
 
-	void PresetManager::valueTreeRedirected(ValueTree& treeWhichHasBeenChanged)
-	{
-		currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
-	}
+    void PresetManager::loadPreset(const String& presetName)
+    {
+        if (presetName.isEmpty())
+            return;
+
+        const auto presetFile = defaultDirectory.getChildFile(presetName + "." + extension);
+        if (!presetFile.existsAsFile())
+        {
+            DBG("Preset file " + presetFile.getFullPathName() + " does not exist");
+            jassertfalse;
+            return;
+        }
+
+        XmlDocument xmlDocument{ presetFile };
+        std::unique_ptr<XmlElement> xml(xmlDocument.getDocumentElement());
+        if (xml == nullptr)
+        {
+            DBG("Invalid XML in preset file");
+            jassertfalse;
+            return;
+        }
+
+        auto valueTreeToLoad = ValueTree::fromXml(*xml);
+        valueTreeToLoad.setProperty("dateModified", Time::getCurrentTime().toISO8601(true), nullptr);
+
+        valueTreeState.replaceState(valueTreeToLoad);
+        currentPreset.setValue(presetName);
+
+        updatePresetList();
+    }
+
+    int PresetManager::loadNextPreset()
+    {
+        if (availablePresets.isEmpty())
+            return -1;
+
+        const auto currentIndex = availablePresets.indexOf(currentPreset.toString());
+        const auto nextIndex = currentIndex + 1 > (availablePresets.size() - 1) ? 0 : currentIndex + 1;
+        loadPreset(availablePresets[nextIndex]);
+        return nextIndex;
+    }
+
+    int PresetManager::loadPreviousPreset()
+    {
+        if (availablePresets.isEmpty())
+            return -1;
+
+        const auto currentIndex = availablePresets.indexOf(currentPreset.toString());
+        const auto previousIndex = currentIndex - 1 < 0 ? availablePresets.size() - 1 : currentIndex - 1;
+        loadPreset(availablePresets[previousIndex]);
+        return previousIndex;
+    }
+
+    StringArray PresetManager::getAllPresets() const
+    {
+        StringArray presets;
+        const auto fileArray = defaultDirectory.findChildFiles(File::findFiles, false, "*." + extension);
+        for (const auto& file : fileArray)
+            presets.add(file.getFileNameWithoutExtension());
+        return presets;
+    }
+
+    Array<PresetMetadata> PresetManager::getAllPresetMetadata() const
+    {
+        Array<PresetMetadata> result;
+        const auto fileArray = defaultDirectory.findChildFiles(File::findFiles, false, "*." + extension);
+
+        for (const auto& file : fileArray)
+        {
+            XmlDocument xmlDocument(file);
+            std::unique_ptr<XmlElement> xml(xmlDocument.getDocumentElement());
+
+            if (xml != nullptr)
+            {
+                auto tree = ValueTree::fromXml(*xml);
+                PresetMetadata meta;
+                meta.name = file.getFileNameWithoutExtension();
+                meta.artist = tree.getProperty("artist", "Unknown").toString();
+                meta.dateCreated = tree.getProperty("dateCreated", "").toString();
+                meta.dateModified = tree.getProperty("dateModified", "").toString();
+                result.add(meta);
+            }
+        }
+
+        return result;
+    }
+
+    String PresetManager::getCurrentPreset() const
+    {
+        return currentPreset.toString();
+    }
+
+    void PresetManager::valueTreeRedirected(ValueTree& treeWhichHasBeenChanged)
+    {
+        currentPreset.referTo(treeWhichHasBeenChanged.getPropertyAsValue(presetNameProperty, nullptr));
+    }
+
+    void PresetManager::updatePresetList()
+    {
+        availablePresets = getAllPresets();
+    }
 }

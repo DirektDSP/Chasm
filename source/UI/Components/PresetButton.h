@@ -24,7 +24,7 @@ namespace UI
             public:
                 PresetButtonLookAndFeel()
                 {
-                    bgColour = juce::Colour::fromRGB (42, 42, 42);
+                    bgColour = juce::Colour::fromRGB (173, 173, 173);
                 }
 
                 void drawButtonBackground (juce::Graphics& g, juce::Button& button, const juce::Colour& backgroundColour, bool isMouseOverButton, bool isButtonDown) override

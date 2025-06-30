@@ -41,17 +41,29 @@ namespace UI
 
             void resized() override
             {
-                const auto container = getLocalBounds();
-                auto bounds = container;
+                auto area = getLocalBounds(); // Add padding
+                const int spacing = 0;
+                const int buttonWidth = 80;
+                const int dropdownWidth = 200;
+                const int height = 24;
 
-                // add .reduced(4) at the end to add a border between buttons
+                // Define widths
+                presetList.setBounds(area.removeFromLeft(dropdownWidth));
 
-                saveButton.setBounds (bounds.removeFromLeft (container.proportionOfWidth (0.2f)));
-                previousPresetButton.setBounds (bounds.removeFromLeft (container.proportionOfWidth (0.1f)));
-                presetList.setBounds (bounds.removeFromLeft (container.proportionOfWidth (0.4f)));
-                nextPresetButton.setBounds (bounds.removeFromLeft (container.proportionOfWidth (0.1f)));
-                deleteButton.setBounds (bounds);
+                area.removeFromLeft(spacing); // Spacer
+
+                previousPresetButton.setBounds(area.removeFromLeft(buttonWidth));
+                area.removeFromLeft(spacing);
+
+                nextPresetButton.setBounds(area.removeFromLeft(buttonWidth));
+                area.removeFromLeft(spacing);
+
+                saveButton.setBounds(area.removeFromLeft(buttonWidth));
+                area.removeFromLeft(spacing);
+
+                deleteButton.setBounds(area.removeFromLeft(buttonWidth));
             }
+
 
         private:
             void buttonClicked (Button* button) override
