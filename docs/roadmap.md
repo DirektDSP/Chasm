@@ -65,17 +65,15 @@ UI Component layout
 
 ### To Do (UI)
 
-- [ ] Main UI
-  - [ ] Misc Knobs
-    - [ ] Preset Dropdown
-    - [ ] Save Preset Button
-    - [ ] Delete Preset Button
-
 ### In Progress (UI)
-
 
 ### Done (UI)
 
+- [x] Main UI
+  - [x] Misc Knobs
+    - [x] Preset Dropdown
+    - [x] Save Preset Button
+    - [x] Delete Preset Button
 - [x] Main Delay Knob
 - [x] Sliders
   - [x] Main Sliders
