@@ -208,7 +208,7 @@ void PluginEditor::resized()
         0,
         0,
         getWidth()*0.56,
-        getHeight()*0.15f
+        getHeight()*0.11f
     );
 
     

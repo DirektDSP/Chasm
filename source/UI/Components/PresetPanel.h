@@ -15,12 +15,13 @@ namespace UI
         class PresetPanel : public Component, Button::Listener, ComboBox::Listener
         {
         public:
-            PresetPanel (Service::PresetManager& pm) : presetManager (pm)
+            PresetPanel (Service::PresetManager& pm) : 
+                presetManager (pm),
+                saveButton(PresetButton::IconType::Plus),
+                deleteButton(PresetButton::IconType::Delete)
             {
-                configureButton (saveButton, "Save");
-                configureButton (deleteButton, "Delete");
-                configureButton (previousPresetButton, "< ");
-                configureButton (nextPresetButton, " >");
+                configureButton (saveButton, "");
+                configureButton (deleteButton, "");
 
                 presetList.setTextWhenNothingSelected ("No Preset Selected");
                 presetList.setMouseCursor (MouseCursor::PointingHandCursor);
@@ -34,36 +35,47 @@ namespace UI
             {
                 saveButton.removeListener (this);
                 deleteButton.removeListener (this);
-                previousPresetButton.removeListener (this);
-                nextPresetButton.removeListener (this);
                 presetList.removeListener (this);
             }
 
             void resized() override
             {
-                auto area = getLocalBounds(); // Add padding
-                const int spacing = 0;
-                const int buttonWidth = 80;
-                const int dropdownWidth = 200;
-                const int height = 24;
+                // Simple approach: position elements directly using your specified coordinates
+                // scaled to the current component size
+                
+                // Base resolution for calculations (2000 x 1200)
+                const float baseWidth = 2000.0f;
+                const float baseHeight = 1200.0f;
 
-                // Define widths
-                presetList.setBounds(area.removeFromLeft(dropdownWidth));
-
-                area.removeFromLeft(spacing); // Spacer
-
-                previousPresetButton.setBounds(area.removeFromLeft(buttonWidth));
-                area.removeFromLeft(spacing);
-
-                nextPresetButton.setBounds(area.removeFromLeft(buttonWidth));
-                area.removeFromLeft(spacing);
-
-                saveButton.setBounds(area.removeFromLeft(buttonWidth));
-                area.removeFromLeft(spacing);
-
-                deleteButton.setBounds(area.removeFromLeft(buttonWidth));
+                auto* topLevel = getTopLevelComponent();
+                
+                // Use the component's own dimensions for scaling
+                const float currentWidth = topLevel->getWidth();
+                const float currentHeight = topLevel->getHeight();
+                
+                // Calculate scale factors
+                const float scaleX = currentWidth / baseWidth;
+                const float scaleY = currentHeight / baseHeight;
+                
+                // Your specified positions, scaled to current size
+                const int dropdownX = int(220.0f * scaleX);
+                const int dropdownY = int(48.0f * scaleY);
+                const int dropdownWidth = int(600.0f * scaleX);
+                const int dropdownHeight = int(82.0f * scaleY);
+                
+                const int saveX = int(840.0f * scaleX);
+                const int saveY = int(48.0f * scaleY);
+                const int buttonWidth = int(82.0f * scaleX);
+                const int buttonHeight = int(82.0f * scaleY);
+                
+                const int deleteX = int(940.0f * scaleX);
+                const int deleteY = int(48.0f * scaleY);
+                
+                // Set component bounds
+                presetList.setBounds(dropdownX, dropdownY, dropdownWidth, dropdownHeight);
+                saveButton.setBounds(saveX, saveY, buttonWidth, buttonHeight);
+                deleteButton.setBounds(deleteX, deleteY, buttonWidth, buttonHeight);
             }
-
 
         private:
             void buttonClicked (Button* button) override
@@ -80,22 +92,13 @@ namespace UI
                         loadPresetList();
                     });
                 }
-                if (button == &previousPresetButton)
-                {
-                    const auto index = presetManager.loadPreviousPreset();
-                    presetList.setSelectedItemIndex (index, dontSendNotification);
-                }
-                if (button == &nextPresetButton)
-                {
-                    const auto index = presetManager.loadNextPreset();
-                    presetList.setSelectedItemIndex (index, dontSendNotification);
-                }
                 if (button == &deleteButton)
                 {
                     presetManager.deletePreset (presetManager.getCurrentPreset());
                     loadPresetList();
                 }
             }
+            
             void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override
             {
                 if (comboBoxThatHasChanged == &presetList)
@@ -122,7 +125,7 @@ namespace UI
             }
 
             Service::PresetManager& presetManager;
-            PresetButton saveButton, deleteButton, previousPresetButton, nextPresetButton;
+            PresetButton saveButton, deleteButton;
             PresetCB presetList;
             std::unique_ptr<FileChooser> fileChooser;
 

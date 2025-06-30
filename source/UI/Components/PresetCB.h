@@ -1,5 +1,6 @@
 #pragma once
 
+#include "UI/Utils/CustomFont.h"
 #include <juce_gui_basics/juce_gui_basics.h>
 
 namespace UI
@@ -25,38 +26,62 @@ namespace UI
             public:
                 PresetCBLookAndFeel()
                 {
-                    bgColour = juce::Colour::fromRGB (173, 173, 173);
+                    bgColour = juce::Colour::fromRGB (160, 196, 126);
+                    bgStroke = juce::Colour::fromRGB (135, 166, 106);
+                    customFont = UI::Utils::getCustomFont();
+                }
+
+                Font getComboBoxFont (ComboBox& /*box*/) override
+                {
+                    return getCommonMenuFont();
+                }
+                Font getPopupMenuFont() override
+                {
+                    return customFont;
                 }
 
                 void drawComboBox (juce::Graphics& g, int width, int height, bool isButtonDown, int buttonX, int buttonY, int buttonW, int buttonH, ComboBox& box) override
                 {
-                    // Define corner radius
+                    g.setFont (customFont);
 
-                    // draw rounded background colour
+                    // Draw rounded background with 5px corner radius
                     g.setColour (bgColour);
                     juce::Rectangle<float> backgroundRect (0.0f, 0.0f, static_cast<float> (width), static_cast<float> (height));
-                    g.fillAll();
+                    g.fillRoundedRectangle (backgroundRect, 5.0f);
 
-                    // draw the icon as white
+                    // Draw the dropdown arrow as white
                     g.setColour (juce::Colours::white);
                     juce::Path path;
                     path.startNewSubPath (0.0f, 0.0f);
                     path.lineTo (8.0f, 0.0f);
                     path.lineTo (4.0f, 8.0f);
                     path.closeSubPath();
-                    g.fillPath (path, juce::AffineTransform::translation (width - 12.0f, (height - 8.0f) * 0.5f));
+                    g.fillPath (path, juce::AffineTransform::translation (width - 20.0f, (height - 8.0f) * 0.5f));
                 }
 
-                // do the same for the dropdown menu
+                void drawComboBoxTextWhenNothingSelected (juce::Graphics& g, ComboBox& box, juce::Label& label) override
+                {
+                    g.setColour (juce::Colours::white.withAlpha (0.7f));
+                    g.setFont (customFont);
+                    
+                    auto textArea = getLabelBorderSize(label).subtractedFrom(label.getLocalBounds());
+
+                    g.drawFittedText(
+                        box.getTextWhenNothingSelected(),
+                        textArea,
+                        juce::Justification::centred, // center horizontally and vertically
+                        juce::jmax(1, (int)( (float)textArea.getHeight() / customFont.getHeight() )),
+                        label.getMinimumHorizontalScale()
+                    );
+                }
 
                 void drawPopupMenuBackground (juce::Graphics& g, int width, int height) override
                 {
                     g.setColour (bgColour);
-                    g.fillAll();
+                    g.fillRect (0.0f, 0.0f, static_cast<float> (width), static_cast<float> (height));
                 }
 
-                void // change the highlight colour
-                    drawPopupMenuItem (juce::Graphics& g, const juce::Rectangle<int>& area, bool isSeparator, bool isActive, bool isHighlighted, bool isTicked, bool hasSubMenu, const juce::String& text, const juce::String& shortcutKeyText, const juce::Drawable* icon, const juce::Colour* const textColourToUse) override
+                void drawPopupMenuItem (juce::Graphics& g, const juce::Rectangle<int>& area, bool isSeparator, bool isActive, bool isHighlighted, bool isTicked, bool hasSubMenu, const juce::String& text, const juce::String& shortcutKeyText, const juce::Drawable* icon, const juce::Colour* const textColourToUse) override
                 {
                     if (isSeparator)
                     {
@@ -78,14 +103,14 @@ namespace UI
                         if (isHighlighted)
                         {
                             g.setColour (bgColour.brighter (0.1f));
-                            g.fillRect (r);
+                            g.fillRect (r.toFloat());
 
                             g.setColour (bgColour.brighter (0.2f));
-                            g.drawRect (r, 1);
+                            g.drawRect (r.toFloat(), 8.0f);
                         }
 
                         g.setColour (bgColour);
-                        g.setFont (juce::jmin (15.0f, area.getHeight() * 0.85f));
+                        g.setFont (customFont);
 
                         juce::Rectangle<float> iconArea ((float) r.removeFromLeft ((r.getHeight() * 5) / 4).reduced (3).getX(),
                             (float) r.getY(),
@@ -105,7 +130,7 @@ namespace UI
 
                         if (hasSubMenu)
                         {
-                            const auto arrowH = 0.6f * getPopupMenuFont().getHeight();
+                            const auto arrowH = 0.6f * customFont.getHeight();
 
                             const auto x = (float) r.removeFromRight ((int) arrowH).getX();
                             const auto halfH = (float) r.getCentreY();
@@ -118,7 +143,7 @@ namespace UI
                             g.strokePath (path, juce::PathStrokeType (2.0f));
                         }
                         g.setColour (isHighlighted ? juce::Colours::white : juce::Colours::grey);
-                        g.setFont (getPopupMenuFont());
+                        g.setFont (customFont);
 
                         g.setColour (juce::Colours::white);
                         g.drawText (text, r, juce::Justification::centredLeft, true);
@@ -126,7 +151,14 @@ namespace UI
                 }
 
             private:
+                Font getCommonMenuFont()
+                {
+                    return customFont;
+                }
+
                 juce::Colour bgColour;
+                juce::Colour bgStroke;
+                juce::Font customFont;
 
                 JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PresetCBLookAndFeel)
             } mainCBLookAndFeel;
