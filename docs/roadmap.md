@@ -94,3 +94,73 @@ UI Component layout
 - Blender Files
   - Main UI Implementation
   - Info UI (TBD)
+
+## Marketing and Post v1.0
+
+- [ ] Installers
+  - [ ] Windows x64 .exe
+  - [ ] MacOS .pkg
+  - [ ] (optional) linux binaries
+
+- [ ] Brand Assets / Copy
+  - [ ] Plugin Logo
+  - [ ] Tagline
+
+- [ ] Example tracks (2)
+
+- [ ] Marketing Materials
+  - [ ] KVR Advert / News
+    - [ ] Graphics
+    - [ ] Product Info
+    - [ ] Platforms
+
+  - [ ] Advert Graphics
+    - [ ] Meta Ads
+
+  - [ ] Website Copy
+    - [ ] DirektDSP Website
+    - [ ] Korzana Website
+
+  - [ ] Youtube Video Plan
+    - [ ] Explain Plugin usage
+    - [ ] Simple examples
+    - [ ] Download instructions
+
+  - [ ] Promotion Email
+    - [ ] Send from Itch.io
+      - [ ] Hot Potato
+      - [ ] Fuzzboy
+      - [ ] MakeItLoud
+    - [ ] Send from Mailerlite
+
+- [ ] Stock Presets
+  - [-] Korzana
+  - [ ] Raptures
+  - [ ] maybe blue?
+  - [ ] iFeature?
+  - [ ] Andrew A?
+
+- [ ] First Impressions / Reaction Video
+  - [-] Raptures
+  - [-] Korzana
+  - [-] maybe blue
+  - [-] Mexo
+  - [ ] Rohho
+  - [ ] Mrugalla?
+  - [ ] iFeature?
+  - [ ] Andrew A?
+  - [ ] Repiet?
+  - [ ] niztopia?
+  - [ ] MHA?
+
+- TikTok / Insta possibilities?
+  - [ ] songblocksofficial (tt)
+  - [ ] Thayer Period (tt)
+  - [ ] NEST Acoustics (tt)
+  - [ ] marshalljames_music (tt / insta)
+  - [ ] artclassmp3 (tt)
+  - [ ] ellismiah (tt)
+  - [ ] beatsbydrkns (tt)
+
+- [ ] x
+  - [ ] y
