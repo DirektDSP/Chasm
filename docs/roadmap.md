@@ -6,15 +6,11 @@ June 2025
 
 ### To Do
 
-- [ ] Implement stereo widening (v0.1.6)
-  - [ ] Simple Haas based widening (Expand / Add wideness)
-  - [ ] Boost existing sides after diffusion with M/S split (exaggerate existing wideness)
-
 ### In Progress
 
-- [ ] fix preset manager (list doesnt update on delete even after reload) (v0.1.5)
-  - [x] change location of saved presets
-  - [ ] check for changes after every save, delete or plugin load
+- [x] Implement stereo widening (v0.1.6)
+  - [ ] Simple Haas based widening (Expand / Add wideness)
+  - [x] Boost existing sides after diffusion with M/S split (exaggerate existing wideness)
 
 ### Completed
 
@@ -37,6 +33,10 @@ June 2025
 - [x] Modify character implementation to significantly reduce gain (v0.1.4)
   - this is problematic since character is the feedback parameter for the allpass chains.
   - We cant have too low a value since it does nothing but too high and its clipping time.
+
+- [x] fix preset manager (list doesnt update on delete even after reload) (v0.1.5)
+  - [x] change location of saved presets
+  - [x] check for changes after every save, delete or plugin load
 
 ### Possible future additions
 
@@ -97,10 +97,18 @@ UI Component layout
 
 ## Marketing and Post v1.0
 
+### Deliverables
+
 - [ ] Installers
   - [ ] Windows x64 .exe
   - [ ] MacOS .pkg
   - [ ] (optional) linux binaries
+
+- [ ] Manuals
+  - [ ] User Guide (set up, install, license, boom)
+  - [ ] Advanced Manual (dsp info, compatibility and stuff)
+
+### Marketing Materials
 
 - [ ] Brand Assets / Copy
   - [ ] Plugin Logo
@@ -108,37 +116,29 @@ UI Component layout
 
 - [ ] Example tracks (2)
 
-- [ ] Marketing Materials
-  - [ ] KVR Advert / News
-    - [ ] Graphics
-    - [ ] Product Info
-    - [ ] Platforms
+- [ ] KVR Advert / News
+  - [ ] Graphics
+  - [ ] Product Info
+  - [ ] Platforms
 
-  - [ ] Advert Graphics
-    - [ ] Meta Ads
+- [ ] Advert Graphics
+  - [ ] Meta Ads
 
-  - [ ] Website Copy
-    - [ ] DirektDSP Website
-    - [ ] Korzana Website
+- [ ] Website Copy
+  - [ ] DirektDSP Website
+  - [ ] Korzana Website
 
-  - [ ] Youtube Video Plan
-    - [ ] Explain Plugin usage
-    - [ ] Simple examples
-    - [ ] Download instructions
+- [ ] Youtube Video Plan
+  - [ ] Explain Plugin usage
+  - [ ] Simple examples
+  - [ ] Download instructions
 
-  - [ ] Promotion Email
-    - [ ] Send from Itch.io
-      - [ ] Hot Potato
-      - [ ] Fuzzboy
-      - [ ] MakeItLoud
-    - [ ] Send from Mailerlite
-
-- [ ] Stock Presets
-  - [-] Korzana
-  - [ ] Raptures
-  - [ ] maybe blue?
-  - [ ] iFeature?
-  - [ ] Andrew A?
+- [ ] Promotion Email
+  - [ ] Send from Itch.io
+    - [ ] Hot Potato
+    - [ ] Fuzzboy
+    - [ ] MakeItLoud
+  - [ ] Send from Mailerlite
 
 - [ ] First Impressions / Reaction Video
   - [-] Raptures
@@ -162,5 +162,11 @@ UI Component layout
   - [ ] ellismiah (tt)
   - [ ] beatsbydrkns (tt)
 
-- [ ] x
-  - [ ] y
+### Plugin Built-Ins
+
+- [ ] Stock Presets
+  - [-] Korzana
+  - [ ] Raptures
+  - [ ] maybe blue?
+  - [ ] iFeature?
+  - [ ] Andrew A?
