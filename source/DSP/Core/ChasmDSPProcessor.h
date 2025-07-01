@@ -135,7 +135,6 @@ namespace DSP
                 brightnessEQ.processBlock (wetBuffer);
 
                 // Apply stereo enhancement
-                // TODO: Finalize Stereo Enhancer implementation
                 stereoEnhancer.processBlock (wetBuffer);
 
                 // Apply MakeItLoud effect
