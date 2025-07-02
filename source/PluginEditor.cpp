@@ -31,19 +31,21 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     addAndMakeVisible(bg);
 
-    addAndMakeVisible (timestampLabel);
-    timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
+    // addAndMakeVisible (timestampLabel);
+    // timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
 
     // Add a button to show an inspector (example usage of another module).
-    addAndMakeVisible (inspectButton);
-    inspectButton.onClick = [&] {
-        if (!inspector)
-        {
-            inspector = std::make_unique<melatonin::Inspector> (*this);
-            inspector->onClose = [this]() { inspector.reset(); };
-        }
-        inspector->setVisible (true);
-    };
+    #ifdef JUCE_DEBUG
+        addAndMakeVisible (inspectButton);
+        inspectButton.onClick = [&] {
+            if (!inspector)
+            {
+                inspector = std::make_unique<melatonin::Inspector> (*this);
+                inspector->onClose = [this]() { inspector.reset(); };
+            }
+            inspector->setVisible (true);
+        };
+    #endif
 
     constrainer.setFixedAspectRatio (2000.0f/1200.0f);
 
