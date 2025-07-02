@@ -149,6 +149,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     float lowCut = *apvts.getRawParameterValue("LOW_CUT");
     float highCut = *apvts.getRawParameterValue("HIGH_CUT");
     float width = *apvts.getRawParameterValue("WIDTH");
+    float haasAmount = *apvts.getRawParameterValue("HAAS");
 
     float mil_InputGain = *apvts.getRawParameterValue("MIL_INGAIN");
     float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST");
@@ -157,7 +158,7 @@ void PluginProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     // Update DSP processor parameters
     dspProcessor.updateParameters(inputGain, outputGain, mix, delay, brightness,
                                   character, lowCut, highCut, width,
-                                  mil_InputGain, mil_BoostValue, mil_Mode);
+                                  mil_InputGain, mil_BoostValue, mil_Mode, haasAmount);
 
 
     // Process the audio using function from

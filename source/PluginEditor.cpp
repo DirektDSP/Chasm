@@ -62,6 +62,7 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(brightnessSlider, brightnessLabel, "Brightness", "dB");
     setupSlider(characterSlider, characterLabel, "Character", "");
     setupSlider(widthSlider, widthLabel, "Width", "%");
+    setupSlider(haasSlider, haasLabel, "Haas", "%");
     
     // use suffix-less functions since these can be "off"
     setupSlider(lowCutSlider, lowCutLabel, "Low Cut");
@@ -103,6 +104,8 @@ PluginEditor::PluginEditor (PluginProcessor& p)
         processorRef.apvts, "HIGH_CUT", highCutSlider);
     widthAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
         processorRef.apvts, "WIDTH", widthSlider);
+    haasAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(
+        processorRef.apvts, "HAAS", haasSlider);
 
     mil_modeCBAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(
         processorRef.apvts, "MIL_MODE", mil_modeCB);
@@ -235,6 +238,13 @@ void PluginEditor::resized()
         knobSizeX+TEXT_BOX_WIDTH,
         knobSizeY-TEXT_BOX_HEIGHT
     );
+
+    haasSlider.setBounds(
+        leftPad*0.75+TEXT_BOX_WIDTH,
+        (getHeight()*0.5) + knobSizeX*0.4 + (knobSizeX),
+        knobSizeX+TEXT_BOX_WIDTH,
+        knobSizeY-TEXT_BOX_HEIGHT
+    );
     // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
 
 
@@ -316,7 +326,8 @@ void PluginEditor::setupSlider(juce::Slider& slider, juce::Label& label,
         labelText == "Mix" ||
         labelText == "Width" ||
         labelText == "In Gain" ||
-        labelText == "Boost"
+        labelText == "Boost" ||
+        labelText == "Haas"
     ){
         label.attachToComponent(&slider, true);
         slider.setTextBoxStyle(juce::Slider::TextBoxRight, false, TEXT_BOX_WIDTH, TEXT_BOX_HEIGHT);

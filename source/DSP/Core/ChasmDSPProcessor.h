@@ -6,6 +6,8 @@
 // DSP Components
 #include "../Effects/MakeItLoud.h"
 #include "../Effects/StereoEnhancer.h"
+#include "../Effects/StereoEnhancer.h"
+#include "../Effects/HaasEffect.h"
 #include "../Filters/EQFilters.h"
 #include "../Filters/SchroederAllpassChain.h"
 #include "../Utils/DSPUtils.h"
@@ -43,6 +45,8 @@ namespace DSP
 
                 stereoEnhancer.setWidth (SampleType { 100.0 });
 
+                haasEffect.prepare(sampleRate, samplesPerBlock);
+
                 prepareParameterSmoothers();
 
                 wetBuffer.setSize (numChannels, samplesPerBlock);
@@ -59,7 +63,7 @@ namespace DSP
                 reset();
             }
 
-            void updateParameters (SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent, SampleType delayMs, SampleType brightnessDb, SampleType characterQ, SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent, SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode)
+            void updateParameters (SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent, SampleType delayMs, SampleType brightnessDb, SampleType characterQ, SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent, SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode, SampleType haasAmount)
             {
                 inputGainSmoother.setTargetValue (Utils::DSPUtils::dbToGain (inputGainDb));
                 outputGainSmoother.setTargetValue (Utils::DSPUtils::dbToGain (outputGainDb));
@@ -70,6 +74,8 @@ namespace DSP
                 lowCutSmoother.setTargetValue (lowCutPercent);
                 highCutSmoother.setTargetValue (highCutPercent);
                 widthSmoother.setTargetValue (widthPercent);
+
+                haasSmoother.setTargetValue(haasAmount);
 
                 mil_BoostSmoother.setTargetValue (Utils::DSPUtils::dbToGain (mil_BoostValue));
                 mil_InputGainSmoother.setTargetValue (Utils::DSPUtils::dbToGain (mil_InputGain));
@@ -97,6 +103,7 @@ namespace DSP
                     const auto brightness = brightnessSmoother.getNextValue();
                     const auto character = characterSmoother.getNextValue();
                     const auto width = widthSmoother.getNextValue();
+                    const auto haasAmount = haasSmoother.getNextValue();
 
                     auto lowCutFreq = lowCutSmoother.getNextValue();
                     if (!juce::approximatelyEqual (lowCutFreq, lastLowCut))
@@ -117,7 +124,7 @@ namespace DSP
                     }
 
                     if (i == 0 || shouldUpdateDSPComponents (i))
-                        updateDSPComponents (delay, brightness, character, width);
+                        updateDSPComponents (delay, brightness, character, width, haasAmount);
 
                     if (buffer.getNumChannels() == 1)
                     {
@@ -135,6 +142,7 @@ namespace DSP
                 brightnessEQ.processBlock (wetBuffer);
 
                 // Apply stereo enhancement
+                haasEffect.processBlock(wetBuffer);
                 stereoEnhancer.processBlock (wetBuffer);
 
                 // Apply MakeItLoud effect
@@ -173,6 +181,8 @@ namespace DSP
                 highCutSmoother.reset (SampleType { 0.0 });
                 widthSmoother.reset (SampleType { 100.0 });
 
+                haasSmoother.reset(SampleType { 0.0 });
+
                 mil_BoostSmoother.reset (SampleType { 0.0 });
                 mil_InputGainSmoother.reset (SampleType { 1.0 });
             }
@@ -189,6 +199,7 @@ namespace DSP
                 lowCutSmoother.prepare (sampleRate, 5.0);
                 highCutSmoother.prepare (sampleRate, 5.0);
                 widthSmoother.prepare (sampleRate, 5.0);
+                haasSmoother.prepare (sampleRate, 1.0);
 
                 mil_BoostSmoother.prepare (sampleRate, 1.0);
                 mil_InputGainSmoother.prepare (sampleRate, 1.0);
@@ -196,7 +207,7 @@ namespace DSP
 
             bool shouldUpdateDSPComponents (int sampleIndex) { return (sampleIndex % 32) == 0; }
 
-            void updateDSPComponents (SampleType delay, SampleType brightness, SampleType character, SampleType width)
+            void updateDSPComponents (SampleType delay, SampleType brightness, SampleType character, SampleType width, SampleType haasAmount)
             {
                 leftAllpassChain.setDelayTime (delay);
                 rightAllpassChain.setDelayTime (delay);
@@ -204,6 +215,7 @@ namespace DSP
                 rightAllpassChain.setCharacter (character);
                 brightnessEQ.setBrightness (brightness);
                 stereoEnhancer.setWidth (width);
+                haasEffect.setDelayMs(haasAmount);
             }
 
             void processSingleSample (juce::AudioBuffer<SampleType>& buffer, int sampleIndex, SampleType inputGain)
@@ -261,6 +273,7 @@ namespace DSP
             Filters::SchroederAllpassChain<SampleType> rightAllpassChain;
             Filters::BrightnessEQ<SampleType> brightnessEQ;
             Effects::StereoEnhancer<SampleType> stereoEnhancer;
+            DSP::Effects::HaasEffect<SampleType> haasEffect;
 
             juce::dsp::StateVariableTPTFilter<SampleType> lowCutFilter;
             juce::dsp::StateVariableTPTFilter<SampleType> highCutFilter;
@@ -274,6 +287,7 @@ namespace DSP
             Utils::ParameterSmoother<SampleType> lowCutSmoother;
             Utils::ParameterSmoother<SampleType> highCutSmoother;
             Utils::ParameterSmoother<SampleType> widthSmoother;
+            Utils::ParameterSmoother<SampleType> haasSmoother;
 
             // MakeItLoud
 

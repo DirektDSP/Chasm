@@ -8,10 +8,6 @@ June 2025
 
 ### In Progress
 
-- [x] Implement stereo widening (v0.1.6)
-  - [ ] Simple Haas based widening (Expand / Add wideness)
-  - [x] Boost existing sides after diffusion with M/S split (exaggerate existing wideness)
-
 ### Completed
 
 - [x] Base DSP implementation for smear effect and wet/dry mixing (v0.1.0)
@@ -38,6 +34,10 @@ June 2025
   - [x] change location of saved presets
   - [x] check for changes after every save, delete or plugin load
 
+- [x] Implement stereo widening (v0.1.6)
+  - [x] Simple Haas based widening (Expand / Add wideness)
+  - [x] Boost existing sides after diffusion with M/S split (exaggerate existing wideness)
+
 ### Possible future additions
 
 - [ ] Dropdowns to control cut slopes
@@ -47,7 +47,8 @@ June 2025
 - [ ] Multiple stereo widening modes
 - [ ] Skins
 - [ ] Online DB of plugins
-- [ ] 
+- [ ] Preset Creator and Description
+- [ ]
 
 ## Chasm UI
 

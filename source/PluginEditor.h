@@ -63,11 +63,11 @@ private:
     UI::Components::RasterKnob delaySlider;
 
     UI::Components::SmallerRasterKnob inputGainSlider, outputGainSlider, mixSlider;
-    UI::Components::SmallerRasterKnob brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider;
+    UI::Components::SmallerRasterKnob brightnessSlider, characterSlider, lowCutSlider, highCutSlider, widthSlider, haasSlider;
 
     // Labels for sliders
     juce::Label inputGainLabel, outputGainLabel, mixLabel, delayLabel;
-    juce::Label brightnessLabel, characterLabel, lowCutLabel, highCutLabel, widthLabel;
+    juce::Label brightnessLabel, characterLabel, lowCutLabel, highCutLabel, widthLabel, haasLabel;
 
     // APVTS Attachments
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> inputGainAttachment;
@@ -79,6 +79,7 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> lowCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> highCutAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> widthAttachment;
+    std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> haasAttachment;
 
     // MIL
 

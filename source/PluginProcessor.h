@@ -124,7 +124,10 @@ public:
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
             juce::ParameterID{"WIDTH", 1}, "Width", 
             juce::NormalisableRange<float>(0.0f, 200.0f, 0.1f), 100.0f));
-        
+            
+        params.push_back(std::make_unique<juce::AudioParameterFloat>(
+            juce::ParameterID{"HAAS", 1}, "Haas Amount", 
+            juce::NormalisableRange<float>(0.0f, 5.0f, 0.1f), 0.0f));
 
         // MakeItLoud Parameters
         params.push_back(std::make_unique<juce::AudioParameterFloat>(
