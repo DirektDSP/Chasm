@@ -62,7 +62,7 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setupSlider(brightnessSlider, brightnessLabel, "Brightness", "dB");
     setupSlider(characterSlider, characterLabel, "Character", "");
     setupSlider(widthSlider, widthLabel, "Width", "%");
-    setupSlider(haasSlider, haasLabel, "Haas", "%");
+    setupSlider(haasSlider, haasLabel, "Haas", "ms");
     
     // use suffix-less functions since these can be "off"
     setupSlider(lowCutSlider, lowCutLabel, "Low Cut");
