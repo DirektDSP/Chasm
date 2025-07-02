@@ -53,8 +53,9 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     setConstrainer (&constrainer);
 
     // Allow the editor to be resizable
-    setResizable(true, true);
-    constrainer.setMinimumSize(800, 420);    addAndMakeVisible(presetPanel);
+    setResizable(false, true);
+    constrainer.setMinimumSize(800, 420);
+    addAndMakeVisible(presetPanel);
 
     // Setup sliders and labels
     setupSlider(inputGainSlider, inputGainLabel, "Input", "dB");
