@@ -47,7 +47,7 @@ namespace UI
                 const float baseWidth = 2000.0f;
                 const float baseHeight = 1200.0f;
 
-                auto* topLevel = getTopLevelComponent();
+                auto* topLevel = getParentComponent();
                 
                 // Use the component's own dimensions for scaling
                 const float currentWidth = topLevel->getWidth();
