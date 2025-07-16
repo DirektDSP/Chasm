@@ -15,7 +15,7 @@ namespace Service
         String getFullPath() const { return category.isEmpty() ? name : category + "/" + name; }
     };
 
-    class PresetManager : private ValueTree::Listener
+    class PresetManager : private ValueTree::Listener, private AudioProcessorParameter::Listener
     {
     public:
         static const File defaultDirectory;
@@ -24,6 +24,7 @@ namespace Service
         static const String defaultCategory;
 
         PresetManager(AudioProcessorValueTreeState&);
+        ~PresetManager();
        
         void buildPresetMenu(PopupMenu& menu, int& menuItemId);
         void handlePresetMenuResult(int result, const StringArray& menuItemIds);
@@ -68,10 +69,24 @@ namespace Service
         void updatePresetList();
         File getPresetFile(const String& presetName, const String& category) const;
         
+        // AudioProcessorParameter::Listener overrides
+        void parameterValueChanged(int parameterIndex, float newValue) override;
+        void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override;
+        
+        // Helper methods for parameter listening
+        void addParameterListeners();
+        void removeParameterListeners();
+        
+        // Check if current state matches loaded preset
+        bool currentStateMatchesPreset() const;
+        
         AudioProcessorValueTreeState& valueTreeState;
         Value currentPreset;
         Value currentCategory;
         StringArray availablePresets;
         StringArray availableCategories;
+        
+        // Flag to prevent clearing preset name during preset loading
+        bool isLoadingPreset = false;
     };
 }

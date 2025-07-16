@@ -29,6 +29,10 @@ namespace Service
         valueTreeState.state.addListener (this);
         currentPreset.referTo (valueTreeState.state.getPropertyAsValue (presetNameProperty, nullptr));
         currentCategory.referTo (valueTreeState.state.getPropertyAsValue ("currentCategory", nullptr));
+        
+        // Add parameter listeners to clear preset name when parameters are modified
+        addParameterListeners();
+        
         updatePresetList();
     }
 
@@ -200,6 +204,8 @@ namespace Service
         if (presetName.isEmpty())
             return;
 
+        DBG("[PRESET-MANAGER] Loading preset: " << presetName << " from category: " << category);
+
         const String finalCategory = category.isEmpty() ? getCurrentCategory() : category;
         const auto presetFile = getPresetFile (presetName, finalCategory);
 
@@ -222,9 +228,12 @@ namespace Service
         auto valueTreeToLoad = ValueTree::fromXml (*xml);
         valueTreeToLoad.setProperty ("dateModified", Time::getCurrentTime().toISO8601 (true), nullptr);
 
+        // Set flag to prevent clearing preset name during load
+        isLoadingPreset = true;
         valueTreeState.replaceState (valueTreeToLoad);
         currentPreset.setValue (presetName);
         currentCategory.setValue (finalCategory);
+        isLoadingPreset = false;
 
         updatePresetList();
     }
@@ -510,5 +519,51 @@ namespace Service
         const String finalCategory = category.isEmpty() ? defaultCategory : category;
         const File dir = (finalCategory == defaultCategory) ? defaultDirectory : getCategoryDirectory (finalCategory);
         return dir.getChildFile (presetName + "." + extension);
+    }
+
+    void PresetManager::addParameterListeners()
+    {
+        // Get all parameters and add listeners to detect changes
+        for (auto* param : valueTreeState.processor.getParameters())
+        {
+            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*>(param))
+            {
+                rangedParam->addListener(this);
+            }
+        }
+    }
+
+    void PresetManager::removeParameterListeners()
+    {
+        // Remove listeners from all parameters
+        for (auto* param : valueTreeState.processor.getParameters())
+        {
+            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*>(param))
+            {
+                rangedParam->removeListener(this);
+            }
+        }
+    }
+
+    void PresetManager::parameterValueChanged(int parameterIndex, float newValue)
+    {
+        // Clear the current preset name when any parameter is changed
+        // but only if there's currently a preset selected and we're not loading a preset
+        if (!isLoadingPreset && getCurrentPreset().isNotEmpty())
+        {
+            DBG("[PRESET-MANAGER] Parameter " << parameterIndex << " changed to " << newValue << ", clearing preset name");
+            currentPreset.setValue("");
+        }
+    }
+
+    void PresetManager::parameterGestureChanged(int parameterIndex, bool gestureIsStarting)
+    {
+        // We don't need to do anything for gesture changes
+    }
+
+    PresetManager::~PresetManager()
+    {
+        removeParameterListeners();
+        valueTreeState.state.removeListener(this);
     }
 }
