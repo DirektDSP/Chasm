@@ -20,6 +20,7 @@ PluginProcessor::PluginProcessor()
 
     apvts.state.setProperty(Service::PresetManager::presetNameProperty, "", nullptr);
     presetManager = std::make_unique<Service::PresetManager>(apvts);
+    DBG("Hello from PluginProcessor constructor!");
 
 }
 

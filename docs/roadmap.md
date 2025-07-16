@@ -6,6 +6,14 @@ June 2025
 
 ### To Do
 
+- [ ] Preset Management (v0.3.0)
+  - [x] Implement subdirectories
+  - [ ] Display subdirs as submenus
+  - [x] Add artist credits to presets
+  - [ ] Add artist label for presets when opened
+  - [x] Allow category creation (subdirs)
+  - [ ] Update the presets before dropdown even opened
+
 ### In Progress
 
 ### Completed
