@@ -305,23 +305,29 @@ namespace UI
                 
                 if (presetName == "DELETE_CATEGORY")
                 {
-                    // Handle category deletion
-                    const int confirmResult = AlertWindow::showYesNoCancelBox (
-                        AlertWindow::WarningIcon,
+                    DBG("[PRESET-PANEL] 1 Attempting to delete category: " << category);
+                    auto* deleteCatDialog = new AlertWindow(
                         "Delete Category",
                         "Are you sure you want to delete the category '" + category + "' and all its presets?",
-                        "Delete",
-                        "Don't Delete",
-                        "Cancel",
-                        nullptr,
-                        nullptr);
-                    
-                    if (confirmResult == 1) // Yes
-                    {
-                        presetManager.deleteCategory(category);
-                        loadPresetList();
-                        updatePresetMenuButton();
-                    }
+                        AlertWindow::WarningIcon);
+
+                    deleteCatDialog->addButton("Delete", 1, KeyPress(KeyPress::returnKey));
+                    deleteCatDialog->addButton("Don't Delete", 2, KeyPress(KeyPress::escapeKey));
+                    deleteCatDialog->addButton("Cancel", 0, KeyPress(KeyPress::escapeKey));
+
+                    deleteCatDialog->enterModalState(true,
+                        ModalCallbackFunction::create([this, deleteCatDialog, category](int result) {
+                            if (result == 1) {
+                                DBG("[PRESET-PANEL] Deleting category: " << category);
+                                presetManager.deleteCategory(category);
+                                loadPresetList();
+                                updatePresetMenuButton();
+                            } else {
+                                DBG("[PRESET-PANEL] Category deletion cancelled. Result was " << result);
+                            }
+                            delete deleteCatDialog;
+                        }),
+                        false);
                 }
                 else
                 {
