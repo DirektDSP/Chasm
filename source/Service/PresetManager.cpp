@@ -175,22 +175,24 @@ namespace Service
         const String finalCategory = category.isEmpty() ? getCurrentCategory() : category;
         const auto presetFile = getPresetFile (presetName, finalCategory);
 
+        DBG("[PRESET-MANAGER] Deleting preset: " << presetName << " from category: " << finalCategory);
         if (!presetFile.existsAsFile())
         {
-            DBG ("Preset file " + presetFile.getFullPathName() + " does not exist");
+            DBG ("Preset file " << presetFile.getFullPathName() << " does not exist");
             jassertfalse;
             return;
         }
 
         if (!presetFile.moveToTrash())
         {
-            DBG ("Preset file " + presetFile.getFullPathName() + " could not be deleted");
+            DBG ("Preset file " << presetFile.getFullPathName() << " could not be deleted");
             jassertfalse;
             return;
         }
 
         currentPreset.setValue ("");
         updatePresetList();
+        DBG("[PRESET-MANAGER] Preset deleted: " << presetName << " from category: " << finalCategory);
     }
 
     void PresetManager::loadPreset (const String& presetName, const String& category)

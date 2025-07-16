@@ -143,25 +143,38 @@ namespace UI
                     const String currentPreset = presetManager.getCurrentPreset();
                     const String currentCategory = presetManager.getCurrentCategory();
 
+                    DBG("[PRESET-PANEL] 1 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
+
                     if (currentPreset.isNotEmpty())
                     {
-                        // Show confirmation dialog
-                        const int result = AlertWindow::showYesNoCancelBox (
-                            AlertWindow::QuestionIcon,
+                        DBG("[PRESET-PANEL] 2 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
+                        // Show non-blocking confirmation dialog
+                        auto* deleteDialog = new AlertWindow(
                             "Delete Preset",
                             "Are you sure you want to delete the preset \"" + currentPreset + "\"?",
-                            "Delete",
-                            "Don't Delete",
-                            "Cancel",
-                            nullptr,
-                            nullptr);
+                            AlertWindow::QuestionIcon);
 
-                        if (result == 1) // Yes
-                        {
-                            presetManager.deletePreset (currentPreset, currentCategory);
-                            loadPresetList();
-                            updatePresetMenuButton();
-                        }
+                        deleteDialog->addButton("Delete", 1, KeyPress(KeyPress::returnKey));
+                        deleteDialog->addButton("Don't Delete", 2, KeyPress(KeyPress::escapeKey));
+                        deleteDialog->addButton("Cancel", 0, KeyPress(KeyPress::escapeKey));
+
+                        deleteDialog->enterModalState(true,
+                            ModalCallbackFunction::create([this, deleteDialog, currentPreset, currentCategory](int result) {
+                                if (result == 1) {
+                                    DBG("[PRESET-PANEL] Deleting preset: " << currentPreset << " from category: " << currentCategory);
+                                    presetManager.deletePreset(currentPreset, currentCategory);
+                                    loadPresetList();
+                                    updatePresetMenuButton();
+                                } else {
+                                    DBG("[PRESET-PANEL] Preset deletion cancelled. Result was " << result);
+                                }
+                                delete deleteDialog;
+                            }),
+                            false);
+                    }
+                    else
+                    {
+                        DBG("[PRESET-PANEL] No preset selected to delete.");
                     }
                 }
             }
