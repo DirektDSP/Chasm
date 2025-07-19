@@ -24,6 +24,7 @@ public:
     void paint (juce::Graphics&) override;
     void resized() override;
 
+    void updateBG();
     int lastRight, lastLeft;
 
 private:
@@ -40,6 +41,7 @@ private:
     PluginProcessor& processorRef;
 
     void sliderValueChanged(juce::Slider* slider) override;
+
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };

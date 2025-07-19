@@ -198,6 +198,12 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName(apvts.state.getType()))
             apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+
+    // reset the UI after a state change to update the background
+    auto x = this->getActiveEditor();
+    if (x != nullptr)
+        // cast to PluginEditor and call updateBG
+        static_cast<PluginEditor*>(x)->updateBG();
 }
 
 //==============================================================================

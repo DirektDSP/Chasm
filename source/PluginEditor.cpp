@@ -31,6 +31,12 @@ PluginEditor::PluginEditor (PluginProcessor& p)
 
     addAndMakeVisible(bg);
 
+    // Fix the background animation frames based on the current parameters after closing and opening UI
+
+    updateBG();
+    
+    // end bg fix
+
     // addAndMakeVisible (timestampLabel);
     // timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
 
@@ -131,9 +137,24 @@ PluginEditor::~PluginEditor()
     characterSlider.removeListener(this);
 }
 
+void PluginEditor::updateBG(){
+    float delay = apvts.getRawParameterValue("DELAY")->load();
+    float character = apvts.getRawParameterValue("CHARACTER")->load();
+
+    float normalized = (delay - 1.0f) / 99.0f;    
+    float skewed = std::pow(normalized, 1.f);
+    
+    int mappedDelay = static_cast<int>(skewed * 127.0f + 1);
+    int mappedCharacter = static_cast<int>(((character - 0.1f) / 1.9f) * 127 + 1);
+    
+    bg.setRightFrame(mappedDelay);
+    bg.setLeftFrame(mappedCharacter);
+}
+
 void PluginEditor::paint (juce::Graphics& g)
 {
     // g.setOpacity(0.0);
+    updateBG();
 }
 
 void PluginEditor::resized()
