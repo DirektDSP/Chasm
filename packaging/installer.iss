@@ -43,7 +43,7 @@ Source: "..\Builds\{#ProjectName}_artefacts\Release\Standalone\{#ProductName}.ex
 Source: "..\assets\stock_presets\*"; DestDir: "{commondocs}\{#Publisher}\{#ProductName}\Presets\"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{autoprograms}\{#ProductName}"; Filename: "{commonpf64}\{#Publisher}\{#ProductName}\{#ProductName}.exe"; Components: standalone
+; Name: "{autoprograms}\{#ProductName}"; Filename: "{commonpf64}\{#Publisher}\{#ProductName}\{#ProductName}.exe"; Components: standalone
 Name: "{autoprograms}\Uninstall {#ProductName}"; Filename: "{uninstallexe}"
 
 ; This is optional, for preset or other plugin data
