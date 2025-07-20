@@ -1,4 +1,5 @@
 #include "PresetManager.h"
+#include <algorithm>
 
 namespace Service
 {
@@ -294,9 +295,63 @@ namespace Service
         categories.add (defaultCategory);
 
         const auto subdirs = defaultDirectory.findChildFiles (File::findDirectories, false);
+        StringArray otherCategories;
         for (const auto& dir : subdirs)
         {
-            categories.add (dir.getFileName());
+            otherCategories.add (dir.getFileName());
+        }
+
+        // Sort categories with custom comparator
+        otherCategories.sort (false); // First do a basic sort
+        
+        // Custom sort: numbers 0-9, 10-19, ..., 90-99, then A-Z
+        std::sort (otherCategories.begin(), otherCategories.end(), 
+            [] (const String& a, const String& b) -> bool
+            {
+                // Helper lambda to get sort priority
+                auto getSortPriority = [] (const String& str) -> int
+                {
+                    if (str.isEmpty()) return 1000;
+                    
+                    const auto firstChar = str[0];
+                    
+                    // Check if it starts with a digit
+                    if (firstChar >= '0' && firstChar <= '9')
+                    {
+                        // Extract the leading number
+                        int number = 0;
+                        int pos = 0;
+                        while (pos < str.length() && str[pos] >= '0' && str[pos] <= '9')
+                        {
+                            number = number * 10 + (str[pos] - '0');
+                            pos++;
+                        }
+                        
+                        // Return priority based on tens digit: 0-9 = 0, 10-19 = 1, etc.
+                        return number / 10;
+                    }
+                    else
+                    {
+                        // Letters come after all numbers (priority 100+)
+                        return 100;
+                    }
+                };
+                
+                int priorityA = getSortPriority(a);
+                int priorityB = getSortPriority(b);
+                
+                if (priorityA != priorityB)
+                {
+                    return priorityA < priorityB;
+                }
+                
+                // Same priority group - use natural string comparison
+                return a.compareNatural(b) < 0;
+            });
+
+        for (const auto& category : otherCategories)
+        {
+            categories.add (category);
         }
 
         return categories;
