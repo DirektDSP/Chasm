@@ -199,10 +199,13 @@ jobs:
           cp -r assets/stock_presets/* "packaging/presets_temp/${{ env.COMPANY_NAME }}/${{ env.PRODUCT_NAME }}/Presets/"
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.presets.pkg" --version $VERSION --root "packaging/presets_temp" --install-location "/Users/Shared" "packaging/${{ env.PRODUCT_NAME }}.presets.pkg"
           
-          # Standalone is special, needs a boolean to always install in /Applications
-          pkgbuild --analyze --root "$(dirname "${{ env.STANDALONE_PATH }}")" standalone.plist
-          plutil -replace BundleIsRelocatable -bool NO standalone.plist
-          pkgbuild --identifier "${{ env.BUNDLE_ID }}.app.pkg" --version $VERSION --root "$(dirname "${{ env.STANDALONE_PATH }}")" --component-plist standalone.plist --install-location "/Applications" "packaging/${{ env.PRODUCT_NAME }}.app.pkg"
+          # Only build standalone package if standalone exists
+          if [ -d "${{ env.STANDALONE_PATH }}" ]; then
+            # Standalone is special, needs a boolean to always install in /Applications
+            pkgbuild --analyze --root "$(dirname "${{ env.STANDALONE_PATH }}")" standalone.plist
+            plutil -replace BundleIsRelocatable -bool NO standalone.plist
+            pkgbuild --identifier "${{ env.BUNDLE_ID }}.app.pkg" --version $VERSION --root "$(dirname "${{ env.STANDALONE_PATH }}")" --component-plist standalone.plist --install-location "/Applications" "packaging/${{ env.PRODUCT_NAME }}.app.pkg"
+          fi
           
           cd packaging
           envsubst < distribution.xml.template > distribution.xml

@@ -12,16 +12,16 @@
     <domain enable_anywhere="false" enable_currentUserHome="false" enable_localSystem="true" />
 
     <choices-outline>
-        <line choice="app" />
+        <!-- <line choice="app" /> -->
         <line choice="vst3" />
         <line choice="au" />
         <line choice="clap" />
         <line choice="presets" />
     </choices-outline>
 
-    <choice id="app" visible="true" start_selected="true" title="${PRODUCT_NAME} Standalone">
+    <!-- <choice id="app" visible="true" start_selected="true" title="${PRODUCT_NAME} Standalone">
         <pkg-ref id="${BUNDLE_ID}.app.pkg" version="${VERSION}" onConclusion="none">${PRODUCT_NAME}.app.pkg</pkg-ref>
-    </choice>
+    </choice> -->
 
     <choice id="vst3" visible="true" start_selected="true" title="${PRODUCT_NAME} VST3">
         <pkg-ref id="${BUNDLE_ID}.vst3.pkg" version="${VERSION}" onConclusion="none">${PRODUCT_NAME}.vst3.pkg</pkg-ref>
