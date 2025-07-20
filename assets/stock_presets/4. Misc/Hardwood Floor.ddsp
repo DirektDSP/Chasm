@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Hardwood Floor" currentCategory="MISC" artist="MeXo"
+            category="MISC" dateCreated="2025-07-19T10:34:15.028-04:00" dateModified="2025-07-19T10:34:15.028-04:00">
+  <PARAM id="BRIGHTNESS" value="-7.699999809265137"/>
+  <PARAM id="CHARACTER" value="1.850000023841858"/>
+  <PARAM id="DELAY" value="30.10000038146973"/>
+  <PARAM id="HAAS" value="1.700000047683716"/>
+  <PARAM id="HIGH_CUT" value="576.6000366210938"/>
+  <PARAM id="INPUT_GAIN" value="0.9000015258789062"/>
+  <PARAM id="LOW_CUT" value="121.0"/>
+  <PARAM id="MIL_BOOST" value="4.5"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="1.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="-3.5"/>
+  <PARAM id="WIDTH" value="0.0"/>
+</Parameters>

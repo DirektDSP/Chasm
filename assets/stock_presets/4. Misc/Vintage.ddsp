@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Vintage" currentCategory="MISC" artist="MeXo" category="MISC"
+            dateCreated="2025-07-19T10:10:24.781-04:00" dateModified="2025-07-19T10:10:24.781-04:00">
+  <PARAM id="BRIGHTNESS" value="4.100000381469727"/>
+  <PARAM id="CHARACTER" value="1.689999938011169"/>
+  <PARAM id="DELAY" value="5.200000286102295"/>
+  <PARAM id="HAAS" value="2.299999952316284"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="185.0"/>
+  <PARAM id="MIL_BOOST" value="2.400000095367432"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="0.0"/>
+</Parameters>

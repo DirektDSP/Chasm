@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Haas" currentCategory="4. Misc" artist="Korzana"
+            category="4. Misc" dateCreated="2025-07-18T17:40:04.422+02:00"
+            dateModified="2025-07-18T17:40:04.422+02:00">
+  <PARAM id="BRIGHTNESS" value="0.0"/>
+  <PARAM id="CHARACTER" value="1.0"/>
+  <PARAM id="DELAY" value="4.0"/>
+  <PARAM id="HAAS" value="5.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="0.0"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="94.40000152587891"/>
+</Parameters>

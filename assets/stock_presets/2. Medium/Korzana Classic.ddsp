@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Korzana Classic" artist="Unknown" dateCreated="2025-07-03T17:56:12.307+02:00"
+            dateModified="2025-07-03T17:56:12.307+02:00">
+  <PARAM id="BRIGHTNESS" value="6.80000114440918"/>
+  <PARAM id="CHARACTER" value="0.8299999833106995"/>
+  <PARAM id="DELAY" value="37.90000152587891"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="135.4000091552734"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="92.80000305175781"/>
+</Parameters>

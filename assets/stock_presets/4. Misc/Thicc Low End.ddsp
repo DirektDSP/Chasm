@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="thicc low end" artist="Unknown" dateCreated="2025-07-09T21:04:51.204+10:00"
+            dateModified="2025-07-09T21:04:51.204+10:00">
+  <PARAM id="BRIGHTNESS" value="12.0"/>
+  <PARAM id="CHARACTER" value="0.1000000014901161"/>
+  <PARAM id="DELAY" value="1.700000047683716"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="226.1000061035156"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="0.0"/>
+  <PARAM id="MIL_BOOST" value="6.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="50.79999923706055"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="176.0"/>
+</Parameters>

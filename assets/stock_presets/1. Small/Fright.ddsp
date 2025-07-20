@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Fright" currentCategory="SMALL" artist="MeXo" category="SMALL"
+            dateCreated="2025-07-19T10:36:17.934-04:00" dateModified="2025-07-19T10:36:17.934-04:00">
+  <PARAM id="BRIGHTNESS" value="-3.59999942779541"/>
+  <PARAM id="CHARACTER" value="1.949999928474426"/>
+  <PARAM id="DELAY" value="6.0"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="1953.599975585938"/>
+  <PARAM id="MIL_BOOST" value="6.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="1.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="-4.899997711181641"/>
+  <PARAM id="WIDTH" value="148.0"/>
+</Parameters>

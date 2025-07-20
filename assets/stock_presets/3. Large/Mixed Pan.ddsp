@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Mixed Pan" artist="Korzana" dateCreated="2025-07-18T17:31:24.231+02:00"
+            dateModified="2025-07-18T17:31:24.231+02:00" currentCategory="3. Large"
+            category="3. Large">
+  <PARAM id="BRIGHTNESS" value="3.600000381469727"/>
+  <PARAM id="CHARACTER" value="1.169999957084656"/>
+  <PARAM id="DELAY" value="100.0"/>
+  <PARAM id="HAAS" value="5.0"/>
+  <PARAM id="HIGH_CUT" value="226.1000061035156"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="852.2999877929688"/>
+  <PARAM id="MIL_BOOST" value="6.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="51.20000076293945"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="176.0"/>
+</Parameters>

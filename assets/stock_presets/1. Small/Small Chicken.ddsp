@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="kfc chicken lovers" artist="Unknown" dateCreated="2025-07-09T21:01:27.770+10:00"
+            dateModified="2025-07-09T21:01:27.770+10:00">
+  <PARAM id="BRIGHTNESS" value="-9.5"/>
+  <PARAM id="CHARACTER" value="1.509999990463257"/>
+  <PARAM id="DELAY" value="1.299999952316284"/>
+  <PARAM id="HAAS" value="2.100000143051147"/>
+  <PARAM id="HIGH_CUT" value="5484.7001953125"/>
+  <PARAM id="INPUT_GAIN" value="4.0"/>
+  <PARAM id="LOW_CUT" value="988.4000244140625"/>
+  <PARAM id="MIL_BOOST" value="1.800000071525574"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="52.79999923706055"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="100.0"/>
+</Parameters>

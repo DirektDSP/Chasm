@@ -1,19 +1,138 @@
-This is a End User License Agreement ("EULA").
+END USER LICENSE AGREEMENT ("EULA")
+Version 2.0 - Effective Date: July 20, 2025
 
-Please read it carefully before installing this software. By installing and using this software, you agree you have read this EULA and agree to the terms and conditions. If you disagree, do not install.
+IMPORTANT - READ CAREFULLY: This End User License Agreement ("Agreement" or "EULA") is a legal agreement between you ("Licensee", "You", or "Your") and DirektDSP, a business operating from Dublin, Ireland ("DirektDSP", "We", "Us", or "Our") for the software product identified above, which includes computer software and may include associated media, printed materials, online or electronic documentation, and Internet-based services ("Software").
 
-1. This software is licensed for use solely by the person who paid for the license, referred to as "Licensee".
+BY INSTALLING, COPYING, OR OTHERWISE USING THE SOFTWARE, YOU AGREE TO BE BOUND BY THE TERMS OF THIS AGREEMENT. IF YOU DO NOT AGREE TO THE TERMS OF THIS AGREEMENT, DO NOT INSTALL OR USE THE SOFTWARE AND PROMPTLY RETURN IT TO THE PLACE OF PURCHASE FOR A FULL REFUND.
 
-2. Licensee can install this software on multiple computers, but only if they personally own and manage them.
-Licensee is allowed to make personal backup copies of the software's materials.
+ARTICLE I - DEFINITIONS
 
-3. Licensee is prohibited from copying, altering, translating, selling, distributing, or reverse engineering the software.
-Trying to access its source code, unless allowed by law, is also forbidden.
+1.1 "Affiliate" means any entity or individual that directly or indirectly controls, is controlled by, or is under common control with a party to this Agreement.
 
-4. Licensee must not change or hide any copyright, trademark, or other ownership notices in the software.
+1.2 "Authorized Device" means any computer, workstation, or electronic device owned, leased, or lawfully controlled by Licensee.
 
-5. Licensee may not share, publish or distribute the software without prior consent.
+1.3 "Commercial Use" means use of the Software for business purposes or in connection with revenue-generating activities.
 
-6. This software is provided "as-is" without any warranties, either expressed or implied, including but not limited to implied warranties of merchantability or fitness for a particular purpose.
+1.4 "Documentation" means any user manuals, technical manuals, and any other materials provided by DirektDSP, in printed, electronic, or other form, that describe the installation, operation, use, or technical specifications of the Software.
 
-7. In no event shall the software's creators or distributors be liable for any damages, including but not limited to, direct, indirect, special, incidental, or consequential damages or other losses arising out of the use of or inability to use the software.
+1.5 "Intellectual Property Rights" means all intellectual property rights worldwide, including without limitation, copyrights, trademarks, patents, trade secrets, moral rights, and any applications, registrations, renewals, and extensions thereof.
+
+1.6 "Personal Use" means use of the Software by an individual for personal, non-commercial purposes.
+
+1.7 "Update" means any bug fix, patch, minor enhancement, or other modification to the Software that DirektDSP may provide from time to time.
+
+ARTICLE II - LICENSE GRANT
+
+2.1 Grant of License. Subject to the terms and conditions of this Agreement, DirektDSP hereby grants to Licensee a non-exclusive, non-transferable, revocable license to:
+    (a) Install and use the Software on Authorized Devices controlled by Licensee;
+    (b) Use the Software for both Personal Use and Commercial Use;
+    (c) Make reasonable backup copies of the Software for archival purposes only.
+
+2.2 Installation Rights. Licensee may install the Software on multiple Authorized Devices, provided that:
+    (a) Each installation is used solely by Licensee;
+    (b) The total number of simultaneous uses does not exceed the number of licenses purchased;
+    (c) All installations remain under Licensee's direct control.
+
+2.3 Network Use. Licensee may use the Software over an internal network, provided that all users accessing the Software are authorized under this Agreement.
+
+ARTICLE III - RESTRICTIONS
+
+3.1 Prohibited Activities. Licensee shall not, and shall not permit any third party to:
+    (a) Copy, modify, adapt, alter, translate, or create derivative works of the Software, except as expressly permitted herein;
+    (b) Reverse engineer, disassemble, decompile, decode, or otherwise attempt to derive or gain access to the source code of the Software, except to the extent permitted by applicable law notwithstanding this restriction;
+    (c) Distribute, sell, rent, lease, sublicense, assign, or otherwise transfer rights to the Software;
+    (d) Remove, alter, or obscure any proprietary notices on the Software;
+    (e) Use the Software to develop competing products or services;
+    (f) Use the Software in any manner that violates applicable laws or regulations.
+
+3.2 Reservation of Rights. DirektDSP reserves all rights not expressly granted to Licensee in this Agreement. No implied licenses are granted under this Agreement.
+
+ARTICLE IV - INTELLECTUAL PROPERTY
+
+4.1 Ownership. Upon purchase, Licensee owns their copy of the Software and has perpetual rights to use it in accordance with this Agreement. DirektDSP retains ownership of the underlying Intellectual Property Rights, including copyrights, trademarks, and trade secrets in the Software's design and code.
+
+4.2 Feedback. Any suggestions, enhancement requests, feedback, recommendations, or other information provided by Licensee relating to the Software shall be the property of DirektDSP.
+
+ARTICLE V - WARRANTIES AND DISCLAIMERS
+
+5.1 Limited Warranty. DirektDSP warrants that the Software will perform substantially in accordance with the Documentation for a period of ninety (90) days from the date of delivery ("Warranty Period"). This warranty is void if failure results from accident, abuse, misapplication, or abnormal use.
+
+5.2 Warranty Remedies. DirektDSP's entire liability and Licensee's exclusive remedy for breach of warranty shall be, at DirektDSP's option, either:
+    (a) Repair or replacement of the Software; or
+    (b) Refund of the license fee paid.
+
+5.3 DISCLAIMER. EXCEPT FOR THE LIMITED WARRANTY SET FORTH ABOVE, THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, DIREKTDSP DISCLAIMS ALL OTHER WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+ARTICLE VI - LIMITATION OF LIABILITY
+
+6.1 LIMITATION OF LIABILITY. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, IN NO EVENT SHALL DIREKTDSP BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION DAMAGES FOR LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER INTANGIBLE LOSSES, EVEN IF DIREKTDSP HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+6.2 MAXIMUM LIABILITY. DIREKTDSP'S TOTAL CUMULATIVE LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT PAID BY LICENSEE FOR THE SOFTWARE.
+
+6.3 Essential Terms. The limitations of liability set forth in this Article VI are essential elements of the basis of the bargain between the parties.
+
+ARTICLE VII - INDEMNIFICATION
+
+7.1 Licensee Indemnification. Licensee agrees to indemnify, defend, and hold harmless DirektDSP and its Affiliates, officers, directors, employees, agents, and representatives from and against any claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to Licensee's use of the Software in violation of this Agreement or applicable law.
+
+ARTICLE VIII - TERM AND TERMINATION
+
+8.1 Term. This Agreement is effective until terminated in accordance with this Article VIII.
+
+8.2 Termination by Licensee. Licensee may terminate this Agreement at any time by destroying all copies of the Software and Documentation.
+
+8.3 Termination by DirektDSP. DirektDSP may terminate this Agreement immediately upon notice if Licensee breaches any provision of this Agreement.
+
+8.4 Effect of Termination. Upon termination, Licensee shall immediately cease all use of the Software and destroy all copies of the Software and Documentation in Licensee's possession or control.
+
+8.5 Survival. Articles IV, VI, VII, IX, and X shall survive termination of this Agreement.
+
+ARTICLE IX - ABANDONWARE PROVISION
+
+9.1 Declaration of Abandonware Status. If DirektDSP:
+    (a) Formally declares the Software to be "abandonware" through written notice posted on its official website or distributed to registered users; AND
+    (b) Ceases all support, updates, and distribution of the Software for a continuous period of twenty-four (24) months; AND
+    (c) Explicitly states that users may modify the Software;
+    
+    Then the restrictions in Article III, Sections 3.1(a) and 3.1(b) shall be automatically lifted for existing licensed users.
+
+9.2 Rights Upon Abandonware Status. Upon satisfaction of the conditions in Section 9.1, Licensee shall have the right to:
+    (a) Modify, adapt, and create derivative works of the Software for personal use;
+    (b) Reverse engineer the Software to the extent necessary for interoperability;
+    (c) Distribute unmodified copies of the Software to other individuals for non-commercial purposes;
+    (d) Archive and preserve the Software for historical or educational purposes.
+
+9.3 Retained Restrictions. Even upon abandonware status, Licensee shall not:
+    (a) Remove or alter copyright notices;
+    (b) Use DirektDSP's trademarks without permission;
+    (c) Commercially distribute the Software or derivative works;
+    (d) Misrepresent the origin of the Software.
+
+9.4 No Warranty for Abandonware. DirektDSP provides no warranty or support for Software with abandonware status.
+
+ARTICLE X - GENERAL PROVISIONS
+
+10.1 Governing Law. This Agreement shall be governed by and construed in accordance with the laws of the jurisdiction where the Licensee resides, or if such laws are deemed incompatible with the terms herein, then the laws of Ireland shall apply.
+
+10.2 Jurisdiction. The courts of Dublin, Ireland shall have exclusive jurisdiction over any disputes arising under this Agreement.
+
+10.3 Export Control. Licensee acknowledges that the Software may be subject to export control laws and regulations of various jurisdictions. Licensee agrees to comply with all applicable export control laws and regulations in their jurisdiction and country of use.
+
+10.4 Severability. If any provision of this Agreement is held to be invalid or unenforceable, the remainder of this Agreement shall remain in full force and effect.
+
+10.5 Entire Agreement. This Agreement constitutes the entire agreement between the parties concerning the subject matter hereof and supersedes all prior or contemporaneous agreements, whether written or oral.
+
+10.6 Amendment. This Agreement may only be modified by a written document signed by both parties or through an updated version distributed with Software updates.
+
+10.7 Waiver. No waiver of any provision of this Agreement shall be deemed or shall constitute a waiver of any other provision.
+
+10.8 Assignment. Licensee may not assign this Agreement without DirektDSP's prior written consent. DirektDSP may assign this Agreement without consent.
+
+10.9 Contact Information. For questions regarding this Agreement, please contact:
+     DirektDSP
+     Dublin, Ireland
+     Email: [legal@direktdsp.com]
+
+10.10 Language. This Agreement is written in English, and any translations are provided for convenience only. In case of conflict, the English version shall prevail.
+
+BY INSTALLING OR USING THE SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ THIS AGREEMENT, UNDERSTAND IT, AND AGREE TO BE BOUND BY ITS TERMS AND CONDITIONS.

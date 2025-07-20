@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Omega Wide" artist="Unknown" dateCreated="2025-07-03T18:10:23.753+02:00"
+            dateModified="2025-07-03T18:10:23.753+02:00">
+  <PARAM id="BRIGHTNESS" value="0.0"/>
+  <PARAM id="CHARACTER" value="2.0"/>
+  <PARAM id="DELAY" value="1.0"/>
+  <PARAM id="HAAS" value="5.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="-14.20000076293945"/>
+  <PARAM id="LOW_CUT" value="0.0"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="200.0"/>
+</Parameters>

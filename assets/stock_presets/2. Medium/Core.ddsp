@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Core" currentCategory="MEDIUM" artist="MeXo" category="MEDIUM"
+            dateCreated="2025-07-19T10:19:04.379-04:00" dateModified="2025-07-19T10:19:04.379-04:00">
+  <PARAM id="BRIGHTNESS" value="6.899999618530273"/>
+  <PARAM id="CHARACTER" value="1.149999976158142"/>
+  <PARAM id="DELAY" value="31.80000114440918"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="1717.099975585938"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="412.2000122070312"/>
+  <PARAM id="MIL_BOOST" value="4.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="-4.0"/>
+  <PARAM id="WIDTH" value="96.0"/>
+</Parameters>

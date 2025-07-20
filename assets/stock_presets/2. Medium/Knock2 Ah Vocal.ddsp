@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Knock2 Ah Vocal" currentCategory="2. Medium" artist="Korzana"
+            category="2. Medium" dateCreated="2025-07-18T17:37:00.614+02:00"
+            dateModified="2025-07-18T17:37:00.614+02:00">
+  <PARAM id="BRIGHTNESS" value="4.399999618530273"/>
+  <PARAM id="CHARACTER" value="2.0"/>
+  <PARAM id="DELAY" value="10.80000019073486"/>
+  <PARAM id="HAAS" value="4.099999904632568"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="127.7000045776367"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="49.60000228881836"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="100.0"/>
+</Parameters>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Arp Ambience" artist="Unknown" dateCreated="2025-07-03T18:07:29.335+02:00"
+            dateModified="2025-07-03T18:07:29.335+02:00">
+  <PARAM id="BRIGHTNESS" value="-4.299999713897705"/>
+  <PARAM id="CHARACTER" value="2.0"/>
+  <PARAM id="DELAY" value="100.0"/>
+  <PARAM id="HAAS" value="2.400000095367432"/>
+  <PARAM id="HIGH_CUT" value="2356.5"/>
+  <PARAM id="INPUT_GAIN" value="-14.20000076293945"/>
+  <PARAM id="LOW_CUT" value="96.30000305175781"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="172.0"/>
+</Parameters>

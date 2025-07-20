@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Hyperpop Snare" currentCategory="2. Medium" artist="Korzana"
+            category="2. Medium" dateCreated="2025-07-18T17:39:09.255+02:00"
+            dateModified="2025-07-18T17:39:09.255+02:00">
+  <PARAM id="BRIGHTNESS" value="0.0"/>
+  <PARAM id="CHARACTER" value="1.0"/>
+  <PARAM id="DELAY" value="16.0"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="0.0"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="50.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="169.6000061035156"/>
+</Parameters>

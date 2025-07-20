@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="airy" artist="Unknown" dateCreated="2025-07-09T21:05:44.390+10:00"
+            dateModified="2025-07-09T21:05:44.390+10:00">
+  <PARAM id="BRIGHTNESS" value="2.600000381469727"/>
+  <PARAM id="CHARACTER" value="0.8400000333786011"/>
+  <PARAM id="DELAY" value="1.900000095367432"/>
+  <PARAM id="HAAS" value="1.300000071525574"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="6887.89990234375"/>
+  <PARAM id="MIL_BOOST" value="6.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="3.0"/>
+  <PARAM id="MIX" value="29.60000038146973"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="176.0"/>
+</Parameters>

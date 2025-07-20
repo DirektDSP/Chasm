@@ -194,6 +194,11 @@ jobs:
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.vst3.pkg" --version $VERSION --component "${{ env.VST3_PATH }}" --install-location "/Library/Audio/Plug-Ins/VST3" "packaging/${{ env.PRODUCT_NAME }}.vst3.pkg"
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.clap.pkg" --version $VERSION --component "${{ env.CLAP_PATH }}" --install-location "/Library/Audio/Plug-Ins/CLAP" "packaging/${{ env.PRODUCT_NAME }}.clap.pkg"
           
+          # Create presets package
+          mkdir -p "packaging/presets_temp/${{ env.COMPANY_NAME }}/${{ env.PRODUCT_NAME }}/Presets"
+          cp -r assets/stock_presets/* "packaging/presets_temp/${{ env.COMPANY_NAME }}/${{ env.PRODUCT_NAME }}/Presets/"
+          pkgbuild --identifier "${{ env.BUNDLE_ID }}.presets.pkg" --version $VERSION --root "packaging/presets_temp" --install-location "/Users/Shared" "packaging/${{ env.PRODUCT_NAME }}.presets.pkg"
+          
           # Standalone is special, needs a boolean to always install in /Applications
           pkgbuild --analyze --root "$(dirname "${{ env.STANDALONE_PATH }}")" standalone.plist
           plutil -replace BundleIsRelocatable -bool NO standalone.plist

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="funky comb" artist="Unknown" dateCreated="2025-07-09T21:03:22.020+10:00"
+            dateModified="2025-07-09T21:03:22.020+10:00">
+  <PARAM id="BRIGHTNESS" value="-0.5999994277954102"/>
+  <PARAM id="CHARACTER" value="0.7400000095367432"/>
+  <PARAM id="DELAY" value="7.5"/>
+  <PARAM id="HAAS" value="0.0"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="9.40000057220459"/>
+  <PARAM id="MIL_BOOST" value="0.0"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="0.0"/>
+  <PARAM id="MIX" value="50.0"/>
+  <PARAM id="OUTPUT_GAIN" value="0.0"/>
+  <PARAM id="WIDTH" value="100.0"/>
+</Parameters>

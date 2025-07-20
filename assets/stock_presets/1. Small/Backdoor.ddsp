@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Backdoor" currentCategory="SMALL" artist="MeXo" category="SMALL"
+            dateCreated="2025-07-19T10:32:11.115-04:00" dateModified="2025-07-19T10:32:11.115-04:00">
+  <PARAM id="BRIGHTNESS" value="-6.5"/>
+  <PARAM id="CHARACTER" value="1.230000019073486"/>
+  <PARAM id="DELAY" value="11.5"/>
+  <PARAM id="HAAS" value="1.600000023841858"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="142.5"/>
+  <PARAM id="MIL_BOOST" value="5.099999904632568"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="1.0"/>
+  <PARAM id="MIX" value="50.0"/>
+  <PARAM id="OUTPUT_GAIN" value="-1.399997711181641"/>
+  <PARAM id="WIDTH" value="200.0"/>
+</Parameters>

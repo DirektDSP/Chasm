@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Parameters presetName="Tapped in" currentCategory="SMALL" artist="MeXo"
+            category="SMALL" dateCreated="2025-07-19T10:22:13.765-04:00"
+            dateModified="2025-07-19T10:22:13.765-04:00">
+  <PARAM id="BRIGHTNESS" value="-7.799999713897705"/>
+  <PARAM id="CHARACTER" value="1.75"/>
+  <PARAM id="DELAY" value="7.599999904632568"/>
+  <PARAM id="HAAS" value="3.400000095367432"/>
+  <PARAM id="HIGH_CUT" value="20000.0"/>
+  <PARAM id="INPUT_GAIN" value="0.0"/>
+  <PARAM id="LOW_CUT" value="215.4000091552734"/>
+  <PARAM id="MIL_BOOST" value="3.5"/>
+  <PARAM id="MIL_INGAIN" value="0.0"/>
+  <PARAM id="MIL_MODE" value="2.0"/>
+  <PARAM id="MIX" value="100.0"/>
+  <PARAM id="OUTPUT_GAIN" value="-3.399997711181641"/>
+  <PARAM id="WIDTH" value="100.5999984741211"/>
+</Parameters>
