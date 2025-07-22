@@ -33,14 +33,14 @@ namespace DSP
                 highCutFilter.setResonance (static_cast<SampleType> (0.707));
             }
 
-            void prepare (const juce::dsp::ProcessSpec& spec)
+            void prepare (const juce::dsp::ProcessSpec& spec, SampleType initialDelayMs = SampleType{30.0}, SampleType initialCharacter = SampleType{1.0})
             {
                 sampleRate = spec.sampleRate;
                 samplesPerBlock = static_cast<int> (spec.maximumBlockSize);
                 numChannels = static_cast<int> (spec.numChannels);
 
-                leftAllpassChain.prepare (sampleRate);
-                rightAllpassChain.prepare (sampleRate);
+                leftAllpassChain.prepare (sampleRate, initialDelayMs, initialCharacter);
+                rightAllpassChain.prepare (sampleRate, initialDelayMs, initialCharacter);
                 brightnessEQ.prepare (spec);
 
                 stereoEnhancer.setWidth (SampleType { 100.0 });
@@ -48,6 +48,12 @@ namespace DSP
                 haasEffect.prepare(sampleRate, samplesPerBlock);
 
                 prepareParameterSmoothers();
+
+                // Snap smoothers to current values to avoid ramping artifacts
+                delaySmoother.setTargetValue(initialDelayMs);
+                delaySmoother.snapToTargetValue();
+                characterSmoother.setTargetValue(initialCharacter);
+                characterSmoother.snapToTargetValue();
 
                 wetBuffer.setSize (numChannels, samplesPerBlock);
                 dryBuffer.setSize (numChannels, samplesPerBlock);
@@ -60,7 +66,7 @@ namespace DSP
 
                 makeItLoud.prepare (spec);
 
-                reset();
+                reset(initialDelayMs, initialCharacter);
             }
 
             void updateParameters (SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent, SampleType delayMs, SampleType brightnessDb, SampleType characterQ, SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent, SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode, SampleType haasAmount)
@@ -164,19 +170,23 @@ namespace DSP
                 }
             }
 
-            void reset()
+            void reset(SampleType initialDelayMs = SampleType{30.0}, SampleType initialCharacter = SampleType{1.0})
             {
-                leftAllpassChain.reset();
-                rightAllpassChain.reset();
+                leftAllpassChain.reset(initialDelayMs, initialCharacter);
+                rightAllpassChain.reset(initialDelayMs, initialCharacter);
                 brightnessEQ.reset();
                 stereoEnhancer.reset();
 
                 inputGainSmoother.reset (SampleType { 1.0 });
                 outputGainSmoother.reset (SampleType { 1.0 });
                 mixSmoother.reset (SampleType { 0.5 });
-                delaySmoother.reset (SampleType { 30.0 });
+                delaySmoother.reset (initialDelayMs);
+                delaySmoother.setTargetValue(initialDelayMs);
+                delaySmoother.snapToTargetValue();
                 brightnessSmoother.reset (SampleType { 0.0 });
-                characterSmoother.reset (SampleType { 1.0 });
+                characterSmoother.reset (initialCharacter);
+                characterSmoother.setTargetValue(initialCharacter);
+                characterSmoother.snapToTargetValue();
                 lowCutSmoother.reset (SampleType { 0.0 });
                 highCutSmoother.reset (SampleType { 0.0 });
                 widthSmoother.reset (SampleType { 100.0 });

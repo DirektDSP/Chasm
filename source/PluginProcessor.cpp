@@ -100,15 +100,20 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
     spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
-    dspProcessor.prepare(spec);
+    // Get initial parameter values for smoothers
+    float delay = *apvts.getRawParameterValue("DELAY");
+    float character = *apvts.getRawParameterValue("CHARACTER");
+    dspProcessor.prepare(spec, delay, character); // Pass initial values to snap smoothers
 
     MOONBASE_PREPARE_TO_PLAY (sampleRate, samplesPerBlock);
 }
 
 void PluginProcessor::releaseResources()
 {
-    // Reset the DSP processor
-    dspProcessor.reset();
+    // Reset the DSP processor and snap smoothers to current values
+    float delay = *apvts.getRawParameterValue("DELAY");
+    float character = *apvts.getRawParameterValue("CHARACTER");
+    dspProcessor.reset(delay, character);
 }
 
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const

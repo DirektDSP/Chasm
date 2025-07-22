@@ -21,29 +21,28 @@ public:
     SchroederAllpassChain() = default;
     
     /** Prepares the chain with sample rate. */
-    void prepare(double newSampleRate)
+    void prepare(double newSampleRate, SampleType initialDelayMs = SampleType{30.0}, SampleType initialCharacter = SampleType{1.0})
     {
         _sampleRate = newSampleRate;
-        
+
         // Prime delay times for diffusion (in milliseconds)
-        // These values are carefully chosen to avoid harmonic relationships
         std::array<double, NumAllpassFilters> delayTimes = {12.3, 19.7, 29.1, 37.4};
-        
+
         for (size_t i = 0; i < NumAllpassFilters; ++i)
         {
             allpassFilters[i].prepare(_sampleRate, 100.0); // Max 100ms delay
             allpassFilters[i].setDelayTime(delayTimes[i]);
             allpassFilters[i].setFeedback(static_cast<SampleType>(0.7)); // Default feedback
         }
-        
+
         // Prepare parameter smoothers
         delayTimeSmoother.prepare(_sampleRate, 50.0); // 50ms smoothing
         characterSmoother.prepare(_sampleRate, 10.0); // 10ms smoothing
 
-        delayTimeSmoother.setTargetValue(SampleType{30.0}); // Default 30ms
-        characterSmoother.setTargetValue(SampleType{1.0});  // Default Q=1.0
-        
+        // Set and snap to initial values to avoid ramping artifacts
+        delayTimeSmoother.setTargetValue(initialDelayMs);
         delayTimeSmoother.snapToTargetValue();
+        characterSmoother.setTargetValue(initialCharacter);
         characterSmoother.snapToTargetValue();
     }
     
@@ -85,15 +84,19 @@ public:
     }
     
     /** Resets the filter chain. */
-    void reset()
+    void reset(SampleType initialDelayMs = SampleType{30.0}, SampleType initialCharacter = SampleType{1.0})
     {
         for (auto& filter : allpassFilters)
         {
             filter.reset();
         }
-        
-        delayTimeSmoother.reset(SampleType{30.0});
-        characterSmoother.reset(SampleType{1.0});
+
+        delayTimeSmoother.reset(initialDelayMs);
+        delayTimeSmoother.setTargetValue(initialDelayMs);
+        delayTimeSmoother.snapToTargetValue();
+        characterSmoother.reset(initialCharacter);
+        characterSmoother.setTargetValue(initialCharacter);
+        characterSmoother.snapToTargetValue();
     }
 
 private:
