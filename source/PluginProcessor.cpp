@@ -100,10 +100,22 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
     spec.sampleRate = sampleRate;
     spec.maximumBlockSize = static_cast<uint32>(samplesPerBlock);
     spec.numChannels = static_cast<uint32>(getTotalNumOutputChannels());
-    // Get initial parameter values for smoothers
+    // Get initial parameter values for all smoothers
+    float inputGain = *apvts.getRawParameterValue("INPUT_GAIN");
+    float outputGain = *apvts.getRawParameterValue("OUTPUT_GAIN");
+    float mix = *apvts.getRawParameterValue("MIX");
     float delay = *apvts.getRawParameterValue("DELAY");
+    float brightness = *apvts.getRawParameterValue("BRIGHTNESS");
     float character = *apvts.getRawParameterValue("CHARACTER");
-    dspProcessor.prepare(spec, delay, character); // Pass initial values to snap smoothers
+    float lowCut = *apvts.getRawParameterValue("LOW_CUT");
+    float highCut = *apvts.getRawParameterValue("HIGH_CUT");
+    float width = *apvts.getRawParameterValue("WIDTH");
+    float haasAmount = *apvts.getRawParameterValue("HAAS");
+    float mil_InputGain = *apvts.getRawParameterValue("MIL_INGAIN");
+    float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST");
+    int mil_Mode = *apvts.getRawParameterValue("MIL_MODE");
+
+    dspProcessor.prepare(spec, inputGain, outputGain, mix, delay, brightness, character, lowCut, highCut, width, mil_InputGain, mil_BoostValue, mil_Mode, haasAmount);
 
     MOONBASE_PREPARE_TO_PLAY (sampleRate, samplesPerBlock);
 }
@@ -111,9 +123,22 @@ void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 void PluginProcessor::releaseResources()
 {
     // Reset the DSP processor and snap smoothers to current values
+    // Reset the DSP processor and snap smoothers to current values for all parameters
+    float inputGain = *apvts.getRawParameterValue("INPUT_GAIN");
+    float outputGain = *apvts.getRawParameterValue("OUTPUT_GAIN");
+    float mix = *apvts.getRawParameterValue("MIX");
     float delay = *apvts.getRawParameterValue("DELAY");
+    float brightness = *apvts.getRawParameterValue("BRIGHTNESS");
     float character = *apvts.getRawParameterValue("CHARACTER");
-    dspProcessor.reset(delay, character);
+    float lowCut = *apvts.getRawParameterValue("LOW_CUT");
+    float highCut = *apvts.getRawParameterValue("HIGH_CUT");
+    float width = *apvts.getRawParameterValue("WIDTH");
+    float haasAmount = *apvts.getRawParameterValue("HAAS");
+    float mil_InputGain = *apvts.getRawParameterValue("MIL_INGAIN");
+    float mil_BoostValue = *apvts.getRawParameterValue("MIL_BOOST");
+    int mil_Mode = *apvts.getRawParameterValue("MIL_MODE");
+
+    dspProcessor.reset(inputGain, outputGain, mix, delay, brightness, character, lowCut, highCut, width, mil_InputGain, mil_BoostValue, mil_Mode, haasAmount);
 }
 
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
