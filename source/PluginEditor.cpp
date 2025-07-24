@@ -37,8 +37,8 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     
     // end bg fix
 
-    // addAndMakeVisible (timestampLabel);
-    // timestampLabel.setText ("DirektDSP - " + String(__DATE__) + " " + String(__TIME__), juce::dontSendNotification);
+    addAndMakeVisible (timestampLabel);
+    timestampLabel.setText ("Chasm_Build_" + String(__DATE__) + "_" + String(__TIME__), juce::dontSendNotification);
 
     // Add a button to show an inspector (example usage of another module).
     #ifdef JUCE_DEBUG
@@ -257,19 +257,26 @@ void PluginEditor::resized()
     );
     
     widthSlider.setBounds(
-        leftPad*0.75+TEXT_BOX_WIDTH,
+        (getWidth() * (leftPad)/2000)+TEXT_BOX_WIDTH,
         (getHeight()*0.5) + knobSizeX*0.4,
         knobSizeX+TEXT_BOX_WIDTH,
         knobSizeY-TEXT_BOX_HEIGHT
     );
 
     haasSlider.setBounds(
-        leftPad*0.75+TEXT_BOX_WIDTH,
+        (getWidth() * (leftPad)/2000)+TEXT_BOX_WIDTH,
         (getHeight()*0.5) + knobSizeX*0.4 + (knobSizeX),
         knobSizeX+TEXT_BOX_WIDTH,
         knobSizeY-TEXT_BOX_HEIGHT
     );
-    // timestampLabel.setBounds(area.removeFromBottom(20).withSizeKeepingCentre(200, 30));
+
+
+    timestampLabel.setBounds(
+        0,
+        getHeight() - 20,
+        getWidth() * 0.25f,
+        20
+    );
 
 
     // MIL
