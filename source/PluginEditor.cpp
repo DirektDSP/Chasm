@@ -12,7 +12,6 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     // The activation UI is created using the licensing member from the processor.
     if (processorRef.moonbaseClient != nullptr)
         activationUI.reset(processorRef.moonbaseClient->createActivationUi(*this));
-        processorRef.moonbaseClient->setTransmitAnalytics (true, true);
 
 
     // Customize the activation UI if it exists.
