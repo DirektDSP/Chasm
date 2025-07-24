@@ -43,6 +43,12 @@ private:
 		{
 		}
 
+		void drawLabel(Graphics& g, Label& label) override
+		{
+			g.setColour(Colour::fromRGB(47, 47, 47));
+			g.drawFittedText(label.getText(), label.getLocalBounds(), Justification::centred, 1);
+		}
+
 	private:
 		juce::Colour bgColour;
 
