@@ -7,7 +7,6 @@
 #include "UI/Components/RasterKnob.h"
 #include "UI/Components/SmallerRasterKnob.h"
 #include "UI/Components/ModeCB.h"
-#include "UI/Components/LedButton.h"
 #include "UI/Utils/Timestamp.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
@@ -85,16 +84,14 @@ private:
 
     // MIL
 
-    juce::Label mil_modeCBLabel, mil_inGainLabel, mil_enabledLabel, mil_boostLabel;
+    juce::Label mil_modeCBLabel, mil_inGainLabel, mil_boostLabel;
 
     UI::Components::ModeCB mil_modeCB;
     UI::Components::SmallerRasterKnob mil_inGain, mil_boost;
-    UI::Components::LedButton mil_enabled;
 
     std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> mil_modeCBAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mil_inGainAttachment;
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> mil_boostAttachment;
-    std::unique_ptr<juce::AudioProcessorValueTreeState::ButtonAttachment> mil_enabledAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };
