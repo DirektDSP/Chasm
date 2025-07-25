@@ -1,6 +1,8 @@
 
 # Chasm
 
+![Chasm Plugin](assets/Chasm_UI_Ad.png)
+
 **Chasm** is a diffusion / delay plugin developed by DirektDSP in collaboration with Korzana.
 Inspired by Korzana's personal FX chains, Chasm combines 7 different effect plugins into one, making your production easier and faster (and lighter on your CPU).
 
