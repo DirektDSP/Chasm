@@ -4,7 +4,7 @@
 
 **Plugin Name:** Chasm  
 **Version:** 1.0.0  
-**Framework:** JUCE with CMake (PluginTemplate)
+**Framework:** JUCE with CMake
 **Architecture:** Modular DSP with parallel processing paths  
 **Target Formats:** VST3, AU, AAX
 

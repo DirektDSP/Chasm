@@ -16,7 +16,7 @@ public:
     PluginProcessor();
     ~PluginProcessor() noexcept override;
 
-    MOONBASE_DECLARE_LICENSING_NAMED(BinaryData, "DirektDSP", "plugintemplate", VERSION)
+    MOONBASE_DECLARE_LICENSING_NAMED(BinaryData, "DirektDSP", "chasm", VERSION)
 
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
