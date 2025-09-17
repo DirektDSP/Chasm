@@ -219,6 +219,11 @@ jobs:
         working-directory: ${{ env.ARTIFACTS_PATH }}
         run: 7z a -tzip "${{ env.ARTIFACT_NAME }}.zip" "-xr!lib${{ env.PRODUCT_NAME }}_SharedCode.a" .
 
+        # This is needed since runners dont add iscc for some reason now...
+      - name: Install Inno Setup (Windows)
+        if: ${{ matrix.name == 'Windows' }}
+        run: choco install innosetup --yes
+
       - name: Generate Installer
         if: ${{ matrix.name == 'Windows' }}
         run: |
