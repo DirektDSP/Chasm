@@ -1,11 +1,10 @@
 name: Chasm_Build 
 
 on:
-  workflow_dispatch: # lets you run a build from the UI
+  workflow_dispatch:
   push:
   pull_request:
 
-# When pushing new commits, cancel any running builds on that branch
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
@@ -13,7 +12,7 @@ concurrency:
 env:
   BUILD_TYPE: Release
   BUILD_DIR: Builds
-  DISPLAY: :0 # linux pluginval needs this
+  DISPLAY: :0
   HOMEBREW_NO_INSTALL_CLEANUP: 1
   SCCACHE_GHA_ENABLED: true
   SCCACHE_CACHE_MULTIARCH: 1
@@ -23,16 +22,13 @@ defaults:
   run:
     shell: bash
 
-# jobs are run in paralell on different machines
-# all steps run in series
 jobs:
   build_and_test:
-    # don't double run on PRs
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name != github.event.pull_request.base.repo.full_name
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false # show all errors for each platform (vs. cancel jobs on error)
+      fail-fast: false
       matrix:
         include:
           - name: Linux
@@ -48,19 +44,14 @@ jobs:
             pluginval-binary: ./pluginval.exe
 
     steps:
-      # Setup MSVC toolchain and developer command prompt (Windows)
       - uses: ilammy/msvc-dev-cmd@v1
 
-
-      # Use clang on Linux so we don't introduce a 3rd compiler (Windows and macOS use MSVC and Clang)
       - name: Set up Clang
         if: runner.os == 'Linux'
         uses: egor-tensin/setup-clang@v1
 
-      # This also starts up our "fake" display (Xvfb), needed for pluginval
       - name: Install JUCE's Linux Deps
         if: runner.os == 'Linux'
-        # Thanks to McMartin & co https://forum.juce.com/t/list-of-juce-dependencies-under-linux/15121/44
         run: |
           sudo apt-get update && sudo apt install libasound2-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev xvfb ninja-build
           sudo /usr/bin/Xvfb $DISPLAY &
@@ -95,7 +86,6 @@ jobs:
         if: ${{ matrix.name == 'macOS' }}
         run: brew install ninja osxutils
 
-      # This block can be removed once 15.1 is default (JUCE requires it when building on macOS 14)
       - name: Use latest Xcode on system (macOS)
         if: ${{ matrix.name == 'macOS' }}
         uses: maxim-lobanov/setup-xcode@v1
@@ -136,10 +126,10 @@ jobs:
         working-directory: ${{ env.BUILD_DIR }}
         run: ctest --verbose --output-on-failure
 
-      - name: Read in .env from CMake # see GitHubENV.cmake
+      - name: Read in .env from CMake
         run: |
-          cat .env # show us the config
-          cat .env >> $GITHUB_ENV # pull in our PRODUCT_NAME, etc
+          cat .env
+          cat .env >> $GITHUB_ENV
 
       - name: Set additional env vars for next steps
         run: |
@@ -161,46 +151,43 @@ jobs:
       - name: Codesign (macOS)
         if: ${{ matrix.name == 'macOS'}}
         run: |
-          # Each plugin must be code signed
-          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime --timestamp
-          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}" --deep --strict --options=runtime --timestamp
-          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime --timestamp
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            TSFLAG="--timestamp"
+            echo "Using timestamped codesign (release build)"
+          else
+            TSFLAG="--timestamp=none"
+            echo "Skipping timestamp (CI build)"
+          fi
+
+          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime $TSFLAG
+          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}"   --deep --strict --options=runtime $TSFLAG
+          codesign --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime $TSFLAG
 
       - name: Add Custom Icons (macOS)
         if: ${{ matrix.name == 'macOS' }}
         run: |
-          # add the icns as its own icon resource (meta!)
           sips -i packaging/chasm.icns
-
-          # Grab the resource, put in tempfile
           DeRez -only icns packaging/chasm.icns > /tmp/icons
-
-          # Stuff the resource into the strange Icon? file's resource fork
           Rez -a /tmp/icons -o "${{ env.VST3_PATH }}/Icon"$'\r'
           Rez -a /tmp/icons -o "${{ env.AU_PATH }}/Icon"$'\r'
           Rez -a /tmp/icons -o "${{ env.CLAP_PATH }}/Icon"$'\r'
-
-          # Set custom icon attribute
           SetFile -a C "${{ env.VST3_PATH }}"
           SetFile -a C "${{ env.AU_PATH }}"
           SetFile -a C "${{ env.CLAP_PATH }}"
 
-      - name: pkgbuild, Productbuild and Notarize
-        if: ${{ matrix.name == 'macOS' }}
+      - name: pkgbuild, Productbuild and Notarize (Release only)
+        if: ${{ matrix.name == 'macOS' && startsWith(github.ref, 'refs/tags/v') }}
         timeout-minutes: 5
         run: |
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.au.pkg" --version $VERSION --component "${{ env.AU_PATH }}" --install-location "/Library/Audio/Plug-Ins/Components"  "packaging/${{ env.PRODUCT_NAME }}.au.pkg"
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.vst3.pkg" --version $VERSION --component "${{ env.VST3_PATH }}" --install-location "/Library/Audio/Plug-Ins/VST3" "packaging/${{ env.PRODUCT_NAME }}.vst3.pkg"
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.clap.pkg" --version $VERSION --component "${{ env.CLAP_PATH }}" --install-location "/Library/Audio/Plug-Ins/CLAP" "packaging/${{ env.PRODUCT_NAME }}.clap.pkg"
           
-          # Create presets package
           mkdir -p "packaging/presets_temp/${{ env.COMPANY_NAME }}/${{ env.PRODUCT_NAME }}/Presets"
           cp -r assets/stock_presets/* "packaging/presets_temp/${{ env.COMPANY_NAME }}/${{ env.PRODUCT_NAME }}/Presets/"
           pkgbuild --identifier "${{ env.BUNDLE_ID }}.presets.pkg" --version $VERSION --root "packaging/presets_temp" --install-location "/Users/Shared" "packaging/${{ env.PRODUCT_NAME }}.presets.pkg"
           
-          # Only build standalone package if standalone exists
           if [ -d "${{ env.STANDALONE_PATH }}" ]; then
-            # Standalone is special, needs a boolean to always install in /Applications
             pkgbuild --analyze --root "$(dirname "${{ env.STANDALONE_PATH }}")" standalone.plist
             plutil -replace BundleIsRelocatable -bool NO standalone.plist
             pkgbuild --identifier "${{ env.BUNDLE_ID }}.app.pkg" --version $VERSION --root "$(dirname "${{ env.STANDALONE_PATH }}")" --component-plist standalone.plist --install-location "/Applications" "packaging/${{ env.PRODUCT_NAME }}.app.pkg"
@@ -218,7 +205,6 @@ jobs:
         working-directory: ${{ env.ARTIFACTS_PATH }}
         run: 7z a -tzip "${{ env.ARTIFACT_NAME }}.zip" "-xr!lib${{ env.PRODUCT_NAME }}_SharedCode.a" .
 
-        # This is needed since runners dont add iscc for some reason now...
       - name: Install Inno Setup (Windows)
         if: ${{ matrix.name == 'Windows' }}
         run: choco install innosetup --yes
@@ -228,32 +214,6 @@ jobs:
         run: |
           iscc "packaging\installer.iss"
           mv "packaging/Output/${{ env.ARTIFACT_NAME }}.exe" "${{ env.ARTIFACTS_PATH }}/"
-
-      - name: Codesign with Azure Trusted Signing
-        if: ${{ matrix.name == 'Windows' && 'true' == 'false'}}
-        uses: azure/trusted-signing-action@v0.5.9
-        with:
-          # The Azure Active Directory tenant (directory) ID.
-          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-
-          # The client (application) ID of an App Registration in the tenant.
-          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
-
-          # A client secret that was generated for the App Registration.
-          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
-          # The Code Signing Account endpoint. The URI value must have a URI that aligns to the region your Code Signing Account and Certificate Profile you are specifying were created in during the setup of these resources.
-          endpoint: ${{ secrets.AZURE_ENDPOINT }}
-
-          # The Code Signing Account name.
-          trusted-signing-account-name: ${{ secrets.AZURE_CODE_SIGNING_NAME }}
-
-          # The Certificate Profile name.
-          certificate-profile-name: ${{ secrets.AZURE_CERT_PROFILE_NAME }}
-
-          # This signs all exes inside the folder
-          files-folder: ${{ env.ARTIFACTS_PATH }}
-          files-folder-filter: exe
 
       - name: Upload Exe (Windows)
         if: ${{ matrix.name == 'Windows' }}
@@ -269,8 +229,8 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}.zip
           path: "${{ env.ARTIFACTS_PATH }}/${{ env.ARTIFACT_NAME }}.zip"
 
-      - name: Upload pkg (macOS)
-        if: ${{ matrix.name == 'macOS' }}
+      - name: Upload pkg (macOS Release only)
+        if: ${{ matrix.name == 'macOS' && startsWith(github.ref, 'refs/tags/v') }}
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}.pkg
@@ -280,7 +240,6 @@ jobs:
     if: contains(github.ref, 'tags/v')
     runs-on: ubuntu-latest
     needs: build_and_test
-
     steps:
       - name: Get Artifacts
         uses: actions/download-artifact@v4
@@ -289,9 +248,8 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           prerelease: true
-          # download-artifact puts these files in their own dirs...
-          # Using globs sidesteps having to pass the version around
           files: |
             */*.exe
             */*.zip
+            */*.pkg
             */*.dmg
