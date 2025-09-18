@@ -151,6 +151,9 @@ jobs:
       - name: Codesign (macOS)
         if: ${{ matrix.name == 'macOS'}}
         run: |
+          # used to make sure the codesign commands dont lock up github actions
+          security set-keychain-settings -t 3600 -u build.keychain
+        
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             TSFLAG="--timestamp"
             echo "Using timestamped codesign (release build)"
