@@ -160,6 +160,13 @@ jobs:
           SetFile -a C "${{ env.AU_PATH }}"
           SetFile -a C "${{ env.CLAP_PATH }}"
 
+      - name: Remove Extended Attributes (macOS)
+        if: ${{ matrix.name == 'macOS' }}
+        run: |
+          xattr -cr "${{ env.VST3_PATH }}"
+          xattr -cr "${{ env.AU_PATH }}"
+          xattr -cr "${{ env.CLAP_PATH }}"
+
       - name: Codesign (macOS)
         if: ${{ matrix.name == 'macOS'}}
         run: |
