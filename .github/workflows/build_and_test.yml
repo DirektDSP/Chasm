@@ -182,9 +182,9 @@ jobs:
 
           security find-identity -v -p codesigning "$KEYCHAIN"
 
-          codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime $TSFLAG
-          codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}"   --deep --strict --options=runtime $TSFLAG
-          codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime $TSFLAG
+          /usr/bin/codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.VST3_PATH }}" --deep --strict --options=runtime $TSFLAG
+          /usr/bin/codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.AU_PATH }}"   --deep --strict --options=runtime $TSFLAG
+          /usr/bin/codesign --keychain "$KEYCHAIN" --force -s "${{ secrets.DEVELOPER_ID_APPLICATION}}" -v "${{ env.CLAP_PATH }}" --deep --strict --options=runtime $TSFLAG
 
       - name: pkgbuild, Productbuild and Notarize (Release only)
         if: ${{ matrix.name == 'macOS' && startsWith(github.ref, 'refs/tags/v') }}
