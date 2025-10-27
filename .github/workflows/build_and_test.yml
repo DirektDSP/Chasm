@@ -259,7 +259,7 @@ jobs:
     needs: build_and_test
     steps:
       - name: Get Artifacts
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
