@@ -179,6 +179,10 @@ jobs:
           fi
 
           KEYCHAIN="${{ steps.keychain.outputs.keychain-path }}"
+          KEYCHAIN_PASSWORD="${{ steps.keychain.outputs.keychain-password }}"
+
+          # Unlock the keychain to prevent password prompts
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
 
           security find-identity -v -p codesigning "$KEYCHAIN"
 
