@@ -221,7 +221,7 @@ private:
     int _blockSize { 512 };
     bool _enabled { true };
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MakeItLoud<SampleType>)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MakeItLoud)
 };
 
 } // namespace Effects
