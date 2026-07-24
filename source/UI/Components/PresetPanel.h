@@ -25,7 +25,7 @@ namespace UI
                 configureButton (presetMenuButton, "Select Preset");
 
                 // Configure the preset menu button
-                presetMenuButton.setButtonText("Select Preset");
+                presetMenuButton.setButtonText ("Select Preset");
                 presetMenuButton.setMouseCursor (MouseCursor::PointingHandCursor);
                 addAndMakeVisible (presetMenuButton);
                 presetMenuButton.addListener (this);
@@ -81,8 +81,8 @@ namespace UI
                 // Set component bounds - use presetMenuButton instead of presetList
                 presetMenuButton.setBounds (dropdownX, dropdownY, dropdownWidth, dropdownHeight);
                 presetList.setBounds (dropdownX, dropdownY, dropdownWidth, dropdownHeight);
-                presetList.setVisible(false); // Hide ComboBox, use button instead
-                
+                presetList.setVisible (false); // Hide ComboBox, use button instead
+
                 saveButton.setBounds (saveX, saveY, buttonWidth, buttonHeight);
                 deleteButton.setBounds (deleteX, deleteY, buttonWidth, buttonHeight);
             }
@@ -143,30 +143,33 @@ namespace UI
                     const String currentPreset = presetManager.getCurrentPreset();
                     const String currentCategory = presetManager.getCurrentCategory();
 
-                    DBG("[PRESET-PANEL] 1 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
+                    DBG ("[PRESET-PANEL] 1 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
 
                     if (currentPreset.isNotEmpty())
                     {
-                        DBG("[PRESET-PANEL] 2 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
+                        DBG ("[PRESET-PANEL] 2 Attempting to delete preset: " << currentPreset << " from category: " << currentCategory);
                         // Show non-blocking confirmation dialog
-                        auto* deleteDialog = new AlertWindow(
+                        auto* deleteDialog = new AlertWindow (
                             "Delete Preset",
                             "Are you sure you want to delete the preset \"" + currentPreset + "\"?",
                             AlertWindow::QuestionIcon);
 
-                        deleteDialog->addButton("Delete", 1, KeyPress(KeyPress::returnKey));
-                        deleteDialog->addButton("Don't Delete", 2, KeyPress(KeyPress::escapeKey));
-                        deleteDialog->addButton("Cancel", 0, KeyPress(KeyPress::escapeKey));
+                        deleteDialog->addButton ("Delete", 1, KeyPress (KeyPress::returnKey));
+                        deleteDialog->addButton ("Don't Delete", 2, KeyPress (KeyPress::escapeKey));
+                        deleteDialog->addButton ("Cancel", 0, KeyPress (KeyPress::escapeKey));
 
-                        deleteDialog->enterModalState(true,
-                            ModalCallbackFunction::create([this, deleteDialog, currentPreset, currentCategory](int result) {
-                                if (result == 1) {
-                                    DBG("[PRESET-PANEL] Deleting preset: " << currentPreset << " from category: " << currentCategory);
-                                    presetManager.deletePreset(currentPreset, currentCategory);
+                        deleteDialog->enterModalState (true,
+                            ModalCallbackFunction::create ([this, deleteDialog, currentPreset, currentCategory] (int result) {
+                                if (result == 1)
+                                {
+                                    DBG ("[PRESET-PANEL] Deleting preset: " << currentPreset << " from category: " << currentCategory);
+                                    presetManager.deletePreset (currentPreset, currentCategory);
                                     loadPresetList();
                                     updatePresetMenuButton();
-                                } else {
-                                    DBG("[PRESET-PANEL] Preset deletion cancelled. Result was " << result);
+                                }
+                                else
+                                {
+                                    DBG ("[PRESET-PANEL] Preset deletion cancelled. Result was " << result);
                                 }
                                 delete deleteDialog;
                             }),
@@ -174,7 +177,7 @@ namespace UI
                     }
                     else
                     {
-                        DBG("[PRESET-PANEL] No preset selected to delete.");
+                        DBG ("[PRESET-PANEL] No preset selected to delete.");
                     }
                 }
             }
@@ -196,17 +199,17 @@ namespace UI
             {
                 PopupMenu menu;
                 int menuItemId = 1;
-                
+
                 // Clear previous mappings
                 menuItemToPresetMap.clear();
                 menuItemToCategoryMap.clear();
-                
-                buildPresetMenu(menu, menuItemId);
-                
+
+                buildPresetMenu (menu, menuItemId);
+
                 // Add menu management options
                 menu.addSeparator();
-                menu.addItem(menuItemId++, "Create New Category...");
-                
+                menu.addItem (menuItemId++, "Create New Category...");
+
                 // Show the menu
                 menu.showMenuAsync (PopupMenu::Options().withTargetComponent (&presetMenuButton),
                     [this, menuItemId] (int result) {
@@ -220,110 +223,111 @@ namespace UI
                             else
                             {
                                 // Handle preset selection
-                                handlePresetMenuResult(result);
+                                handlePresetMenuResult (result);
                             }
                         }
                     });
             }
 
-            void buildPresetMenu(PopupMenu& menu, int& menuItemId)
+            void buildPresetMenu (PopupMenu& menu, int& menuItemId)
             {
                 const auto categories = presetManager.getAllCategories();
-                
+
                 for (const auto& category : categories)
                 {
-                    const auto presetsInCategory = presetManager.getPresetsInCategory(category);
-                    
+                    const auto presetsInCategory = presetManager.getPresetsInCategory (category);
+
                     if (presetsInCategory.isEmpty())
                         continue;
-                        
+
                     if (category == Service::PresetManager::defaultCategory)
                     {
                         // Add default category presets directly to main menu
-                        menu.addSectionHeader("Default Presets");
-                        
+                        menu.addSectionHeader ("Default Presets");
+
                         for (const auto& preset : presetsInCategory)
                         {
-                            menuItemToPresetMap.add(preset);
-                            menuItemToCategoryMap.add(category);
-                            
+                            menuItemToPresetMap.add (preset);
+                            menuItemToCategoryMap.add (category);
+
                             // Mark current preset with a tick
-                            const bool isCurrentPreset = (preset == presetManager.getCurrentPreset() && 
-                                                        category == presetManager.getCurrentCategory());
-                            menu.addItem(menuItemId++, preset, true, isCurrentPreset);
+                            const bool isCurrentPreset = (preset == presetManager.getCurrentPreset() && category == presetManager.getCurrentCategory());
+                            menu.addItem (menuItemId++, preset, true, isCurrentPreset);
                         }
-                        
+
                         menu.addSeparator();
                     }
                     else
                     {
                         // Create submenu for this category
                         PopupMenu categorySubmenu;
-                        buildCategorySubmenu(categorySubmenu, category, menuItemId);
-                        
+                        buildCategorySubmenu (categorySubmenu, category, menuItemId);
+
                         // Add submenu to main menu with folder icon or indicator
-                        menu.addSubMenu(category + " ▶", categorySubmenu);
+                        menu.addSubMenu (category + " ▶", categorySubmenu);
                     }
                 }
             }
 
-            void buildCategorySubmenu(PopupMenu& submenu, const String& category, int& menuItemId)
+            void buildCategorySubmenu (PopupMenu& submenu, const String& category, int& menuItemId)
             {
-                const auto presetsInCategory = presetManager.getPresetsInCategory(category);
-                
+                const auto presetsInCategory = presetManager.getPresetsInCategory (category);
+
                 // Add header showing category name
-                submenu.addSectionHeader(category);
-                
+                submenu.addSectionHeader (category);
+
                 for (const auto& preset : presetsInCategory)
                 {
-                    menuItemToPresetMap.add(preset);
-                    menuItemToCategoryMap.add(category);
-                    
+                    menuItemToPresetMap.add (preset);
+                    menuItemToCategoryMap.add (category);
+
                     // Mark current preset with a tick
-                    const bool isCurrentPreset = (preset == presetManager.getCurrentPreset() && 
-                                                category == presetManager.getCurrentCategory());
-                    submenu.addItem(menuItemId++, preset, true, isCurrentPreset);
+                    const bool isCurrentPreset = (preset == presetManager.getCurrentPreset() && category == presetManager.getCurrentCategory());
+                    submenu.addItem (menuItemId++, preset, true, isCurrentPreset);
                 }
-                
+
                 // Add separator and category management options
                 submenu.addSeparator();
-                submenu.addItem(menuItemId++, "Delete Category: " + category, true, false);
-                
+                submenu.addItem (menuItemId++, "Delete Category: " + category, true, false);
+
                 // Store the category management item mapping
-                menuItemToPresetMap.add("DELETE_CATEGORY");
-                menuItemToCategoryMap.add(category);
+                menuItemToPresetMap.add ("DELETE_CATEGORY");
+                menuItemToCategoryMap.add (category);
             }
 
-            void handlePresetMenuResult(int result)
+            void handlePresetMenuResult (int result)
             {
                 if (result == 0 || result > menuItemToPresetMap.size())
                     return;
-                    
+
                 const int index = result - 1; // Convert to 0-based index
                 const String presetName = menuItemToPresetMap[index];
                 const String category = menuItemToCategoryMap[index];
-                
+
                 if (presetName == "DELETE_CATEGORY")
                 {
-                    DBG("[PRESET-PANEL] 1 Attempting to delete category: " << category);
-                    auto* deleteCatDialog = new AlertWindow(
+                    DBG ("[PRESET-PANEL] 1 Attempting to delete category: " << category);
+                    auto* deleteCatDialog = new AlertWindow (
                         "Delete Category",
                         "Are you sure you want to delete the category '" + category + "' and all its presets?",
                         AlertWindow::WarningIcon);
 
-                    deleteCatDialog->addButton("Delete", 1, KeyPress(KeyPress::returnKey));
-                    deleteCatDialog->addButton("Don't Delete", 2, KeyPress(KeyPress::escapeKey));
-                    deleteCatDialog->addButton("Cancel", 0, KeyPress(KeyPress::escapeKey));
+                    deleteCatDialog->addButton ("Delete", 1, KeyPress (KeyPress::returnKey));
+                    deleteCatDialog->addButton ("Don't Delete", 2, KeyPress (KeyPress::escapeKey));
+                    deleteCatDialog->addButton ("Cancel", 0, KeyPress (KeyPress::escapeKey));
 
-                    deleteCatDialog->enterModalState(true,
-                        ModalCallbackFunction::create([this, deleteCatDialog, category](int result) {
-                            if (result == 1) {
-                                DBG("[PRESET-PANEL] Deleting category: " << category);
-                                presetManager.deleteCategory(category);
+                    deleteCatDialog->enterModalState (true,
+                        ModalCallbackFunction::create ([this, deleteCatDialog, category] (int result) {
+                            if (result == 1)
+                            {
+                                DBG ("[PRESET-PANEL] Deleting category: " << category);
+                                presetManager.deleteCategory (category);
                                 loadPresetList();
                                 updatePresetMenuButton();
-                            } else {
-                                DBG("[PRESET-PANEL] Category deletion cancelled. Result was " << result);
+                            }
+                            else
+                            {
+                                DBG ("[PRESET-PANEL] Category deletion cancelled. Result was " << result);
                             }
                             delete deleteCatDialog;
                         }),
@@ -332,7 +336,7 @@ namespace UI
                 else
                 {
                     // Load the selected preset
-                    presetManager.loadPreset(presetName, category);
+                    presetManager.loadPreset (presetName, category);
                     updatePresetMenuButton();
                 }
             }
@@ -341,7 +345,7 @@ namespace UI
             {
                 const String currentPreset = presetManager.getCurrentPreset();
                 const String currentCategory = presetManager.getCurrentCategory();
-                
+
                 if (currentPreset.isNotEmpty())
                 {
                     // Show current preset and category
@@ -350,11 +354,11 @@ namespace UI
                     {
                         buttonText = currentCategory + " / " + currentPreset;
                     }
-                    presetMenuButton.setButtonText(buttonText);
+                    presetMenuButton.setButtonText (buttonText);
                 }
                 else
                 {
-                    presetMenuButton.setButtonText("Select Preset");
+                    presetMenuButton.setButtonText ("Select Preset");
                 }
             }
 
@@ -452,7 +456,7 @@ namespace UI
             PresetCB presetList;
             TextButton presetMenuButton; // New hierarchical menu button
             std::unique_ptr<FileChooser> fileChooser;
-            
+
             // Menu item mappings for hierarchical menu
             StringArray menuItemToPresetMap;
             StringArray menuItemToCategoryMap;

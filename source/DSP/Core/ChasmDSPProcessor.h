@@ -4,10 +4,9 @@
 #include <juce_dsp/juce_dsp.h>
 
 // DSP Components
+#include "../Effects/HaasEffect.h"
 #include "../Effects/MakeItLoud.h"
 #include "../Effects/StereoEnhancer.h"
-#include "../Effects/StereoEnhancer.h"
-#include "../Effects/HaasEffect.h"
 #include "../Filters/EQFilters.h"
 #include "../Filters/SchroederAllpassChain.h"
 #include "../Utils/DSPUtils.h"
@@ -34,19 +33,19 @@ namespace DSP
             }
 
             void prepare (const juce::dsp::ProcessSpec& spec,
-                          SampleType inputGain = SampleType{1.0},
-                          SampleType outputGain = SampleType{1.0},
-                          SampleType mix = SampleType{0.5},
-                          SampleType delayMs = SampleType{30.0},
-                          SampleType brightness = SampleType{0.0},
-                          SampleType character = SampleType{1.0},
-                          SampleType lowCut = SampleType{0.0},
-                          SampleType highCut = SampleType{0.0},
-                          SampleType width = SampleType{100.0},
-                          SampleType mil_InputGain = SampleType{1.0},
-                          SampleType mil_BoostValue = SampleType{0.0},
-                          int mil_Mode = 0,
-                          SampleType haasAmount = SampleType{0.0})
+                SampleType inputGain = SampleType { 1.0 },
+                SampleType outputGain = SampleType { 1.0 },
+                SampleType mix = SampleType { 0.5 },
+                SampleType delayMs = SampleType { 30.0 },
+                SampleType brightness = SampleType { 0.0 },
+                SampleType character = SampleType { 1.0 },
+                SampleType lowCut = SampleType { 0.0 },
+                SampleType highCut = SampleType { 0.0 },
+                SampleType width = SampleType { 100.0 },
+                SampleType mil_InputGain = SampleType { 1.0 },
+                SampleType mil_BoostValue = SampleType { 0.0 },
+                int mil_Mode = 0,
+                SampleType haasAmount = SampleType { 0.0 })
             {
                 sampleRate = spec.sampleRate;
                 samplesPerBlock = static_cast<int> (spec.maximumBlockSize);
@@ -58,36 +57,36 @@ namespace DSP
 
                 stereoEnhancer.setWidth (SampleType { 100.0 });
 
-                haasEffect.prepare(sampleRate, samplesPerBlock);
+                haasEffect.prepare (sampleRate, samplesPerBlock);
 
                 prepareParameterSmoothers();
 
                 // Snap all smoothers to current values to avoid ramping artifacts
-                inputGainSmoother.setTargetValue(inputGain);
+                inputGainSmoother.setTargetValue (inputGain);
                 inputGainSmoother.snapToTargetValue();
-                outputGainSmoother.setTargetValue(outputGain);
+                outputGainSmoother.setTargetValue (outputGain);
                 outputGainSmoother.snapToTargetValue();
-                mixSmoother.setTargetValue(mix);
+                mixSmoother.setTargetValue (mix);
                 mixSmoother.snapToTargetValue();
-                delaySmoother.setTargetValue(delayMs);
+                delaySmoother.setTargetValue (delayMs);
                 delaySmoother.snapToTargetValue();
-                brightnessSmoother.setTargetValue(brightness);
+                brightnessSmoother.setTargetValue (brightness);
                 brightnessSmoother.snapToTargetValue();
-                characterSmoother.setTargetValue(character);
+                characterSmoother.setTargetValue (character);
                 characterSmoother.snapToTargetValue();
-                lowCutSmoother.setTargetValue(lowCut);
+                lowCutSmoother.setTargetValue (lowCut);
                 lowCutSmoother.snapToTargetValue();
-                highCutSmoother.setTargetValue(highCut);
+                highCutSmoother.setTargetValue (highCut);
                 highCutSmoother.snapToTargetValue();
-                widthSmoother.setTargetValue(width);
+                widthSmoother.setTargetValue (width);
                 widthSmoother.snapToTargetValue();
-                haasSmoother.setTargetValue(haasAmount);
+                haasSmoother.setTargetValue (haasAmount);
                 haasSmoother.snapToTargetValue();
-                mil_InputGainSmoother.setTargetValue(mil_InputGain);
+                mil_InputGainSmoother.setTargetValue (mil_InputGain);
                 mil_InputGainSmoother.snapToTargetValue();
-                mil_BoostSmoother.setTargetValue(mil_BoostValue);
+                mil_BoostSmoother.setTargetValue (mil_BoostValue);
                 mil_BoostSmoother.snapToTargetValue();
-                makeItLoud.setCompressorMode(mil_Mode);
+                makeItLoud.setCompressorMode (mil_Mode);
 
                 wetBuffer.setSize (numChannels, samplesPerBlock);
                 dryBuffer.setSize (numChannels, samplesPerBlock);
@@ -100,7 +99,7 @@ namespace DSP
 
                 makeItLoud.prepare (spec);
 
-                reset(inputGain, outputGain, mix, delayMs, brightness, character, lowCut, highCut, width, mil_InputGain, mil_BoostValue, mil_Mode, haasAmount);
+                reset (inputGain, outputGain, mix, delayMs, brightness, character, lowCut, highCut, width, mil_InputGain, mil_BoostValue, mil_Mode, haasAmount);
             }
 
             void updateParameters (SampleType inputGainDb, SampleType outputGainDb, SampleType mixPercent, SampleType delayMs, SampleType brightnessDb, SampleType characterQ, SampleType lowCutPercent, SampleType highCutPercent, SampleType widthPercent, SampleType mil_InputGain, SampleType mil_BoostValue, int mil_Mode, SampleType haasAmount)
@@ -115,7 +114,7 @@ namespace DSP
                 highCutSmoother.setTargetValue (highCutPercent);
                 widthSmoother.setTargetValue (widthPercent);
 
-                haasSmoother.setTargetValue(haasAmount);
+                haasSmoother.setTargetValue (haasAmount);
 
                 mil_BoostSmoother.setTargetValue (Utils::DSPUtils::dbToGain (mil_BoostValue));
                 mil_InputGainSmoother.setTargetValue (Utils::DSPUtils::dbToGain (mil_InputGain));
@@ -148,7 +147,7 @@ namespace DSP
                     auto lowCutFreq = lowCutSmoother.getNextValue();
                     if (!juce::approximatelyEqual (lowCutFreq, lastLowCut))
                     {
-                        lowCutFreq = juce::jlimit(lowCutMin, lowCutMax, lowCutFreq);
+                        lowCutFreq = juce::jlimit (lowCutMin, lowCutMax, lowCutFreq);
                         lowCutFilter.setCutoffFrequency (lowCutFreq);
                         lowCutActive = lowCutFreq > SampleType { 1.0 };
                         lastLowCut = lowCutFreq;
@@ -157,7 +156,7 @@ namespace DSP
                     auto highCutFreq = highCutSmoother.getNextValue();
                     if (!juce::approximatelyEqual (highCutFreq, lastHighCut))
                     {
-                        highCutFreq = juce::jlimit(highCutMin, highCutMax, highCutFreq);
+                        highCutFreq = juce::jlimit (highCutMin, highCutMax, highCutFreq);
                         highCutFilter.setCutoffFrequency (highCutFreq);
                         highCutActive = highCutFreq < SampleType { 19999.0 };
                         lastHighCut = highCutFreq;
@@ -182,7 +181,7 @@ namespace DSP
                 brightnessEQ.processBlock (wetBuffer);
 
                 // Apply stereo enhancement
-                haasEffect.processBlock(wetBuffer);
+                haasEffect.processBlock (wetBuffer);
                 stereoEnhancer.processBlock (wetBuffer);
 
                 // Apply MakeItLoud effect
@@ -204,62 +203,62 @@ namespace DSP
                 }
             }
 
-            void reset(SampleType inputGain = SampleType{1.0},
-                       SampleType outputGain = SampleType{1.0},
-                       SampleType mix = SampleType{0.5},
-                       SampleType delayMs = SampleType{30.0},
-                       SampleType brightness = SampleType{0.0},
-                       SampleType character = SampleType{1.0},
-                       SampleType lowCut = SampleType{0.0},
-                       SampleType highCut = SampleType{0.0},
-                       SampleType width = SampleType{100.0},
-                       SampleType mil_InputGain = SampleType{1.0},
-                       SampleType mil_BoostValue = SampleType{0.0},
-                       int mil_Mode = 0,
-                       SampleType haasAmount = SampleType{0.0})
+            void reset (SampleType inputGain = SampleType { 1.0 },
+                SampleType outputGain = SampleType { 1.0 },
+                SampleType mix = SampleType { 0.5 },
+                SampleType delayMs = SampleType { 30.0 },
+                SampleType brightness = SampleType { 0.0 },
+                SampleType character = SampleType { 1.0 },
+                SampleType lowCut = SampleType { 0.0 },
+                SampleType highCut = SampleType { 0.0 },
+                SampleType width = SampleType { 100.0 },
+                SampleType mil_InputGain = SampleType { 1.0 },
+                SampleType mil_BoostValue = SampleType { 0.0 },
+                int mil_Mode = 0,
+                SampleType haasAmount = SampleType { 0.0 })
             {
-                leftAllpassChain.reset(delayMs, character);
-                rightAllpassChain.reset(delayMs, character);
+                leftAllpassChain.reset (delayMs, character);
+                rightAllpassChain.reset (delayMs, character);
                 brightnessEQ.reset();
                 stereoEnhancer.reset();
 
-                inputGainSmoother.reset(inputGain);
-                inputGainSmoother.setTargetValue(inputGain);
+                inputGainSmoother.reset (inputGain);
+                inputGainSmoother.setTargetValue (inputGain);
                 inputGainSmoother.snapToTargetValue();
-                outputGainSmoother.reset(outputGain);
-                outputGainSmoother.setTargetValue(outputGain);
+                outputGainSmoother.reset (outputGain);
+                outputGainSmoother.setTargetValue (outputGain);
                 outputGainSmoother.snapToTargetValue();
-                mixSmoother.reset(mix);
-                mixSmoother.setTargetValue(mix);
+                mixSmoother.reset (mix);
+                mixSmoother.setTargetValue (mix);
                 mixSmoother.snapToTargetValue();
-                delaySmoother.reset(delayMs);
-                delaySmoother.setTargetValue(delayMs);
+                delaySmoother.reset (delayMs);
+                delaySmoother.setTargetValue (delayMs);
                 delaySmoother.snapToTargetValue();
-                brightnessSmoother.reset(brightness);
-                brightnessSmoother.setTargetValue(brightness);
+                brightnessSmoother.reset (brightness);
+                brightnessSmoother.setTargetValue (brightness);
                 brightnessSmoother.snapToTargetValue();
-                characterSmoother.reset(character);
-                characterSmoother.setTargetValue(character);
+                characterSmoother.reset (character);
+                characterSmoother.setTargetValue (character);
                 characterSmoother.snapToTargetValue();
-                lowCutSmoother.reset(lowCut);
-                lowCutSmoother.setTargetValue(lowCut);
+                lowCutSmoother.reset (lowCut);
+                lowCutSmoother.setTargetValue (lowCut);
                 lowCutSmoother.snapToTargetValue();
-                highCutSmoother.reset(highCut);
-                highCutSmoother.setTargetValue(highCut);
+                highCutSmoother.reset (highCut);
+                highCutSmoother.setTargetValue (highCut);
                 highCutSmoother.snapToTargetValue();
-                widthSmoother.reset(width);
-                widthSmoother.setTargetValue(width);
+                widthSmoother.reset (width);
+                widthSmoother.setTargetValue (width);
                 widthSmoother.snapToTargetValue();
-                haasSmoother.reset(haasAmount);
-                haasSmoother.setTargetValue(haasAmount);
+                haasSmoother.reset (haasAmount);
+                haasSmoother.setTargetValue (haasAmount);
                 haasSmoother.snapToTargetValue();
-                mil_BoostSmoother.reset(mil_BoostValue);
-                mil_BoostSmoother.setTargetValue(mil_BoostValue);
+                mil_BoostSmoother.reset (mil_BoostValue);
+                mil_BoostSmoother.setTargetValue (mil_BoostValue);
                 mil_BoostSmoother.snapToTargetValue();
-                mil_InputGainSmoother.reset(mil_InputGain);
-                mil_InputGainSmoother.setTargetValue(mil_InputGain);
+                mil_InputGainSmoother.reset (mil_InputGain);
+                mil_InputGainSmoother.setTargetValue (mil_InputGain);
                 mil_InputGainSmoother.snapToTargetValue();
-                makeItLoud.setCompressorMode(mil_Mode);
+                makeItLoud.setCompressorMode (mil_Mode);
             }
 
         private:
@@ -290,7 +289,7 @@ namespace DSP
                 rightAllpassChain.setCharacter (character);
                 brightnessEQ.setBrightness (brightness);
                 stereoEnhancer.setWidth (width);
-                haasEffect.setDelayMs(haasAmount);
+                haasEffect.setDelayMs (haasAmount);
             }
 
             void processSingleSample (juce::AudioBuffer<SampleType>& buffer, int sampleIndex, SampleType inputGain)
@@ -386,9 +385,8 @@ namespace DSP
 
             // subtract one to ensure that the value is always
             // LOWER than the upper limit
-            SampleType lowCutMax = (sampleRate*0.5) - 1;
-            SampleType highCutMax = (sampleRate*0.5) - 1;
-
+            SampleType lowCutMax = (sampleRate * 0.5) - 1;
+            SampleType highCutMax = (sampleRate * 0.5) - 1;
 
             bool lowCutActive = false;
             bool highCutActive = false;

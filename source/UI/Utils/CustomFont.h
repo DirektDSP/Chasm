@@ -10,8 +10,8 @@ namespace UI
         {
             static auto typeface = juce::Typeface::createSystemTypefaceFor (BinaryData::Rovaney_ttf, BinaryData::Rovaney_ttfSize);
             juce::Font font (typeface);
-            font.setHeight(20.0f);
-            
+            font.setHeight (20.0f);
+
             return font;
         }
 

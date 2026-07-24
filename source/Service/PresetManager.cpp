@@ -30,10 +30,10 @@ namespace Service
         valueTreeState.state.addListener (this);
         currentPreset.referTo (valueTreeState.state.getPropertyAsValue (presetNameProperty, nullptr));
         currentCategory.referTo (valueTreeState.state.getPropertyAsValue ("currentCategory", nullptr));
-        
+
         // Add parameter listeners to clear preset name when parameters are modified
         addParameterListeners();
-        
+
         updatePresetList();
     }
 
@@ -123,10 +123,10 @@ namespace Service
                                             .withMessage ("Are you sure you want to delete the category '" + category + "' and all its presets?")
                                             .withButton ("Delete")
                                             .withButton ("Cancel")
-                                            .withParentComponent(nullptr); // Use the main component as parent
+                                            .withParentComponent (nullptr); // Use the main component as parent
 
             NativeMessageBox::showAsync (options, [this, category] (int result) {
-                DBG("Button Pressed");
+                DBG ("Button Pressed");
                 if (result == 1)
                     deleteCategory (category);
             });
@@ -180,7 +180,7 @@ namespace Service
         const String finalCategory = category.isEmpty() ? getCurrentCategory() : category;
         const auto presetFile = getPresetFile (presetName, finalCategory);
 
-        DBG("[PRESET-MANAGER] Deleting preset: " << presetName << " from category: " << finalCategory);
+        DBG ("[PRESET-MANAGER] Deleting preset: " << presetName << " from category: " << finalCategory);
         if (!presetFile.existsAsFile())
         {
             DBG ("Preset file " << presetFile.getFullPathName() << " does not exist");
@@ -197,7 +197,7 @@ namespace Service
 
         currentPreset.setValue ("");
         updatePresetList();
-        DBG("[PRESET-MANAGER] Preset deleted: " << presetName << " from category: " << finalCategory);
+        DBG ("[PRESET-MANAGER] Preset deleted: " << presetName << " from category: " << finalCategory);
     }
 
     void PresetManager::loadPreset (const String& presetName, const String& category)
@@ -205,7 +205,7 @@ namespace Service
         if (presetName.isEmpty())
             return;
 
-        DBG("[PRESET-MANAGER] Loading preset: " << presetName << " from category: " << category);
+        DBG ("[PRESET-MANAGER] Loading preset: " << presetName << " from category: " << category);
 
         const String finalCategory = category.isEmpty() ? getCurrentCategory() : category;
         const auto presetFile = getPresetFile (presetName, finalCategory);
@@ -273,7 +273,8 @@ namespace Service
             }
 
             // Remove the directory
-            if (!categoryDir.deleteRecursively()){
+            if (!categoryDir.deleteRecursively())
+            {
                 DBG ("Could not delete category directory: " + categoryDir.getFullPathName());
                 jassertfalse; // Assert to catch this during development
             }
@@ -303,51 +304,49 @@ namespace Service
 
         // Sort categories with custom comparator
         otherCategories.sort (false); // First do a basic sort
-        
+
         // Custom sort: numbers 0-9, 10-19, ..., 90-99, then A-Z
-        std::sort (otherCategories.begin(), otherCategories.end(), 
-            [] (const String& a, const String& b) -> bool
-            {
-                // Helper lambda to get sort priority
-                auto getSortPriority = [] (const String& str) -> int
+        std::sort (otherCategories.begin(), otherCategories.end(), [] (const String& a, const String& b) -> bool {
+            // Helper lambda to get sort priority
+            auto getSortPriority = [] (const String& str) -> int {
+                if (str.isEmpty())
+                    return 1000;
+
+                const auto firstChar = str[0];
+
+                // Check if it starts with a digit
+                if (firstChar >= '0' && firstChar <= '9')
                 {
-                    if (str.isEmpty()) return 1000;
-                    
-                    const auto firstChar = str[0];
-                    
-                    // Check if it starts with a digit
-                    if (firstChar >= '0' && firstChar <= '9')
+                    // Extract the leading number
+                    int number = 0;
+                    int pos = 0;
+                    while (pos < str.length() && str[pos] >= '0' && str[pos] <= '9')
                     {
-                        // Extract the leading number
-                        int number = 0;
-                        int pos = 0;
-                        while (pos < str.length() && str[pos] >= '0' && str[pos] <= '9')
-                        {
-                            number = number * 10 + (str[pos] - '0');
-                            pos++;
-                        }
-                        
-                        // Return priority based on tens digit: 0-9 = 0, 10-19 = 1, etc.
-                        return number / 10;
+                        number = number * 10 + (str[pos] - '0');
+                        pos++;
                     }
-                    else
-                    {
-                        // Letters come after all numbers (priority 100+)
-                        return 100;
-                    }
-                };
-                
-                int priorityA = getSortPriority(a);
-                int priorityB = getSortPriority(b);
-                
-                if (priorityA != priorityB)
-                {
-                    return priorityA < priorityB;
+
+                    // Return priority based on tens digit: 0-9 = 0, 10-19 = 1, etc.
+                    return number / 10;
                 }
-                
-                // Same priority group - use natural string comparison
-                return a.compareNatural(b) < 0;
-            });
+                else
+                {
+                    // Letters come after all numbers (priority 100+)
+                    return 100;
+                }
+            };
+
+            int priorityA = getSortPriority (a);
+            int priorityB = getSortPriority (b);
+
+            if (priorityA != priorityB)
+            {
+                return priorityA < priorityB;
+            }
+
+            // Same priority group - use natural string comparison
+            return a.compareNatural (b) < 0;
+        });
 
         for (const auto& category : otherCategories)
         {
@@ -581,9 +580,9 @@ namespace Service
         // Get all parameters and add listeners to detect changes
         for (auto* param : valueTreeState.processor.getParameters())
         {
-            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*>(param))
+            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*> (param))
             {
-                rangedParam->addListener(this);
+                rangedParam->addListener (this);
             }
         }
     }
@@ -593,25 +592,25 @@ namespace Service
         // Remove listeners from all parameters
         for (auto* param : valueTreeState.processor.getParameters())
         {
-            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*>(param))
+            if (auto* rangedParam = dynamic_cast<juce::RangedAudioParameter*> (param))
             {
-                rangedParam->removeListener(this);
+                rangedParam->removeListener (this);
             }
         }
     }
 
-    void PresetManager::parameterValueChanged(int parameterIndex, float newValue)
+    void PresetManager::parameterValueChanged (int parameterIndex, float newValue)
     {
         // Clear the current preset name when any parameter is changed
         // but only if there's currently a preset selected and we're not loading a preset
         if (!isLoadingPreset && getCurrentPreset().isNotEmpty())
         {
-            DBG("[PRESET-MANAGER] Parameter " << parameterIndex << " changed to " << newValue << ", clearing preset name");
-            currentPreset.setValue("");
+            DBG ("[PRESET-MANAGER] Parameter " << parameterIndex << " changed to " << newValue << ", clearing preset name");
+            currentPreset.setValue ("");
         }
     }
 
-    void PresetManager::parameterGestureChanged(int parameterIndex, bool gestureIsStarting)
+    void PresetManager::parameterGestureChanged (int parameterIndex, bool gestureIsStarting)
     {
         // We don't need to do anything for gesture changes
     }
@@ -619,6 +618,6 @@ namespace Service
     PresetManager::~PresetManager()
     {
         removeParameterListeners();
-        valueTreeState.state.removeListener(this);
+        valueTreeState.state.removeListener (this);
     }
 }

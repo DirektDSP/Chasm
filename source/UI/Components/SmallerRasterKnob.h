@@ -59,8 +59,7 @@ namespace UI
                         0,
                         frameId * image.getHeight() / frames,
                         image.getWidth(),
-                        image.getHeight() / frames
-                    );
+                        image.getHeight() / frames);
                 }
 
             private:

@@ -22,24 +22,25 @@
 // Core DSP processor
 #include "Core/ChasmDSPProcessor.h"
 
-namespace DSP {
+namespace DSP
+{
 
-/**
+    /**
  * Convenience aliases for common types.
  */
-using FloatProcessor = Core::ChasmDSPProcessor<float>;
-using DoubleProcessor = Core::ChasmDSPProcessor<double>;
+    using FloatProcessor = Core::ChasmDSPProcessor<float>;
+    using DoubleProcessor = Core::ChasmDSPProcessor<double>;
 
-using FloatParameterSmoother = Utils::ParameterSmoother<float>;
-using DoubleParameterSmoother = Utils::ParameterSmoother<double>;
+    using FloatParameterSmoother = Utils::ParameterSmoother<float>;
+    using DoubleParameterSmoother = Utils::ParameterSmoother<double>;
 
-using FloatAllpassFilter = Filters::AllpassFilter<float>;
-using DoubleAllpassFilter = Filters::AllpassFilter<double>;
+    using FloatAllpassFilter = Filters::AllpassFilter<float>;
+    using DoubleAllpassFilter = Filters::AllpassFilter<double>;
 
-using FloatAllpassChain = Filters::SchroederAllpassChain<float>;
-using DoubleAllpassChain = Filters::SchroederAllpassChain<double>;
+    using FloatAllpassChain = Filters::SchroederAllpassChain<float>;
+    using DoubleAllpassChain = Filters::SchroederAllpassChain<double>;
 
-using FloatStereoEnhancer = Effects::StereoEnhancer<float>;
-using DoubleStereoEnhancer = Effects::StereoEnhancer<double>;
+    using FloatStereoEnhancer = Effects::StereoEnhancer<float>;
+    using DoubleStereoEnhancer = Effects::StereoEnhancer<double>;
 
 } // namespace DSP

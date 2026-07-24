@@ -3,10 +3,10 @@
 #include "BinaryData.h"
 #include "PluginProcessor.h"
 #include "UI/Components/AnimatedBackground.h"
+#include "UI/Components/ModeCB.h"
 #include "UI/Components/PresetPanel.h"
 #include "UI/Components/RasterKnob.h"
 #include "UI/Components/SmallerRasterKnob.h"
-#include "UI/Components/ModeCB.h"
 #include "UI/Utils/Timestamp.h"
 #include "melatonin_inspector/melatonin_inspector.h"
 
@@ -27,20 +27,18 @@ public:
     int lastRight, lastLeft;
 
 private:
-    
     AudioProcessorValueTreeState& apvts;
 
     // Helper functions for UI setup
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText, const juce::String& suffix);
     void setupSlider (juce::Slider& slider, juce::Label& label, const juce::String& labelText);
-    void setupComboBox(juce::ComboBox& comboBox, juce::Label& label, const juce::String& labelText);
+    void setupComboBox (juce::ComboBox& comboBox, juce::Label& label, const juce::String& labelText);
     void setupToggleButton (juce::ToggleButton& button, juce::Label& label, const juce::String& labelText);
     void layoutSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::Rectangle<int> area);
     void layoutToggleWithLabel (juce::ToggleButton& button, juce::Label& label, juce::Rectangle<int> area);
     PluginProcessor& processorRef;
 
-    void sliderValueChanged(juce::Slider* slider) override;
-
+    void sliderValueChanged (juce::Slider* slider) override;
 
     // A button to show a sample inspector (if needed)
     juce::TextButton inspectButton { "Inspect the UI" };

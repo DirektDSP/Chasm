@@ -319,8 +319,7 @@ namespace UI
                     const juce::Rectangle<int>& area,
                     bool isHighlighted,
                     const PopupMenu::Item& item,
-                    const PopupMenu::Options& options
-                ) override
+                    const PopupMenu::Options& options) override
                 {
                     bool isCategory = item.text.startsWith ("📁");
 
@@ -337,8 +336,7 @@ namespace UI
                             item.text,
                             item.shortcutKeyDescription,
                             item.image.get(),
-                            nullptr
-                        );
+                            nullptr);
                     }
                     else
                     {
@@ -353,8 +351,7 @@ namespace UI
                             item.text,
                             item.shortcutKeyDescription,
                             item.image.get(),
-                            nullptr
-                        );
+                            nullptr);
                     }
                 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <juce_gui_basics/juce_gui_basics.h>
 #include "PluginEditor.h"
 #include "PluginProcessor.h"
+#include <juce_gui_basics/juce_gui_basics.h>
 
 /*
 class BypassButton : public juce::ToggleButton
@@ -133,4 +133,3 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ToggleSwitchButton)
 };
 */
-

@@ -154,27 +154,26 @@ namespace UI
                     g.fillRect (notchBounds);
                 }
 
-                void drawDeleteIcon(juce::Graphics& g, juce::Rectangle<int> bounds)
+                void drawDeleteIcon (juce::Graphics& g, juce::Rectangle<int> bounds)
                 {
-                    g.setColour(juce::Colours::white.withAlpha(0.9f));
+                    g.setColour (juce::Colours::white.withAlpha (0.9f));
 
                     int midX = bounds.getX() + bounds.getWidth() / 2;
                     int midY = bounds.getY() + bounds.getHeight() / 2;
                     int thickness = 3;
-                    int length = juce::jmin(bounds.getWidth(), bounds.getHeight()) / 2;
+                    int length = juce::jmin (bounds.getWidth(), bounds.getHeight()) / 2;
 
-                    juce::Graphics::ScopedSaveState saveState(g);
+                    juce::Graphics::ScopedSaveState saveState (g);
 
                     // Rotate 45 degrees (pi/4 radians) around center point
-                    g.addTransform(juce::AffineTransform::rotation(juce::MathConstants<float>::pi / 4, (float)midX, (float)midY));
+                    g.addTransform (juce::AffineTransform::rotation (juce::MathConstants<float>::pi / 4, (float) midX, (float) midY));
 
                     // Draw vertical line (which will appear rotated)
-                    g.fillRect(midX - thickness / 2, midY - length, thickness, length * 2);
+                    g.fillRect (midX - thickness / 2, midY - length, thickness, length * 2);
 
                     // Draw horizontal line (which will appear rotated)
-                    g.fillRect(midX - length, midY - thickness / 2, length * 2, thickness);
+                    g.fillRect (midX - length, midY - thickness / 2, length * 2, thickness);
                 }
-
 
                 void drawPlusIcon (juce::Graphics& g, juce::Rectangle<int> bounds)
                 {

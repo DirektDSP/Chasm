@@ -1,6 +1,6 @@
 #pragma once
-#include <juce_gui_basics/juce_gui_basics.h>
 #include <juce_audio_processors/juce_audio_processors.h>
+#include <juce_gui_basics/juce_gui_basics.h>
 using namespace juce;
 
 namespace Service
@@ -23,69 +23,69 @@ namespace Service
         static const String presetNameProperty;
         static const String defaultCategory;
 
-        PresetManager(AudioProcessorValueTreeState&);
+        PresetManager (AudioProcessorValueTreeState&);
         ~PresetManager();
-       
-        void buildPresetMenu(PopupMenu& menu, int& menuItemId);
-        void handlePresetMenuResult(int result, const StringArray& menuItemIds);
+
+        void buildPresetMenu (PopupMenu& menu, int& menuItemId);
+        void handlePresetMenuResult (int result, const StringArray& menuItemIds);
 
         // Enhanced save/load methods with category support
-        void savePreset(const String& presetName, const String& artistName = "Unknown", const String& category = "");
-        void deletePreset(const String& presetName, const String& category = "");
-        void loadPreset(const String& presetName, const String& category = "");
-        
+        void savePreset (const String& presetName, const String& artistName = "Unknown", const String& category = "");
+        void deletePreset (const String& presetName, const String& category = "");
+        void loadPreset (const String& presetName, const String& category = "");
+
         // Category management
-        void createCategory(const String& categoryName);
-        void deleteCategory(const String& categoryName);
-        bool categoryExists(const String& categoryName) const;
+        void createCategory (const String& categoryName);
+        void deleteCategory (const String& categoryName);
+        bool categoryExists (const String& categoryName) const;
         StringArray getAllCategories() const;
-        
+
         // Enhanced preset retrieval
         StringArray getAllPresets() const;
-        StringArray getPresetsInCategory(const String& category) const;
+        StringArray getPresetsInCategory (const String& category) const;
         Array<PresetMetadata> getAllPresetMetadata() const;
-        Array<PresetMetadata> getPresetMetadataInCategory(const String& category) const;
-        
+        Array<PresetMetadata> getPresetMetadataInCategory (const String& category) const;
+
         // Navigation methods
         int loadNextPreset();
         int loadPreviousPreset();
-        int loadNextPresetInCategory(const String& category);
-        int loadPreviousPresetInCategory(const String& category);
-        
+        int loadNextPresetInCategory (const String& category);
+        int loadPreviousPresetInCategory (const String& category);
+
         // Current preset info
         String getCurrentPreset() const;
         String getCurrentCategory() const;
-        
+
         // Utility methods
-        void movePresetToCategory(const String& presetName, const String& fromCategory, const String& toCategory);
-        File getCategoryDirectory(const String& category) const;
-        
+        void movePresetToCategory (const String& presetName, const String& fromCategory, const String& toCategory);
+        File getCategoryDirectory (const String& category) const;
+
     private:
-        void buildCategorySubmenu(PopupMenu& submenu, const String& category, int& menuItemId);
+        void buildCategorySubmenu (PopupMenu& submenu, const String& category, int& menuItemId);
         StringArray menuItemToPresetMap;
         StringArray menuItemToCategoryMap;
 
-        void valueTreeRedirected(ValueTree& treeWhichHasBeenChanged) override;
+        void valueTreeRedirected (ValueTree& treeWhichHasBeenChanged) override;
         void updatePresetList();
-        File getPresetFile(const String& presetName, const String& category) const;
-        
+        File getPresetFile (const String& presetName, const String& category) const;
+
         // AudioProcessorParameter::Listener overrides
-        void parameterValueChanged(int parameterIndex, float newValue) override;
-        void parameterGestureChanged(int parameterIndex, bool gestureIsStarting) override;
-        
+        void parameterValueChanged (int parameterIndex, float newValue) override;
+        void parameterGestureChanged (int parameterIndex, bool gestureIsStarting) override;
+
         // Helper methods for parameter listening
         void addParameterListeners();
         void removeParameterListeners();
-        
+
         // Check if current state matches loaded preset
         bool currentStateMatchesPreset() const;
-        
+
         AudioProcessorValueTreeState& valueTreeState;
         Value currentPreset;
         Value currentCategory;
         StringArray availablePresets;
         StringArray availableCategories;
-        
+
         // Flag to prevent clearing preset name during preset loading
         bool isLoadingPreset = false;
     };
